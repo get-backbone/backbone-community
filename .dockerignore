@@ -1,0 +1,23 @@
+# Used when building images from repo root (e.g. infra/docker/Dockerfile.quarkus and Dockerfile.quarkus-native).
+# Reduces context size; target/ for built modules is still included so COPY MODULE_PATH/target/quarkus-app works.
+
+.git
+.github
+.idea
+.vscode
+.cursor
+*.iml
+node_modules
+infra/node_modules
+infra/dist
+infra/cdk.out
+.quarkus
+.clover
+.localstack
+.postgres
+.prometheus
+.grafana
+.dependency-check-cache
+*.log
+.env
+.envrc
