@@ -1,21 +1,17 @@
 ---
 version: '3'
 
-# use mvnd if available, otherwise (in CI) fallback to ./mvnw
+# Developer-mirror build tasks (included from taskfile.developer.yml).
+# No libs/sdk/reactor module and no template/ui exclusions.
+
 vars:
   MAVEN_CMD: '$(command -v mvnd >/dev/null 2>&1 && echo mvnd || echo "./mvnw")'
   ROOT_DIR: "{{.TASKFILE_DIR}}/.."
-  # exclude libs/sdk/reactor from root builds
-  REACTOR_EXCLUDE: '-pl ''!libs/sdk/reactor'''
 
 tasks:
   _default:
     cmds:
       - task --list-all
-
-  ##################################
-  # build
-  ##################################
 
   nuke:
     desc: Delete the Maven build cache + stop mvn daemons
@@ -34,33 +30,16 @@ tasks:
     desc: mvn compile
     dir: "{{.ROOT_DIR}}"
     cmds:
-      - '{{.MAVEN_CMD}} compile {{.REACTOR_EXCLUDE}} -am'
+      - '{{.MAVEN_CMD}} compile -am'
 
   package:
     desc: mvn package -DskipTests
     dir: "{{.ROOT_DIR}}"
     cmds:
-      - '{{.MAVEN_CMD}} package -Dmaven.test.skip {{.REACTOR_EXCLUDE}} -am'
-
-  # CI / selective native optimization — MODULE_PATHS from runtime-modules-changed.sh (space-separated)
-  _native:
-    desc: mvn package -Pnative -DskipTests (target modules; no parallel; no cache)
-    dir: "{{.ROOT_DIR}}"
-    vars:
-      MODULE_PL:
-        sh: echo '{{.MODULE_PATHS}}' | tr -s ' ' | tr ' ' ','
-    cmds:
-      - '{{.MAVEN_CMD}} -T 1 package -Pnative -Dmaven.build.cache.enabled=false -Dmaven.test.skip -pl ''{{.MODULE_PL}}'' -am'
+      - '{{.MAVEN_CMD}} package -Dmaven.test.skip -am'
 
   install:
     desc: mvn install -DskipTests
     dir: "{{.ROOT_DIR}}"
     cmds:
-      - '{{.MAVEN_CMD}} install -Dmaven.test.skip {{.REACTOR_EXCLUDE}} -am'
-
-  # CI only (underscore = workflow entrypoint; same pattern as build:_native / _clover:*)
-  _install:ci:
-    desc: CI install — skip quarkus:build; exclude ui + template-service
-    dir: "{{.ROOT_DIR}}"
-    cmds:
-      - '{{.MAVEN_CMD}} install -Dmaven.test.skip -Dquarkus.build.skip=true -pl ''!libs/sdk/reactor,!ui,!ui/web-actor,!services/template-service'' -am {{.CLI_ARGS}}'
+      - '{{.MAVEN_CMD}} install -Dmaven.test.skip -am'
