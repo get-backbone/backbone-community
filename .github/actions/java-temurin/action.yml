@@ -1,0 +1,24 @@
+---
+name: 'Setup Temurin JDK'
+description: 'Install Eclipse Temurin JDK with jmods (for ProGuard) and optional Maven cache'
+inputs:
+  cache-maven:
+    description: 'Enable Maven dependency caching via setup-java'
+    required: false
+    default: 'true'
+
+runs:
+  using: composite
+  steps:
+    - if: runner.os == 'Linux'
+      uses: actions/setup-java@v5
+      with:
+        java-version: '25'
+        distribution: 'temurin'
+        cache: ${{ inputs.cache-maven == 'true' && 'maven' || '' }}
+
+    # Temurin 24+ omits jmods (JEP 493). setup-java v5 has no jdk+jmods package;
+    # download matching Adoptium jmods into $JAVA_HOME for ProGuard (libs/sdk/reactor).
+    - if: runner.os == 'Linux'
+      shell: bash
+      run: bash .github/scripts/install-temurin-jmods.sh

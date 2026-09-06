@@ -1,0 +1,93 @@
+---
+commit-msg:
+  commands:
+    commit-lint:
+      run: cz check --allow-abort --commit-msg-file {1}
+
+# Same tools and config as .github/workflows/00-hygiene-check.yml (YAML, Markdown, ShellCheck jobs).
+# glob + {staged_files}: skipped when no staged paths match; do not use [ -z "{staged_files}" ] (breaks with 2+ paths).
+pre-commit:
+  commands:
+    # yamllint has no --fix; correct issues manually or adjust .config/.yamllint.yml
+    hygiene-yamllint:
+      glob:
+        - "*.yml"
+        - "*.yaml"
+        - "**/*.yml"
+        - "**/*.yaml"
+      run: yamllint --config-file .config/.yamllint.yml {staged_files}
+
+    hygiene-markdownlint:
+      glob:
+        - "*.md"
+        - "**/*.md"
+      exclude:
+        - CHANGELOG.md
+        - "internal/**"
+        - ".grafana/**"
+        - ".agents/**"
+      run: markdownlint-cli2 --fix --config .config/.markdownlint.jsonc {staged_files}
+      stage_fixed: true
+
+    hygiene-shfmt:
+      glob:
+        - "*.sh"
+        - "**/*.sh"
+      exclude:
+        - ".agents/**"
+      run: shfmt -w -i 4 -ci -sr {staged_files}
+      stage_fixed: true
+
+    hygiene-shellcheck:
+      glob:
+        - "*.sh"
+        - "**/*.sh"
+      exclude:
+        - "**/node_modules/**"
+        - ".agents/**"
+      run: shellcheck --rcfile=.config/.shellcheckrc --external-sources {staged_files}
+
+post-commit:
+  parallel: false  # must run sequentially since we modify files
+  commands:
+    spotless-apply:
+      run: |
+        # Skip during rebase operations to avoid running on replayed commits
+        if [ -d ".git/rebase-merge" ] || [ -d ".git/rebase-apply" ] || [ "${GIT_REFLOG_ACTION:-}" = "rebase" ]; then
+          exit 0
+        fi
+
+        # Same as .github/taskfile.*.yml: mvnd when installed, else ./mvnw
+        MAVEN_CMD=$(command -v mvnd >/dev/null 2>&1 && echo mvnd || echo "./mvnw")
+
+        # Files in this commit only — spotless must not stage unrelated working-tree edits
+        COMMIT_LIST=$(mktemp)
+        DIFF_LIST=$(mktemp)
+        trap 'rm -f "$COMMIT_LIST" "$DIFF_LIST"' EXIT
+        git diff-tree --no-commit-id --name-only -r HEAD > "$COMMIT_LIST"
+
+        # Format repo; then amend only with spotless fixes for paths that were in this commit
+        "$MAVEN_CMD" spotless:apply -Pspotless -q
+        git diff --name-only > "$DIFF_LIST"
+
+        while IFS= read -r changed_path; do
+          [ -z "$changed_path" ] && continue
+          grep -qxF "$changed_path" "$COMMIT_LIST" && git add -- "$changed_path"
+        done < "$DIFF_LIST"
+
+        if ! git diff --cached --quiet; then
+          git commit --amend --no-edit --no-verify
+        fi
+
+# applications modules - there are no unit tests currently, so no need to incur the build overhead
+pre-push:
+  commands:
+    # Same exclude list as .github/actions/secret-scan (brew TruffleHog v3; --regex/--entropy are legacy no-ops).
+    # Scan range: commits after origin/main through HEAD. Requires refs/remotes/origin/main (e.g. git fetch origin).
+    hygiene-trufflehog:
+      run: |
+        set -e
+        exclude_file=.github/actions/secret-scan/trufflehog-exclude.txt
+        since=$(git rev-parse refs/remotes/origin/main)
+        trufflehog git file://. --since-commit="$since" --branch HEAD --exclude-paths="$exclude_file" --no-update --log-level=-1 --fail
+

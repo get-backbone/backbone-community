@@ -1,0 +1,45 @@
+---
+version: '3'
+
+# Developer-mirror build tasks (included from taskfile.developer.yml).
+# No libs/sdk/reactor module and no template/ui exclusions.
+
+vars:
+  MAVEN_CMD: '$(command -v mvnd >/dev/null 2>&1 && echo mvnd || echo "./mvnw")'
+  ROOT_DIR: "{{.TASKFILE_DIR}}/.."
+
+tasks:
+  _default:
+    cmds:
+      - task --list-all
+
+  nuke:
+    desc: Delete the Maven build cache + stop mvn daemons
+    dir: "{{.ROOT_DIR}}"
+    cmds:
+      - 'rm -rf ~/.m2/build-cache'
+      - 'command -v mvnd >/dev/null 2>&1 && mvnd --stop || true'
+
+  clean:
+    desc: mvn clean
+    dir: "{{.ROOT_DIR}}"
+    cmds:
+      - '{{.MAVEN_CMD}} clean -am'
+
+  compile:
+    desc: mvn compile
+    dir: "{{.ROOT_DIR}}"
+    cmds:
+      - '{{.MAVEN_CMD}} compile -am'
+
+  package:
+    desc: mvn package -DskipTests
+    dir: "{{.ROOT_DIR}}"
+    cmds:
+      - '{{.MAVEN_CMD}} package -Dmaven.test.skip -am'
+
+  install:
+    desc: mvn install -DskipTests
+    dir: "{{.ROOT_DIR}}"
+    cmds:
+      - '{{.MAVEN_CMD}} install -Dmaven.test.skip -am'

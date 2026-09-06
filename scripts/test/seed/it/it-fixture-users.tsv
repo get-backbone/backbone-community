@@ -1,0 +1,4 @@
+# Tab-separated: email, display_name, password (IT / integration fixtures only; long-lived).
+alice@example.com	Alice Test	Rogue_One1
+bob@example.com	Bob Test	Rogue_One1
+eve@example.com	Eve Test	Rogue_One1

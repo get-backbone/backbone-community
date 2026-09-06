@@ -1,0 +1,72 @@
+---
+name: '51 ☘️ Code coverage'
+
+# yamllint disable-line rule:truthy
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # weekly Sunday 00:00 UTC
+  workflow_dispatch:
+
+# need actions: read to access artifacts from other jobs
+permissions:
+  contents: read
+  actions: read
+
+env:
+  GITHUB_MAVEN_USERNAME: ${{ vars.USER_BACKBONE_DEPLOY }}
+  GITHUB_MAVEN_TOKEN: ${{ secrets.PAT_BACKBONE_DEPLOY }}
+  BACKBONE_OAUTH2_REFRESH_TOKEN_ENCRYPTION_KEY: ${{ secrets.BACKBONE_OAUTH2_REFRESH_TOKEN_ENCRYPTION_KEY }}
+  GOOGLE_OAUTH2_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH2_CLIENT_ID }}
+  GOOGLE_OAUTH2_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH2_CLIENT_SECRET }}
+  LINKEDIN_OAUTH2_CLIENT_ID: ${{ secrets.LINKEDIN_OAUTH2_CLIENT_ID }}
+  LINKEDIN_OAUTH2_CLIENT_SECRET: ${{ secrets.LINKEDIN_OAUTH2_CLIENT_SECRET }}
+  SMALLRYE_CONFIG_SECRET_KEY: ${{ secrets.SMALLRYE_CONFIG_SECRET_KEY }}
+
+jobs:
+  code-coverage:
+    runs-on: ubuntu-latest
+    env:
+      # Dummy AWS credentials for Floci (prevent SDK from using real AWS)
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_REGION: us-west-2
+      AWS_DEFAULT_REGION: us-west-2
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0  # Needed for commit range checks
+          ref: main  # check out the branch, not detached HEAD
+      - parallel:
+          - uses: ./.github/actions/java-temurin
+          - uses: ./.github/actions/shell-tools
+      - parallel:
+          - uses: ./.github/actions/floci
+          - uses: ./.github/actions/postgres
+      - run: .github/scripts/configure-maven-github.sh
+      - run: task build:_install:ci
+      - run: task _clover:unit
+      - run: |
+          task dev:floci
+          task seed:floci
+          task seed:_it:cognito
+          task _clover:integration
+      - run: task _clover:report
+      - if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-report
+          path: target/site/clover/**
+          retention-days: 30
+          if-no-files-found: warn
+      # Extract coverage summary and generate job summary
+      - if: always()
+        id: coverage
+        run: .github/scripts/coverage-summary.sh target/site/clover/clover.xml
+      - if: always()
+        uses: codecov/codecov-action@v6
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: target/site/clover/clover.xml
+          codecov_yml_path: .github/.codecov.yml
+          fail_ci_if_error: false
+          handle_no_reports_found: true

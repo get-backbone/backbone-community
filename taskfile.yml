@@ -1,0 +1,43 @@
+---
+version: '3'
+
+# Developer-mirror Taskfile (promoted to taskfile.yml on 92 sync).
+# Omits infra/CDK, reactor publish, perf, and metrics (needs infra catalog).
+# template-service is scaffold-only — no dev:template wrapper.
+
+includes:
+  # install/setup tasks
+  lefthook: "scripts/taskfile.lefthook.yml"
+  bootstrap: "scripts/taskfile.bootstrap.yml"
+  seed: "scripts/taskfile.seed.yml"
+  # internal tasks (not exposed via cli)
+  _runtime: ".github/taskfile.runtime.yml"
+  _static: ".github/taskfile.static.yml"
+  # developer tasks
+  dev: "scripts/taskfile.development.yml"
+  build: ".github/taskfile.build.developer.yml"
+  test: ".github/taskfile.test.developer.yml"
+  smoke: "scripts/taskfile.smoke.yml"
+  # operational tasks
+  docker: "scripts/taskfile.docker.yml"
+  quarkus: "scripts/taskfile.quarkus.yml"
+
+tasks:
+  _default:
+    aliases: [default]
+    cmds:
+      - task --list-all
+
+  dev:bff:
+    desc: Quarkus dev - actor-bff
+    cmds:
+      - task: dev:application
+        vars:
+          APP: actor-bff
+
+  dev:web:
+    desc: Quarkus dev - web-actor
+    cmds:
+      - task: dev:ui
+        vars:
+          APP: web-actor

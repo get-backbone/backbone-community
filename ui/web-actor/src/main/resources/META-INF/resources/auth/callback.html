@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<!--
+  Auth browser entry: OAuth token exchange (LinkedIn/Google) and delegated redirects from auth-service
+  (e.g. LinkedIn link success/error). Backend URL must stay /auth/callback.html unless Java + IdP configs change.
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Signing you in…</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://rsms.me">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="icon" type="image/x-icon" href="../assets/favicon.ico">
+</head>
+<body>
+    <div class="container">
+        <div style="text-align: center; padding: 2rem;">
+            <h1 id="statusHeading">Signing you in…</h1>
+            <p id="statusMessage">Please wait.</p>
+        </div>
+    </div>
+
+    <script src="../config.js"></script>
+    <script src="../auth-utils.js"></script>
+    <script>
+        (function () {
+            const loginPath = () => `/${AppConfig.ROUTES.LOGIN}`;
+            const dashboardPath = () => `/${AppConfig.ROUTES.DASHBOARD}`;
+
+            function setStatus(heading, message) {
+                const h = document.getElementById('statusHeading');
+                const m = document.getElementById('statusMessage');
+                if (h) h.textContent = heading;
+                if (m) m.textContent = message;
+            }
+
+            function navigateAppPath(path, query) {
+                const target = new URL(path, window.location.origin);
+                if (query) {
+                    target.search = query;
+                }
+                window.location.assign(target.href);
+            }
+
+            function continueToDashboard() {
+                setStatus('Redirecting…', 'Taking you to the app.');
+                const params = new URLSearchParams(window.location.search);
+                params.delete('token');
+                navigateAppPath(dashboardPath(), params.toString());
+            }
+
+            async function runTokenExchange() {
+                setStatus('Signing you in…', 'Completing authentication.');
+                const urlParams = new URLSearchParams(window.location.search);
+                const token = urlParams.get('token');
+
+                if (!token || !token.trim()) {
+                    console.error('Missing token on auth entry URL');
+                    window.location.href = `${loginPath()}?error=missing_token`;
+                    return;
+                }
+
+                const response = await fetch(AppConfig.apiUrl('/auth/tokens/exchange'), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: token.trim() })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({ error: 'Token exchange failed' }));
+                    console.error('Token exchange failed:', errorData);
+                    window.location.href = `${loginPath()}?error=authentication_failed`;
+                    return;
+                }
+
+                const authResponse = await response.json();
+                AuthUtils.storeTokens(authResponse);
+                navigateAppPath(dashboardPath());
+            }
+
+            const params = new URLSearchParams(window.location.search);
+            const hasToken = params.get('token') && params.get('token').trim();
+            const hasError = params.get('error') && params.get('error').trim();
+
+            if (hasToken) {
+                runTokenExchange().catch(function (error) {
+                    console.error('Authentication failed:', error);
+                    window.location.href = `${loginPath()}?error=authentication_failed`;
+                });
+                return;
+            }
+
+            if (hasError) {
+                navigateAppPath(loginPath(), params.toString());
+                return;
+            }
+
+            if (params.toString()) {
+                continueToDashboard();
+                return;
+            }
+
+            console.error('Auth entry URL missing token and outcome params');
+            window.location.href = `${loginPath()}?error=missing_token`;
+        })();
+    </script>
+</body>
+</html>

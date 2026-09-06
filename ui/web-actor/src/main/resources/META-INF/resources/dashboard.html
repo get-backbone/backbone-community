@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Backbone - Actor Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://rsms.me">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+</head>
+
+<body class="dashboard-page">
+
+<script src="config.js"></script>
+<script src="auth-utils.js"></script>
+<script src="api-client.js"></script>
+<script src="actor-session.js"></script>
+<script src="common.js"></script>
+
+<div class="container">
+
+    <div id="linkedinMessage" style="margin-bottom: 12px;"></div>
+
+    <div class="dashboard-header">
+        <div class="dashboard-header-left">
+            <div class="dashboard-header-left-col">
+                <h1>Candidate Dashboard</h1>
+                <p>Roles that you are a good match for are displayed under 'Prospects'.<br/>To learn more and pursue, please select the role.</p>
+                <p>Roles that you have alreaady applied for are displayed under 'In-flight'.<br/>You can review the full history of your application and current status by<br/>selecting the role.</p>
+                <div class="profile-visibility-toggle">
+                    <div class="toggle-container">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="profileVisibilityToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <label class="toggle-label">Profile Enabled</label>
+                    </div>
+                    <p class="toggle-help-text">Existing matches will be honoured</p>
+                </div>
+            </div>
+            <div class="divider-vertical"></div>
+            <div class="dashboard-header-right-col">
+                <div class="health-widget">
+                    <div class="health-gauge">
+                        <svg class="gauge-svg" viewBox="0 0 120 120">
+                            <circle class="gauge-background" cx="60" cy="60" r="54" fill="none" stroke="var(--border)" stroke-width="8"/>
+                            <circle class="gauge-progress" cx="60" cy="60" r="54" fill="none" stroke="var(--accent)" stroke-width="8" 
+                                    stroke-dasharray="339.292" stroke-dashoffset="67.858" stroke-linecap="round" transform="rotate(-90 60 60)"/>
+                        </svg>
+                        <div class="gauge-value">80%</div>
+                    </div>
+                </div>
+                <div class="health-checklist">
+                    <ul class="health-list">
+                        <li class="health-item health-item-complete"> ✅ LinkedIn connected</li>
+                        <li class="health-item health-item-complete"> ✅ Cover letter uploaded</li>
+                        <li class="health-item health-item-pending"> 🔎  Consider expanding your location</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="table-section">
+        <h2 class="table-title">🔎&nbsp;&nbsp;Prospective Matches</h2>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Position</th>
+                    <th>
+                        Company
+                        <span class="help-icon" data-tooltip="Company identify is blind until you actively pursue this role">
+                            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="8" cy="8" r="7" fill="#3b82f6" stroke="none"/>
+                                <path d="M8 11V8" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+                                <circle cx="8" cy="5.5" r="0.75" fill="white"/>
+                            </svg>
+                        </span>
+                    </th>
+                    <th>Match Score</th>
+                    <th>Location</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr onclick="window.location.href='match-prospect.html'">
+                    <td>Senior Software Engineer</td>
+                    <td><span class="company-name-blurred">Amazon</span> - FAANG Tech Co</td>
+                    <td>92%</td>
+                    <td>London, UK</td>
+                    <td>2024-01-15</td>
+                </tr>
+                <tr onclick="window.location.href='match-prospect.html'">
+                    <td>Full Stack Developer</td>
+                    <td><span class="company-name-blurred">Eagle Drive</span> - Tech Startup</td>
+                    <td>88%</td>
+                    <td>Remote, UK</td>
+                    <td>2024-01-14</td>
+                </tr>
+                <tr onclick="window.location.href='match-prospect.html'">
+                    <td>Backend Engineer</td>
+                    <td><span class="company-name-blurred">British Airways</span> - UK Airline</td>
+                    <td>85%</td>
+                    <td>Hybrid, UK</td>
+                    <td>2024-01-13</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-section">
+        <h2 class="table-title">🚀&nbsp;&nbsp;Active Matches</h2>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Position</th>
+                    <th>Company</th>
+                    <th>Next Step</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr onclick="window.location.href='match-active.html'">
+                    <td>Senior Software Engineer</td>
+                    <td>Amazon</td>
+                    <td>Technical Round</td>
+                    <td>Interview Scheduled</td>
+                    <td>2024-01-10</td>
+                </tr>
+                <tr onclick="window.location.href='match-active.html'">
+                    <td>Full Stack Developer</td>
+                    <td>Eagle Drive Group</td>
+                    <td>Awaiting Response</td>
+                    <td>Under Review</td>
+                    <td>2024-01-08</td>
+                </tr>
+                <tr onclick="window.location.href='match-active.html'">
+                    <td>Backend Engineer</td>
+                    <td>British Airways</td>
+                    <td>Initial Review</td>
+                    <td>Application Sent</td>
+                    <td>2024-01-05</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-section">
+        <h2 class="table-title">🏛&nbsp;&nbsp;Archive</h2>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Position</th>
+                    <th>Company</th>
+                    <th>Next Step</th>
+                    <th>Status</th>
+                    <th>Applied Date</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+</div>
+
+<script src="dashboard.js"></script>
+
+</body>
+</html>
+

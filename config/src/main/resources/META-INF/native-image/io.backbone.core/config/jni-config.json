@@ -1,0 +1,12 @@
+[
+  {
+    "name": "org.xerial.snappy.SnappyNative",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  },
+  {
+    "name": "org.xerial.snappy.BitShuffleNative",
+    "allDeclaredConstructors": true,
+    "allDeclaredMethods": true
+  }
+]

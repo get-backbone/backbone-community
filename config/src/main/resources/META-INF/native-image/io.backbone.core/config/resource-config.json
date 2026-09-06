@@ -1,0 +1,25 @@
+{
+  "resources": {
+    "includes": [
+      {
+        "pattern": "org/xerial/snappy/native/.*"
+      },
+      {
+        "pattern": ".*libsnappyjava\\.dylib"
+      },
+      {
+        "pattern": ".*libsnappyjava\\.jnilib"
+      },
+      {
+        "pattern": ".*libsnappyjava\\.so"
+      },
+      {
+        "pattern": ".*libsnappyjava\\.dll"
+      },
+      {
+        "pattern": ".*libsnappyjava\\.a"
+      }
+    ]
+  },
+  "bundles": []
+}

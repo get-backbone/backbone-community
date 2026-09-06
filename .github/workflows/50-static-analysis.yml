@@ -1,0 +1,39 @@
+---
+name: '50 🔎 Static analysis'
+
+# yamllint disable-line rule:truthy
+on:
+  # Run weekly, Sunday afternoon PST
+  schedule:
+    - cron: '0 22 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: read
+  actions: write
+
+env:
+  NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+  OSS_INDEX_USER: ${{ secrets.OSS_INDEX_USER }}
+  OSS_INDEX_API_KEY: ${{ secrets.OSS_INDEX_API_KEY }}
+  GITHUB_MAVEN_USERNAME: ${{ vars.USER_BACKBONE_DEPLOY }}
+  GITHUB_MAVEN_TOKEN: ${{ secrets.PAT_BACKBONE_DEPLOY }}
+
+jobs:
+  static-analysis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/java-temurin
+      - uses: ./.github/actions/shell-tools
+      - run: .github/scripts/configure-maven-github.sh
+      - uses: actions/cache/restore@v5
+        with:
+          path: .dependency-check-cache
+          key: dependency-check-${{ runner.os }}-v3
+          restore-keys: |
+            dependency-check-${{ runner.os }}-
+
+      - run: task test:static -- -Doss.index.analyzer.enabled=true

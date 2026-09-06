@@ -1,0 +1,63 @@
+---
+version: '3'
+
+# use mvnd if available, otherwise (in CI) fallback to ./mvnw
+vars:
+  MAVEN_CMD: '$(command -v mvnd >/dev/null 2>&1 && echo mvnd || echo "./mvnw")'
+  ROOT_DIR: "{{.TASKFILE_DIR}}/.."
+  # exclude libs/sdk/reactor and scaffold-only module from test builds
+  EXCLUDED_MODULES: '-pl ''!libs/sdk/reactor,!services/template-service'''
+
+tasks:
+
+  _default:
+    cmds:
+      - task --list-all
+
+  ##################################
+  # test
+  ##################################
+
+  all:
+    desc: mvn verify
+    dir: "{{.ROOT_DIR}}"
+    cmds:
+      - '{{.MAVEN_CMD}} verify {{.EXCLUDED_MODULES}} -am'
+
+  unit:
+    desc: mvn test; no IT
+    dir: "{{.ROOT_DIR}}"
+    cmds:
+      - '{{.MAVEN_CMD}} test {{.EXCLUDED_MODULES}} -am {{.CLI_ARGS}}'
+
+  integration:
+    desc: mvn verify; IT only (MODULE=…)
+    dir: "{{.ROOT_DIR}}"
+    vars:
+      MODULE: '{{.MODULE | default ""}}'
+      PL_FLAG: '{{if eq .MODULE ""}}{{.EXCLUDED_MODULES}}{{else}}-pl ''{{.MODULE}}''{{end}}'
+    cmds:
+      - '{{.MAVEN_CMD}} verify {{.PL_FLAG}} -DskipUnitTests -am {{.CLI_ARGS}}'
+
+  # CI only (underscore = workflow entrypoint; same pattern as build:_native / _clover:*)
+  _integration:ci:
+    desc: CI Failsafe ITs only (no package/quarkus:build; MODULE=…)
+    dir: "{{.ROOT_DIR}}"
+    vars:
+      MODULE: '{{.MODULE | default ""}}'
+      PL_FLAG: '{{if eq .MODULE ""}}{{.EXCLUDED_MODULES}}{{else}}-pl ''{{.MODULE}}''{{end}}'
+    cmds:
+      - '{{.MAVEN_CMD}} {{.PL_FLAG}} test-compile failsafe:integration-test failsafe:verify -DskipUnitTests {{.CLI_ARGS}}'
+
+  static:
+    dir: "{{.ROOT_DIR}}"
+    desc: Static analysis + OWASP (no tests)
+    cmds:
+      - '{{.MAVEN_CMD}} -Pcode-quality verify {{.EXCLUDED_MODULES}} -am -DautoUpdate=false {{.CLI_ARGS}}'
+      - '{{.MAVEN_CMD}} -Pdependency-check dependency-check:aggregate -DautoUpdate=false {{.CLI_ARGS}}'
+
+  owasp-update:
+    dir: "{{.ROOT_DIR}}"
+    desc: Pull nightly OWASP dependency-check image to refresh local NVD cache
+    cmds:
+      - .github/scripts/owasp-update-docker.sh

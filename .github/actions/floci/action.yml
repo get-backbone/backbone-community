@@ -1,0 +1,23 @@
+---
+name: Start Floci
+description: Composite action to start Floci in GHA
+runs:
+  using: 'composite'
+  steps:
+    - shell: bash
+      env:
+        FLOCI_CLI_VERSION: '0.2.0'
+        FLOCI_INSTALL_DIR: /usr/local/bin
+      run: curl -fsSL https://floci.io/install.sh | sudo -E sh
+
+    # Pin matches compose.yml so CI and local use the same emulator.
+    - shell: bash
+      env:
+        AWS_ACCESS_KEY_ID: test
+        AWS_SECRET_ACCESS_KEY: test
+        AWS_REGION: us-west-2
+        AWS_DEFAULT_REGION: us-west-2
+        AWS_ENDPOINT_URL: http://localhost:4566
+      run: |
+        floci start --detach --image floci/floci:1.7.0
+        floci wait --timeout 2m

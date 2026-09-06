@@ -1,0 +1,12 @@
+---
+name: 00 🔐 Trufflehog secrets scan
+description: Scan the checkout with TruffleHog v3 (same engine as lefthook pre-push).
+runs:
+    using: composite
+    steps:
+        # Caller must checkout with fetch-depth: 0. Official action already passes --fail.
+        - name: TruffleHog
+          uses: trufflesecurity/trufflehog@v3.95.6
+          with:
+              extra_args: --exclude-paths=.github/actions/secret-scan/trufflehog-exclude.txt --log-level=-1
+              version: 3.95.6

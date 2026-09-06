@@ -1,0 +1,63 @@
+---
+version: '3'
+
+tasks:
+  _default:
+    cmds:
+      - task --list-all
+
+  ##################################
+  # email template metadata only currently
+  # this is the hook for additional seed data
+  ##################################
+
+  floci:
+    desc: Seed Floci development resources
+    dir: "{{.TASKFILE_DIR}}"
+    cmds:
+      - docker/floci-seed.sh
+
+  ##################################
+  # int test users (local)
+  ##################################
+
+  _it:cognito:
+    dir: "{{.TASKFILE_DIR}}"
+    cmds:
+      - test/seed/it/it-seed-cognito.sh
+
+  _it:postgres:
+    internal: true
+    dir: "{{.TASKFILE_DIR}}"
+    cmds:
+      - test/seed/it/it-sync-postgres.sh
+
+  it:up:
+    desc: Seed IT fixture users to Cognito and sync to Postgres
+    dir: "{{.TASKFILE_DIR}}"
+    cmds:
+      - task: _it:cognito
+      - task: _it:postgres
+
+  ##################################
+  # perf test users (ephemeral)
+  ##################################
+
+  perf:up:
+    desc: Seed perf fixture users to Cognito + Postgres
+    dir: "{{.TASKFILE_DIR}}"
+    cmds:
+      - test/seed/perf/perf-seed-cognito.sh {{.CLI_ARGS}}
+      - test/seed/perf/perf-sync-postgres.sh {{.CLI_ARGS}}
+
+  perf:down:
+    desc: Perf cleanup
+    dir: "{{.TASKFILE_DIR}}"
+    cmds:
+      - test/seed/perf/perf-cleanup.sh {{.CLI_ARGS}}
+
+  perf:reset:
+    desc: Perf reset preserving load users
+    dir: "{{.TASKFILE_DIR}}"
+    cmds:
+      - test/seed/perf/perf-cleanup.sh {{.CLI_ARGS}} --preserve-load

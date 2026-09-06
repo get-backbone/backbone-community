@@ -1,0 +1,4 @@
+layout:
+  -
+    - task dev:bff
+    - task dev:web

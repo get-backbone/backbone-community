@@ -1,0 +1,19 @@
+---
+name: 'Setup GraalVM JDK'
+description: 'Install GraalVM JDK with optional Maven dependency cache'
+inputs:
+  cache-maven:
+    description: 'Enable Maven dependency caching via setup-java'
+    required: false
+    default: 'true'
+
+runs:
+  using: composite
+  steps:
+    - name: Set up GraalVM JDK 25
+      if: runner.os == 'Linux'
+      uses: actions/setup-java@v5
+      with:
+        java-version: '25'
+        distribution: 'graalvm'
+        cache: ${{ inputs.cache-maven == 'true' && 'maven' || '' }}

@@ -1,0 +1,21 @@
+---
+version: '3'
+
+tasks:
+  _default:
+    cmds:
+      - task --list-all
+
+  ##################################
+  # Quarkus
+  ##################################
+
+  status:
+    desc: Quarkus dev processes (ports)
+    cmds:
+      - scripts/quarkus/port-manager.sh status
+
+  kill:
+    desc: Kill Quarkus dev PIDs
+    cmds:
+      - scripts/quarkus/port-manager.sh kill

@@ -1,0 +1,41 @@
+---
+version: '3'
+
+vars:
+  ROOT_DIR:
+    sh: git rev-parse --show-toplevel
+  MAVEN_CMD: '$(command -v mvnd >/dev/null 2>&1 && echo mvnd || echo "{{.ROOT_DIR}}/mvnw")'
+
+tasks:
+  package:
+    desc: Package static UI assets
+    dir: "{{.ROOT_DIR}}"
+    cmds:
+      - '{{.MAVEN_CMD}} package -pl ui/web-actor -am -Dmaven.test.skip'
+      - rm -rf ui/web-actor/target/static-dist
+      - mkdir -p ui/web-actor/target/static-dist
+      - cp -R ui/web-actor/target/classes/META-INF/resources/. ui/web-actor/target/static-dist/
+
+  deploy:
+    desc: Sync static assets to S3 and invalidate CloudFront
+    dir: "{{.ROOT_DIR}}"
+    cmds:
+      - |
+        set -euo pipefail
+        bucket_name="$(aws cloudformation list-exports --query "Exports[?Name=='Backbone-STATIC-EDGE-BUCKET-NAME'].Value | [0]" --output text)"
+        distribution_id="$(aws cloudformation list-exports --query "Exports[?Name=='Backbone-STATIC-EDGE-DISTRIBUTION-ID'].Value | [0]" --output text)"
+
+        aws s3 sync ui/web-actor/target/static-dist/ "s3://${bucket_name}/" --delete
+        while IFS= read -r -d '' file_path; do
+          relative_path="${file_path#ui/web-actor/target/static-dist/}"
+          case "${file_path}" in
+            *.html) content_type="text/html; charset=utf-8" ;;
+            *.css) content_type="text/css; charset=utf-8" ;;
+            *.js) content_type="application/javascript; charset=utf-8" ;;
+            *) content_type="application/octet-stream" ;;
+          esac
+          aws s3 cp "${file_path}" "s3://${bucket_name}/${relative_path}" \
+            --content-type "${content_type}" \
+            --metadata-directive REPLACE
+        done < <(find ui/web-actor/target/static-dist -type f -print0)
+        aws cloudfront create-invalidation --distribution-id "${distribution_id}" --paths "/*"

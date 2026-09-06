@@ -1,0 +1,15 @@
+{
+  "templateId": "welcome-email-v1",
+  "version": 1,
+  "channel": "EMAIL",
+  "content": {
+    "subject": "Welcome to Backbone!",
+    "htmlBody": "<!DOCTYPE html>\n<html>\n<head>\n    <title>Welcome {firstName}!</title>\n</head>\n<body>\n    <h1>Hello {firstName}!</h1>\n    <p>Welcome to Backbone. We are excited to have you on board.</p>\n    <p>Get started by completing your profile.</p>\n    <hr style=\"margin: 20px 0; border: none; border-top: 1px solid #eee;\">\n    <p style=\"font-size: 12px; color: #666;\">\n        If you no longer wish to receive these emails, you can <a href=\"{unsubscribeLink}\">unsubscribe here</a>.\n    </p>\n</body>\n</html>",
+    "textBody": "Hello {firstName}!\n\nWelcome to Backbone. We are excited to have you on board.\n\nGet started by completing your profile.\n\n---\n\nIf you no longer wish to receive these emails, you can unsubscribe here: {unsubscribeLink}",
+    "placeholders": ["firstName", "unsubscribeLink"]
+  },
+  "metadata": {
+    "owner": "system",
+    "createdAt": "${CREATED_AT}"
+  }
+}

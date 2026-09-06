@@ -1,0 +1,26 @@
+---
+version: '3'
+
+# Quiet copies of main tasks for git hooks (see .config/lefthook.yml). Prefer task test:unit / task cdk:test for local runs.
+# ui/ and config/ are not hooked here (no unit-test modules in those trees).
+#
+# Use the root reactor (-pl … -am from pom.xml), not -f services/pom.xml / -f applications/pom.xml. Sub-aggregators list
+# io.backbone.core libs as external dependencies; only the root reactor builds those modules from source so pre-push works
+# before GitHub Packages has the new version.
+
+vars:
+  MAVEN_CMD: '$(command -v mvnd >/dev/null 2>&1 && echo mvnd || echo "./mvnw")'
+  ROOT_DIR: "{{.TASKFILE_DIR}}/.."
+  WITH_NODE: 'bash {{.ROOT_DIR}}/scripts/bootstrap/nvm-env.sh'
+
+tasks:
+  _default:
+    cmds:
+      - task --list-all
+
+  install:
+    desc: Install git hooks configured in .config/lefthook.yml
+    dir: "{{.ROOT_DIR}}"
+    cmds:
+      - lefthook install
+      - bash scripts/bootstrap/patch-lefthook-hooks-term-dumb.sh

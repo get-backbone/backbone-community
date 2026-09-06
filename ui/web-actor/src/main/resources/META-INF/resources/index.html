@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Backbone</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://rsms.me">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+</head>
+
+<body class="homepage">
+
+<script src="config.js"></script>
+<script src="auth-utils.js"></script>
+<script src="api-client.js"></script>
+<script src="actor-session.js"></script>
+<script src="common.js"></script>
+
+<main class="homepage-main">
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">An enterprise-grade, zero-trust security-hardened platform for delivering services at scale</h1>
+            <p class="hero-description">Built on Quarkus and AWS, this platform powers a modern microservices
+                architecture designed for high availability, security, and performance.</p>
+            <div class="hero-actions">
+                <a href="register.html" class="btn btn-primary btn-large">* Register</a>
+                <a href="https://backbonehq.io/" class="hero-login-link" target="_blank">Backbone HQ <span class="arrow">></span></a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="hero-illustration" aria-label="A screenshot of the Backbone platform showing a dummy background">
+                <img src="https://linear.app/cdn-cgi/imagedelivery/fO02fVwohEs9s9UHFwon6A/25491170-d59e-427e-ee76-a69dcf080300/f=auto,dpr=2,q=95,fit=scale-down,metadata=none" alt="Backbone platform interface" />
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>Lorem ipsum dolor</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Ut enim ad minim</h3>
+                <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Duis aute irure</h3>
+                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script>
+// Redirect authenticated users to dashboard
+(async function() {
+    const authStatus = await checkAuthStatus();
+    if (authStatus.authenticated && authStatus.user) {
+        // User is authenticated, redirect to dashboard
+        window.location.href = 'dashboard.html';
+    }
+})();
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,868 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.backbone.core</groupId>
+    <artifactId>backbone-platform</artifactId>
+    <version>1.1.0</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>config</module>
+        <!-- reusable libraries -->
+        <module>libs</module>
+        <!-- REST controllers, DTOs etc. -->
+        <module>applications</module>
+        <!-- services -->
+        <module>services</module>
+        <!-- frontend assets (React, etc.) -->
+        <module>ui</module>
+    </modules>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/get-backbone/backbone-platform</url>
+        </repository>
+    </distributionManagement>
+
+    <properties>
+        <!--suppress UnresolvedMavenProperty -->
+        <nvd.api.key>${env.NVD_API_KEY}</nvd.api.key>
+        <!--suppress UnresolvedMavenProperty -->
+        <oss.index.user>${env.OSS_INDEX_USER}</oss.index.user>
+        <!--suppress UnresolvedMavenProperty -->
+        <oss.index.key>${env.OSS_INDEX_API_KEY}</oss.index.key>
+        <!-- Sonatype Guide free tier is credit-limited; keep OSS Index off locally, enable in weekly CI. -->
+        <oss.index.analyzer.enabled>false</oss.index.analyzer.enabled>
+
+        <!-- Build & Java setup -->
+        <java.version>25</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- Cross-cutting library versions (used by multiple aggregators) -->
+        <commons.lang3.version>3.20.0</commons.lang3.version>
+        <commons.collections4.version>4.5.0</commons.collections4.version>
+        <io.backbone.version>1.0.1</io.backbone.version>
+        <!-- Must match Quarkus BOM protobuf-java: Quarkus fast-jar loads protobuf parent-first, so RuntimeVersion
+             comes from that copy. libs/vendor/licence-runtime gencode (protoc) must use the same line. Do not bump above BOM
+             without checking quarkus.class-loading or Quarkus release notes. Keep in step with backbone-kit. -->
+        <protobuf.version>4.32.1</protobuf.version>
+        <!-- Override Quarkus BOM / Tika transitive BC 1.84 (OWASP CVSS>=7).
+             Coordinated 1.85 across jdk18on modules; bcprov alone has 1.85.2 — keep the set aligned. -->
+        <bouncycastle.version>1.85</bouncycastle.version>
+        <!-- Override Tika 3.3.0 transitive jsoup 1.22.1 (CVE-2026-71497). -->
+        <jsoup.version>1.23.1</jsoup.version>
+
+        <!-- Maven plugin versions -->
+        <maven.build.cache.version>1.2.2</maven.build.cache.version>
+        <maven.build.helper.version>3.6.1</maven.build.helper.version>
+        <maven.clean.version>3.5.0</maven.clean.version>
+        <maven.clover.version>4.5.2</maven.clover.version>
+        <maven.compiler.version>3.15.0</maven.compiler.version>
+        <maven.dependency.version>3.10.0</maven.dependency.version>
+        <maven.deploy.version>3.1.4</maven.deploy.version>
+        <maven.enforcer.version>3.6.2</maven.enforcer.version>
+        <maven.failsafe.version>3.5.5</maven.failsafe.version>
+        <maven.gpg.version>3.2.8</maven.gpg.version>
+        <maven.min.version>3.9.9</maven.min.version>
+        <maven.os.version>1.7.1</maven.os.version>
+        <maven.proguard.version>2.7.0</maven.proguard.version>
+        <maven.protobuf.version>0.6.1</maven.protobuf.version>
+        <maven.resources.version>3.5.0</maven.resources.version>
+        <maven.shade.version>3.6.2</maven.shade.version>
+        <maven.spotless.version>3.6.0</maven.spotless.version>
+        <maven.surefire.version>3.5.5</maven.surefire.version>
+        <maven.versions.version>2.21.0</maven.versions.version>
+        <jandex.version>3.5.3</jandex.version>
+
+        <!-- Profile / annotation-processor plugin versions -->
+        <checkstyle.version>3.6.0</checkstyle.version>
+        <lombok.version>1.18.46</lombok.version>
+        <owasp.version>13.0.0</owasp.version>
+        <pmd.version>3.28.0</pmd.version>
+        <proguard.base.version>7.9.1</proguard.base.version>
+        <proguard.core.version>9.3.2</proguard.core.version>
+        <spotbugs.version>4.10.2.0</spotbugs.version>
+        <takari.lifecycle.version>2.3.3</takari.lifecycle.version>
+
+        <!-- Quarkus BOM(s) -->
+        <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
+        <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
+        <quarkus.platform.version>3.36.1</quarkus.platform.version>
+        <quarkus-aws.sdk.version>3.17.0</quarkus-aws.sdk.version>
+        <quarkus.micrometer.registry.version>3.5.0</quarkus.micrometer.registry.version>
+        <!-- AWS SDK BOM -->
+        <aws.sdk.group-id>software.amazon.awssdk</aws.sdk.group-id>
+        <aws.sdk.artifact-id>bom</aws.sdk.artifact-id>
+        <aws.sdk.version>2.42.34</aws.sdk.version>
+
+        <!-- Test execution control properties -->
+        <!-- Empty so Surefire @{argLine} late-replacement resolves when Quarkus/JaCoCo do not set argLine (e.g. libs). -->
+        <argLine/>
+        <skipUnitTests>false</skipUnitTests>
+        <skipIntegrationTests>false</skipIntegrationTests>
+        <test.thread.count>4</test.thread.count>
+        <!-- Surefire: parallel classes for Mockito units. Override to 'none' when Clover is active. -->
+        <surefire.parallel>classes</surefire.parallel>
+        <!-- Failsafe: parallel classes; override to 'none' if @QuarkusTest classes interfere. -->
+        <failsafe.parallel>classes</failsafe.parallel>
+        <!-- JVM args for test execution - use custom property name to avoid Clover interference -->
+        <surefire.jvm.args>-Xshare:off --add-opens java.base/java.lang=ALL-UNNAMED -XX:+EnableDynamicAgentLoading -Djdk.instrument.traceUsage=false</surefire.jvm.args>
+        <!-- Disable parallel execution when Clover is active (not thread-safe) -->
+        <clover.active>false</clover.active>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- BOMs -->
+            <dependency>
+                <groupId>${aws.sdk.group-id}</groupId>
+                <artifactId>${aws.sdk.artifact-id}</artifactId>
+                <version>${aws.sdk.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>${quarkus.platform.group-id}</groupId>
+                <artifactId>${quarkus.platform.artifact-id}</artifactId>
+                <version>${quarkus.platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.quarkiverse.amazonservices</groupId>
+                <artifactId>quarkus-amazon-services-bom</artifactId>
+                <version>${quarkus-aws.sdk.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Common -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>${commons.collections4.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons.lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <!-- Quarkus / alignment pins -->
+            <!-- Align app lib with ${protobuf.version} (see comment on protobuf.version property). -->
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${protobuf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.quarkiverse.micrometer.registry</groupId>
+                <artifactId>quarkus-micrometer-registry-prometheus-v1</artifactId>
+                <version>${quarkus.micrometer.registry.version}</version>
+            </dependency>
+            <!-- Bouncy Castle 1.85: fixes CVE-2026-* on 1.84 (Tika crypto parser + Quarkus BOM pin). -->
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk18on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcutil-jdk18on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcpkix-jdk18on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcjmail-jdk18on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcmail-jdk18on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcpg-jdk18on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bctls-jdk18on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcmls-jdk18on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jsoup</groupId>
+                <artifactId>jsoup</artifactId>
+                <version>${jsoup.version}</version>
+            </dependency>
+            <!-- backbone-kit -->
+            <dependency>
+                <groupId>io.backbone</groupId>
+                <artifactId>backbone-common</artifactId>
+                <version>${io.backbone.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.backbone</groupId>
+                <artifactId>backbone-health-aws</artifactId>
+                <version>${io.backbone.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.backbone</groupId>
+                <artifactId>backbone-logging</artifactId>
+                <version>${io.backbone.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.backbone</groupId>
+                <artifactId>backbone-logging-api</artifactId>
+                <version>${io.backbone.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.backbone</groupId>
+                <artifactId>backbone-metrics</artifactId>
+                <version>${io.backbone.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.backbone</groupId>
+                <artifactId>backbone-metrics-api</artifactId>
+                <version>${io.backbone.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.backbone</groupId>
+                <artifactId>backbone-observability-api</artifactId>
+                <version>${io.backbone.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.backbone</groupId>
+                <artifactId>backbone-observability-aws</artifactId>
+                <version>${io.backbone.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.backbone</groupId>
+                <artifactId>backbone-security</artifactId>
+                <version>${io.backbone.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.backbone</groupId>
+                <artifactId>backbone-security-api</artifactId>
+                <version>${io.backbone.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.backbone</groupId>
+                <artifactId>backbone-throttle</artifactId>
+                <version>${io.backbone.version}</version>
+            </dependency>
+            <!-- libs/sdk -->
+            <dependency>
+                <groupId>io.backbone.core</groupId>
+                <artifactId>audit</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.backbone.core</groupId>
+                <artifactId>cache</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.backbone.core</groupId>
+                <artifactId>common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.backbone.core</groupId>
+                <artifactId>domain-clients</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.backbone.core</groupId>
+                <artifactId>domain-dtos</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.backbone.core</groupId>
+                <artifactId>security-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <!-- libs/platform -->
+            <dependency>
+                <groupId>io.backbone.core</groupId>
+                <artifactId>aws-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.backbone.core</groupId>
+                <artifactId>document</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.backbone.core</groupId>
+                <artifactId>notification</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.backbone.core</groupId>
+                <artifactId>oauth</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.backbone.core</groupId>
+                <artifactId>security-cognito</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <!-- libs/vendor -->
+            <dependency>
+                <groupId>io.backbone.core</groupId>
+                <artifactId>licence</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <repositories>
+        <repository>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/get-backbone/backbone-kit</url>
+        </repository>
+    </repositories>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- Quarkus packaging (bound on services / applications / ui aggregators) -->
+                <plugin>
+                    <groupId>${quarkus.platform.group-id}</groupId>
+                    <artifactId>quarkus-maven-plugin</artifactId>
+                    <version>${quarkus.platform.version}</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <!-- Disable JDWP debug port by default so multiple Quarkus apps can run
+                             without "Address already in use" on port 5005. Override with e.g.
+                             -Ddebug=5005 when debugging a single app. -->
+                        <debug>false</debug>
+                    </configuration>
+                </plugin>
+
+                <!-- Compilation -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.compiler.version}</version>
+                    <configuration>
+                        <source>${maven.compiler.source}</source>
+                        <target>${maven.compiler.target}</target>
+                        <release>${maven.compiler.source}</release>
+                        <compilerArgs>
+                            <!-- suppress the message only -->
+                            <arg>-Xlint:-options</arg>
+                        </compilerArgs>
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <version>${lombok.version}</version>
+                            </path>
+                        </annotationProcessorPaths>
+                    </configuration>
+                </plugin>
+
+                <!-- Build performance -->
+                <plugin>
+                    <groupId>io.takari.maven.plugins</groupId>
+                    <artifactId>takari-lifecycle-plugin</artifactId>
+                    <version>${takari.lifecycle.version}</version>
+                </plugin>
+
+                <!-- Clean plugin -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>${maven.clean.version}</version>
+                    <configuration>
+                        <filesets>
+                            <fileset>
+                                <directory>${project.build.directory}/maven-incremental</directory>
+                            </fileset>
+                        </filesets>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven.resources.version}</version>
+                    <configuration>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                        <propertiesEncoding>${project.build.sourceEncoding}</propertiesEncoding>
+                    </configuration>
+                </plugin>
+
+                <!-- Dependency management -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${maven.dependency.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${maven.deploy.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>versions-maven-plugin</artifactId>
+                    <version>${maven.versions.version}</version>
+                </plugin>
+
+                <!-- Testing -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven.surefire.version}</version>
+                    <configuration>
+                        <!-- @{argLine} lets Quarkus inject JVM params; surefire.jvm.args avoids Clover argLine interference -->
+                        <argLine>@{argLine} ${surefire.jvm.args}</argLine>
+                        <forkCount>1</forkCount>
+                        <reuseForks>true</reuseForks>
+                        <parallel>${surefire.parallel}</parallel>
+                        <threadCount>${test.thread.count}</threadCount>
+                        <useUnlimitedThreads>false</useUnlimitedThreads>
+                        <skipTests>${skipUnitTests}</skipTests>
+                        <systemPropertyVariables>
+                            <maven.home>${maven.home}</maven.home>
+                            <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                        </systemPropertyVariables>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${maven.failsafe.version}</version>
+                    <configuration>
+                        <!-- @{argLine} lets Quarkus inject JVM params; surefire.jvm.args avoids Clover argLine interference -->
+                        <argLine>@{argLine} ${surefire.jvm.args}</argLine>
+                        <forkCount>1</forkCount>
+                        <reuseForks>true</reuseForks>
+                        <parallel>${failsafe.parallel}</parallel>
+                        <threadCount>${test.thread.count}</threadCount>
+                        <useUnlimitedThreads>false</useUnlimitedThreads>
+                        <skipTests>${skipIntegrationTests}</skipTests>
+                        <forkedProcessExitTimeoutInSeconds>15</forkedProcessExitTimeoutInSeconds>
+                        <forkedProcessTimeoutInSeconds>300</forkedProcessTimeoutInSeconds>
+                        <systemPropertyVariables>
+                            <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
+                            <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                            <maven.home>${maven.home}</maven.home>
+                        </systemPropertyVariables>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.openclover</groupId>
+                    <artifactId>clover-maven-plugin</artifactId>
+                    <version>${maven.clover.version}</version>
+                    <configuration>
+                        <cloverDatabase>${maven.multiModuleProjectDirectory}/.clover/clover.db</cloverDatabase>
+                        <snapshot>${maven.multiModuleProjectDirectory}/.clover/atlassian-plugins-clover.snapshot</snapshot>
+                        <singleCloverDatabase>true</singleCloverDatabase>
+                    </configuration>
+                </plugin>
+
+                <!-- Jandex for Quarkus CDI bean discovery in library JARs -->
+                <plugin>
+                    <groupId>io.smallrye</groupId>
+                    <artifactId>jandex-maven-plugin</artifactId>
+                    <version>${jandex.version}</version>
+                </plugin>
+
+                <!-- Protobuf code generation -->
+                <plugin>
+                    <groupId>org.xolstice.maven.plugins</groupId>
+                    <artifactId>protobuf-maven-plugin</artifactId>
+                    <version>${maven.protobuf.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>${maven.build.helper.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>${maven.shade.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.wvengen</groupId>
+                    <artifactId>proguard-maven-plugin</artifactId>
+                    <version>${maven.proguard.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>${maven.gpg.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>${maven.enforcer.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <!-- Dependency management (runs at root level) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+            </plugin>
+
+            <!-- Enforcer (runs at root level to validate all modules) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <configuration>
+                    <rules>
+                        <requireMavenVersion>
+                            <version>${maven.min.version}</version>
+                        </requireMavenVersion>
+                        <requireJavaVersion>
+                            <version>${java.version}</version>
+                        </requireJavaVersion>
+                        <bannedRepositories>
+                            <message>Use HTTPS repositories only.</message>
+                            <bannedRepositories>
+                                <bannedRepository>http://*</bannedRepository>
+                            </bannedRepositories>
+                            <bannedPluginRepositories>
+                                <bannedPluginRepository>http://*</bannedPluginRepository>
+                            </bannedPluginRepositories>
+                        </bannedRepositories>
+                    </rules>
+                    <fail>true</fail>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>enforce</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <phase>validate</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+        <extensions>
+            <!-- Build cache extension -->
+            <extension>
+                <groupId>org.apache.maven.extensions</groupId>
+                <artifactId>maven-build-cache-extension</artifactId>
+                <version>${maven.build.cache.version}</version>
+            </extension>
+        </extensions>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>spotless</id>
+            <!-- Profile never auto-activates - only used when explicitly invoked -->
+            <!-- Usage: mvn spotless:apply or via git hook .lefthook.yml#pre-commit -->
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.diffplug.spotless</groupId>
+                        <artifactId>spotless-maven-plugin</artifactId>
+                        <version>${maven.spotless.version}</version>
+                        <configuration>
+                            <ratchetFrom>origin/main</ratchetFrom>
+                            <formats>
+                                <format>
+                                    <includes>
+                                        <include>.gitattributes</include>
+                                        <include>.gitignore</include>
+                                        <include>.yml</include>
+                                        <include>.json</include>
+                                        <include>.md</include>
+                                        <include>Dockerfile</include>
+                                    </includes>
+                                    <excludes>
+                                        <exclude>**/*.xml</exclude>
+                                    </excludes>
+                                    <trimTrailingWhitespace/>
+                                    <endWithNewline/>
+                                    <indent>
+                                        <spaces>true</spaces>
+                                    </indent>
+                                </format>
+                            </formats>
+                            <pom>
+                                <sortPom>
+                                    <expandEmptyElements>false</expandEmptyElements>
+                                    <nrOfIndentSpace>4</nrOfIndentSpace>
+                                </sortPom>
+                            </pom>
+                            <java>
+                                <!-- Run Cleanthat first for any structural cleanups... -->
+                                <cleanthat/>
+                                <!-- ...then apply Eclipse formatter using the shared project profile
+                                     so IDE and Spotless use the same Java formatting rules -->
+                                <eclipse>
+                                    <version>4.21</version>
+                                    <file>${maven.multiModuleProjectDirectory}/.config/.eclipse-java-format.xml</file>
+                                </eclipse>
+                                <importOrder/>
+                                <removeUnusedImports/>
+                                <trimTrailingWhitespace/>
+                                <endWithNewline/>
+                            </java>
+                            <lintSuppressions>
+                                <suppression name="eclipse jdt formatter"/>
+                            </lintSuppressions>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>gpg-sign</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <phase>verify</phase>
+                                <configuration>
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>code-quality</id>
+            <properties>
+                <skipUnitTests>true</skipUnitTests>
+                <skipIntegrationTests>true</skipIntegrationTests>
+            </properties>
+            <build>
+                <plugins>
+                    <!-- Linting and Static Analysis -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <version>${checkstyle.version}</version>
+                        <configuration>
+                            <configLocation>google_checks.xml</configLocation>
+                            <failsOnError>true</failsOnError>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <phase>verify</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                        <version>${pmd.version}</version>
+                        <configuration>
+                            <linkXRef>false</linkXRef>
+                            <failOnViolation>true</failOnViolation>
+                            <printFailingErrors>true</printFailingErrors>
+                            <rulesets>
+                                <ruleset>${maven.multiModuleProjectDirectory}/.config/.pmd-rules.xml</ruleset>
+                            </rulesets>
+                            <!-- Exclude generated sources (e.g. protobuf in libs/vendor/licence-runtime) from PMD -->
+                            <excludeRoots>
+                                <excludeRoot>target/generated-sources/protobuf</excludeRoot>
+                            </excludeRoots>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <phase>verify</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs-maven-plugin</artifactId>
+                        <version>${spotbugs.version}</version>
+                        <configuration>
+                            <excludeFilterFile>${maven.multiModuleProjectDirectory}/.config/.spotbugs-exclude.xml</excludeFilterFile>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                                <phase>verify</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- OWASP aggregate across reactor modules; invoked via task test:static (no -N: root-only scan is empty). -->
+        <profile>
+            <id>dependency-check</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                        <version>${owasp.version}</version>
+                        <configuration>
+                            <!-- NVD DB is refreshed via task test:owasp-update (nightly Docker image → .dependency-check-cache) -->
+                            <nvdValidForHours>168</nvdValidForHours>
+                            <nvdApiKey>${nvd.api.key}</nvdApiKey>
+                            <failBuildOnCVSS>7</failBuildOnCVSS>
+                            <dataDirectory>${maven.multiModuleProjectDirectory}/.dependency-check-cache</dataDirectory>
+                            <ossIndexUsername>${oss.index.user}</ossIndexUsername>
+                            <ossIndexPassword>${oss.index.key}</ossIndexPassword>
+                            <ossIndexAnalyzerEnabled>${oss.index.analyzer.enabled}</ossIndexAnalyzerEnabled>
+                            <!-- Align cache with weekly CI so a restored data dir does not re-burn credits every run -->
+                            <ossIndexAnalyzerCacheValidForHours>168</ossIndexAnalyzerCacheValidForHours>
+                            <suppressionFiles>
+                                <suppressionFile>${maven.multiModuleProjectDirectory}/.config/.dependency-check-suppressions.xml</suppressionFile>
+                            </suppressionFiles>
+
+                            <!-- Disable analyzers not needed for Java/Maven project -->
+                            <!-- .NET analyzers -->
+                            <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
+                            <msbuildAnalyzerEnabled>false</msbuildAnalyzerEnabled>
+                            <nugetconfAnalyzerEnabled>false</nugetconfAnalyzerEnabled>
+                            <nuspecAnalyzerEnabled>false</nuspecAnalyzerEnabled>
+                            <libmanAnalyzerEnabled>false</libmanAnalyzerEnabled>
+
+                            <!-- Node.js/JavaScript analyzers -->
+                            <nodeAnalyzerEnabled>false</nodeAnalyzerEnabled>
+                            <nodeAuditAnalyzerEnabled>false</nodeAuditAnalyzerEnabled>
+                            <yarnAuditAnalyzerEnabled>false</yarnAuditAnalyzerEnabled>
+                            <pnpmAuditAnalyzerEnabled>false</pnpmAuditAnalyzerEnabled>
+                            <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>
+
+                            <!-- Python analyzers -->
+                            <pyDistributionAnalyzerEnabled>false</pyDistributionAnalyzerEnabled>
+                            <pyPackageAnalyzerEnabled>false</pyPackageAnalyzerEnabled>
+                            <pipAnalyzerEnabled>false</pipAnalyzerEnabled>
+                            <pipfileAnalyzerEnabled>false</pipfileAnalyzerEnabled>
+                            <poetryAnalyzerEnabled>false</poetryAnalyzerEnabled>
+
+                            <!-- Ruby analyzers -->
+                            <rubygemsAnalyzerEnabled>false</rubygemsAnalyzerEnabled>
+                            <bundleAuditAnalyzerEnabled>false</bundleAuditAnalyzerEnabled>
+
+                            <!-- Other language analyzers -->
+                            <composerAnalyzerEnabled>false</composerAnalyzerEnabled>
+                            <cpanfileAnalyzerEnabled>false</cpanfileAnalyzerEnabled>
+                            <dartAnalyzerEnabled>false</dartAnalyzerEnabled>
+                            <cocoapodsAnalyzerEnabled>false</cocoapodsAnalyzerEnabled>
+                            <carthageAnalyzerEnabled>false</carthageAnalyzerEnabled>
+                            <golangDepEnabled>false</golangDepEnabled>
+                            <!-- Separate from golangDepEnabled; defaults to true in the plugin -->
+                            <golangModEnabled>false</golangModEnabled>
+                            <swiftPackageManagerAnalyzerEnabled>false</swiftPackageManagerAnalyzerEnabled>
+                            <swiftPackageResolvedAnalyzerEnabled>false</swiftPackageResolvedAnalyzerEnabled>
+                            <mixAuditAnalyzerEnabled>false</mixAuditAnalyzerEnabled>
+
+                            <!-- C/C++ analyzers -->
+                            <autoconfAnalyzerEnabled>false</autoconfAnalyzerEnabled>
+                            <cmakeAnalyzerEnabled>false</cmakeAnalyzerEnabled>
+                            <opensslAnalyzerEnabled>false</opensslAnalyzerEnabled>
+
+                            <!-- Repository analyzers (not using Artifactory or Nexus) -->
+                            <artifactoryAnalyzerEnabled>false</artifactoryAnalyzerEnabled>
+                            <nexusAnalyzerEnabled>false</nexusAnalyzerEnabled>
+                            <!-- Scans ~/.m2 from mvn install; not needed for project dependency scan -->
+                            <mavenInstallAnalyzerEnabled>false</mavenInstallAnalyzerEnabled>
+                            <archiveAnalyzerEnabled>false</archiveAnalyzerEnabled>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- ECR native images. Local dev keeps the default JVM / fast-jar via task build:package. -->
+        <profile>
+            <id>native</id>
+            <properties>
+                <quarkus.native.enabled>true</quarkus.native.enabled>
+                <!-- Native-image warns when heap is under ~5.67g (GC churn) -->
+                <quarkus.native.native-image-xmx>6656m</quarkus.native.native-image-xmx>
+                <!-- Bundled Ed25519 public key lives in libs/vendor/licence-runtime; Graal does not pull dependency META-INF resources into the image by default. -->
+                <!-- Snappy JNI libs for AMP remote-write (see config/META-INF/native-image). -->
+                <native.resources.base>META-INF/backbone-licence.pub,org/xerial/snappy/native/.*,.*libsnappyjava.*</native.resources.base>
+                <quarkus.native.resources.includes>${native.resources.base}</quarkus.native.resources.includes>
+            </properties>
+        </profile>
+    </profiles>
+</project>

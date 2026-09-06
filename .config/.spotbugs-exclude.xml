@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!-- Exclude generated protobuf classes (e.g. libs/vendor/licence-runtime target/generated-sources/protobuf) -->
+    <Match>
+        <Package name="~io\.backbone\.core\.licence\.infrastructure\.proto" />
+    </Match>
+    <Match>
+        <Class name="io.backbone.core.audit.auth.ResolutionContext"/>
+        <Method name="requestContext"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.core.audit.auth.ResolutionContext"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.services.audit.infrastructure.persistence.AuditEventRepository"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.services.template.infrastructure.persistence.TemplateEventRepository"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.core.security.infrastructure.http.ContainerRequestContextProducer"/>
+        <Method name="getRequestContext"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.services.actor.infrastructure.persistence.ActorRepository"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <!-- Redis cache envelope holds a JPA entity; copying would break identity/Hibernate semantics -->
+    <Match>
+        <Class name="io.backbone.services.actor.infrastructure.cache.CachedActorRecord"/>
+        <Method name="actorRecord"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.services.actor.infrastructure.cache.CachedActorRecord"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.core.oauth.infrastructure.cache.OidcExchangeTokenStore"/>
+        <Method name="generateToken"/>
+        <Bug pattern="DLS_DEAD_LOCAL_STORE"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.core.oauth.infrastructure.cache.PasswordResetTokenStore"/>
+        <Method name="generateToken"/>
+        <Bug pattern="DLS_DEAD_LOCAL_STORE"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.core.oauth.infrastructure.cache.OAuthLoginStateStore"/>
+        <Method name="issue"/>
+        <Bug pattern="DLS_DEAD_LOCAL_STORE"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.core.oauth.infrastructure.cache.OAuthLoginStateStore"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.core.document.parser.ParsedDocumentRecord"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.core.document.parser.ParsedDocumentRecord"/>
+        <Method name="metadata"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.core.document.parser.DocumentParseResult"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.core.document.parser.DocumentParseResult"/>
+        <Method name="metadata"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.services.notification.infrastructure.persistence.DeliveryStatusRepository"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.services.notification.infrastructure.persistence.NotificationRepository"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.services.notification.infrastructure.persistence.UnsubscribeRepository"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.services.notification.infrastructure.persistence.UnsubscribeTokenRepository"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.services.notification.infrastructure.provider.AwsSesProvider"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.core.aws.infrastructure.client.sqs.SqsQueueUrlResolver"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.core.audit.infrastructure.EventBridgeAuditEventDispatcher"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.services.audit.infrastructure.processing.AuditEventsQueueConsumer"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.services.notification.infrastructure.template.TemplateRenderingService"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.services.auth.domain.UserCredentialService"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.services.auth.domain.RegistrationService"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.services.auth.domain.PasswordResetService"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.core.security.infrastructure.cognito.CognitoAdminSession"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.core.security.infrastructure.cognito.CognitoPasswordResetSupport"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+</FindBugsFilter>
+

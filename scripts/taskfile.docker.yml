@@ -1,0 +1,45 @@
+---
+version: '3'
+
+# Compose services via CLI_ARGS (everything after --). Task requires the double dash:
+#   task docker:start -- postgres
+#   task docker:start -- postgres redis jaeger
+#   task docker:restart -- floci
+# Without --, Task treats the next token as another task name, not an argument.
+
+tasks:
+  _default:
+    cmds:
+      - task --list-all
+
+  status:
+    desc: Status - floci jaeger postgres redis prometheus grafana
+    cmds:
+      - scripts/docker/status.sh floci jaeger postgres redis prometheus grafana
+
+  start:
+    desc: Compose start (-- svc [svc...])
+    preconditions:
+      - sh: '[ -n "{{.CLI_ARGS}}" ]'
+        msg: "Usage: task docker:start -- <service> [<service> ...]"
+    cmds:
+      - for: {var: CLI_ARGS}
+        cmd: scripts/docker/services.sh start '{{.ITEM}}'
+
+  stop:
+    desc: Compose stop (-- svc [svc...])
+    preconditions:
+      - sh: '[ -n "{{.CLI_ARGS}}" ]'
+        msg: "Usage: task docker:stop -- <service> [<service> ...]"
+    cmds:
+      - for: {var: CLI_ARGS}
+        cmd: scripts/docker/services.sh stop '{{.ITEM}}'
+
+  restart:
+    desc: Compose restart (-- svc [svc...])
+    preconditions:
+      - sh: '[ -n "{{.CLI_ARGS}}" ]'
+        msg: "Usage: task docker:restart -- <service> [<service> ...]"
+    cmds:
+      - for: {var: CLI_ARGS}
+        cmd: scripts/docker/services.sh stop '{{.ITEM}}' && scripts/docker/services.sh start '{{.ITEM}}'

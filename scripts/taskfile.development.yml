@@ -1,0 +1,62 @@
+---
+version: '3'
+
+vars:
+  ROOT_DIR: "{{.TASKFILE_DIR}}/.."
+  PORTS_ENV: "../../config/quarkus-ports.env"
+  PORTS_EXPORT: "export $(grep -v '^#' {{.PORTS_ENV}} | xargs)"
+  PROJECT_VERSION:
+    sh: "MAVEN_OPTS='-XX:+DisableAttachMechanism' mvn help:evaluate -Dexpression=project.version -q -DforceStdout 2>/dev/null"
+  QUARKUS_DEV_OPTS: "-Dquarkus.console.enabled=false -Dquarkus.application.version={{.PROJECT_VERSION}}"
+
+tasks:
+  _default:
+    cmds:
+      - task --list-all
+
+  floci:
+    desc: Create Floci resources
+    dir: "{{.TASKFILE_DIR}}"
+    cmds:
+      - docker/floci-resources.sh
+
+  scaffold:
+    desc: Scaffold a new domain service
+    dir: "{{.ROOT_DIR}}"
+    cmds:
+      - |
+        if [ -z "{{.CLI_ARGS}}" ]; then
+          echo "Usage: task dev:scaffold -- <service-name> [--with-rds]"
+          echo "Examples: task dev:scaffold -- quote-engine"
+          echo "          task dev:scaffold -- search-service --with-rds"
+          exit 1
+        fi
+        scripts/scaffold/scaffold.sh {{.CLI_ARGS}}
+
+  service:
+    internal: true
+    silent: true
+    dir: '{{.ROOT_DIR}}/services/{{.SERVICE}}'
+    cmds:
+      - echo "🚀 Starting {{.SERVICE}} in Quarkus dev mode..."
+      - sh -c '{{.PORTS_EXPORT}} && quarkus dev {{.QUARKUS_DEV_OPTS}} 2>&1 || true'
+
+  application:
+    internal: true
+    silent: true
+    dir: '{{.ROOT_DIR}}/applications/{{.APP}}'
+    vars:
+      APP: '{{.APP}}'
+    cmds:
+      - echo "🚀 Starting {{.APP}} app in Quarkus dev mode..."
+      - sh -c '{{.PORTS_EXPORT}} && quarkus dev {{.QUARKUS_DEV_OPTS}} 2>&1 || true'
+
+  ui:
+    internal: true
+    silent: true
+    dir: '{{.ROOT_DIR}}/ui/{{.APP}}'
+    vars:
+      APP: '{{.APP}}'
+    cmds:
+      - echo "🚀 Starting {{.APP}} UI in Quarkus dev mode..."
+      - sh -c '{{.PORTS_EXPORT}} && quarkus dev {{.QUARKUS_DEV_OPTS}} 2>&1 || true'

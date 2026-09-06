@@ -1,0 +1,12 @@
+# ShellCheck defaults for backbone-core (see .config/lefthook.yml and 00-hygiene-check.yml).
+# Passed explicitly: shellcheck --rcfile=.config/.shellcheckrc --external-sources
+
+shell=bash
+external-sources=true
+
+# Sourced libs and dynamic paths (SC1090/SC1091) — covered by # shellcheck source= where practical.
+# SC2034 — config/constants in sourced scripts (e.g. Cognito pool names).
+# SC2155 — declare-and-assign style warnings in helper scripts.
+# SC2016 — intentional single-quoted sed/awk patterns.
+# SC2005 — prefer subshell over echo $(cmd); low risk in our scripts.
+disable=SC1090,SC1091,SC2034,SC2155,SC2016,SC2005

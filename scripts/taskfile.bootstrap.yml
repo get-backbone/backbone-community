@@ -1,0 +1,127 @@
+---
+version: '3'
+
+tasks:
+  _default:
+    cmds:
+      - task --list-all
+
+  ##################################
+  # Script Management - template
+  ##################################
+
+  script-template:
+    desc: "New script from template (--module for source-only modules)"
+    cmds:
+      - lib/template-helper.sh {{.CLI_ARGS}}
+
+  ##################################
+  # install tools
+  ##################################
+
+  toolchain:
+    desc: CLI toolchain install
+    dir: "{{.TASKFILE_DIR}}/.."
+    cmds:
+      - bash scripts/bootstrap/install-sdkman-tools.sh
+      - |
+        case "$(uname -s)" in
+          Darwin)
+            bash scripts/bootstrap/install-toolchain-mac-brew.sh
+            ;;
+          Linux)
+            bash scripts/bootstrap/install-toolchain-amzn-linux.sh
+            ;;
+          *)
+            echo "Unsupported OS: $(uname -s). Use macOS or Amazon Linux (AL2023 / AL2)." >&2
+            exit 1
+            ;;
+        esac
+
+  ##################################
+  # maven settings
+  ##################################
+
+  mvn:
+    desc: Configure maven settings to allow access to GitHub Packages
+    dir: "{{.TASKFILE_DIR}}/.."
+    cmds:
+      - bash scripts/bootstrap/maven-settings.sh
+
+  ##################################
+  # platform config
+  ##################################
+
+  platform-config:
+    desc: Interactive platform configuration (HA capacity etc.)
+    dir: "{{.TASKFILE_DIR}}/.."
+    cmds:
+      - bash scripts/bootstrap/platform-config.sh
+
+  ##################################
+  # .envrc
+  ##################################
+
+  dotenvrc:
+    desc: Generate .envrc.local secrets
+    dir: "{{.TASKFILE_DIR}}/.."
+    cmds:
+      - scripts/bootstrap/dotenvrc.sh
+
+  ##################################
+  # licence
+  ##################################
+
+  licence-install:
+    desc: Install licence file to /etc/backbone-config
+    dir: "{{.TASKFILE_DIR}}/.."
+    cmds:
+      - |
+        # shellcheck source=scripts/lib/common.sh
+        source scripts/lib/common.sh
+        require_cli gum
+        gum_panel "${GUM_PANEL_WIDTH}" "Install Backbone licence to /etc/backbone-config"
+        sudo mkdir -p /etc/backbone-config
+        licence_path="$(gum input --prompt "Path to Backbone licence: " --placeholder "/path/to/backbone-licence-you-received")"
+        sudo cp "$licence_path" /etc/backbone-config/backbone-licence
+        if [ -f "/etc/backbone-config/backbone-licence" ]; then
+          gum_panel "${GUM_PANEL_WIDTH}" \
+            "$(gum_success "✅ Licence file successfully installed to /etc/backbone-config/backbone-licence")"
+        else
+          gum_panel "${GUM_PANEL_WIDTH}" \
+            "$(gum_error "❌ Licence file not found!")"
+        fi
+
+  licence-secure:
+    desc: Backbone user + secure licence dir
+    dir: "{{.TASKFILE_DIR}}/.."
+    cmds:
+      - scripts/bootstrap/secure-backbone-client.sh
+
+  licence-verify:
+    desc: Verify licence JSON (--licence optional)
+    dir: "{{.TASKFILE_DIR}}/.."
+    cmds:
+      - scripts/bootstrap/verify-licence.sh {{.CLI_ARGS}}
+
+  ##################################
+  # github
+  ##################################
+
+  github-licence:
+    desc: Publish GHA secret BACKBONE_LICENCE from local licence file
+    dir: "{{.TASKFILE_DIR}}/.."
+    cmds:
+      - bash scripts/bootstrap/github-licence.sh
+
+  github-env:
+    desc: Publish GHA vars/secrets from .envrc.local
+    dir: "{{.TASKFILE_DIR}}/.."
+    cmds:
+      - bash scripts/bootstrap/github-env.sh
+
+  github-ci:
+    desc: Prompt and publish GHA vars/secrets for CI
+    dir: "{{.TASKFILE_DIR}}/.."
+    cmds:
+      - bash scripts/bootstrap/github-ci.sh

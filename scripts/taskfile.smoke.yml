@@ -1,0 +1,30 @@
+---
+# Manual AWS platform smoke checks (not CI). Use after monitoring / observability / governance refactors.
+version: '3'
+
+vars:
+  ROOT_DIR: "{{.TASKFILE_DIR}}/.."
+  PLATFORM_SMOKE_DIR: "{{.ROOT_DIR}}/scripts/aws/platform-smoke"
+
+tasks:
+  _default:
+    cmds:
+      - task --list-all
+
+  ##################################
+  # Platform (AWS)
+  ##################################
+
+  platform:
+    desc: AWS platform monitoring smoke
+    dir: "{{.ROOT_DIR}}"
+    env:
+      BACKBONE_STAGE_ENV: '{{.BACKBONE_STAGE_ENV | default "INT"}}'
+      AWS_REGION: '{{.AWS_REGION | default "us-west-2"}}'
+      AWS_EDGE_REGION: '{{.AWS_EDGE_REGION | default "us-east-1"}}'
+      OBSERVABILITY_EXPECTED: '{{.OBSERVABILITY_EXPECTED | default "true"}}'
+      GOVERNANCE_EXPECTED: '{{.GOVERNANCE_EXPECTED | default "true"}}'
+      SKIP_RUNTIME_CHECKS: '{{.SKIP_RUNTIME_CHECKS | default "false"}}'
+      CONTINUE_ON_FAIL: '{{.CONTINUE_ON_FAIL | default "false"}}'
+    cmds:
+      - bash "{{.PLATFORM_SMOKE_DIR}}/run-all.sh"

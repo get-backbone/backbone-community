@@ -1,0 +1,21 @@
+---
+name: 🐘 Start PostgreSQL
+description: Composite action to start PostgreSQL in GHA
+runs:
+    using: 'composite'
+    steps:
+        - name: Setup PostgreSQL
+          uses: ikalnytskyi/action-setup-postgres@v8
+          with:
+              username: postgres
+              password: postgres
+              database: backbone
+              port: 5432
+              postgres-version: '16'
+
+        - name: Set database environment variables
+          shell: bash
+          run: |
+            echo "DB_URL=jdbc:postgresql://localhost:5432/backbone" >> $GITHUB_ENV
+            echo "DB_USERNAME=postgres" >> $GITHUB_ENV
+            echo "DB_PASSWORD=postgres" >> $GITHUB_ENV

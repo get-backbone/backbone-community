@@ -1,0 +1,51 @@
+---
+# Developer mirror local backing services only.
+# Pre-baked native service images will be added here later (auth/actor/etc.).
+services:
+
+  floci:
+    image: floci/floci:1.7.0
+    container_name: floci
+    environment:
+      # Local AWS emulator on :4566 (S3, DynamoDB, SES, SSM, Cognito, CloudFormation, etc.).
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - FLOCI_HOSTNAME=localhost
+      - FLOCI_STORAGE_MODE=persistent
+      - FLOCI_STORAGE_PERSISTENT_PATH=/app/data
+      - QUARKUS_LOG_LEVEL=INFO
+    ports:
+      - "4566:4566"
+    volumes:
+      - "./.floci:/app/data"  # visible local folder .floci
+      - "/var/run/docker.sock:/var/run/docker.sock"
+
+  postgres:
+    image: postgres:18-alpine
+    container_name: postgres
+    command: ["postgres", "-c", "max_connections=200"]
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=backbone
+    ports:
+      - "5432:5432"
+    volumes:
+      - "./.postgres:/var/lib/postgresql"  # visible local folder .postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    command: ["redis-server", "--port", "6380"]
+    ports:
+      - "6380:6380"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "6380", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

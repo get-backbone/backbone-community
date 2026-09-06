@@ -1,0 +1,204 @@
+---
+name: '02 🚧 Build and test'
+
+# yamllint disable-line rule:truthy
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - .github/**
+      - .github/scripts/**
+      - config/**
+      - applications/**
+      - services/**
+      - libs/**
+  pull_request:
+    branches: [ main ]
+    types: [ opened, synchronize, reopened ]
+    paths:
+      - .github/**
+      - .github/scripts/**
+      - config/**
+      - applications/**
+      - services/**
+      - libs/**
+
+# need actions: read to access artifacts from other jobs
+permissions:
+  contents: read
+  actions: read
+  packages: read
+
+env:
+  GITHUB_MAVEN_USERNAME: ${{ vars.USER_BACKBONE_DEPLOY }}
+  GITHUB_MAVEN_TOKEN: ${{ secrets.PAT_BACKBONE_DEPLOY }}
+  BACKBONE_OAUTH2_REFRESH_TOKEN_ENCRYPTION_KEY: ${{ secrets.BACKBONE_OAUTH2_REFRESH_TOKEN_ENCRYPTION_KEY }}
+  GOOGLE_OAUTH2_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH2_CLIENT_ID }}
+  GOOGLE_OAUTH2_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH2_CLIENT_SECRET }}
+  LINKEDIN_OAUTH2_CLIENT_ID: ${{ secrets.LINKEDIN_OAUTH2_CLIENT_ID }}
+  LINKEDIN_OAUTH2_CLIENT_SECRET: ${{ secrets.LINKEDIN_OAUTH2_CLIENT_SECRET }}
+  SMALLRYE_CONFIG_SECRET_KEY: ${{ secrets.SMALLRYE_CONFIG_SECRET_KEY }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0  # Needed for commit range checks
+          ref: main  # check out the branch, not detached HEAD
+      - parallel:
+          - uses: ./.github/actions/java-temurin
+          - uses: ./.github/actions/shell-tools
+      - run: .github/scripts/configure-maven-github.sh
+      - run: task build:_install:ci
+      - uses: actions/upload-artifact@v7
+        with:
+          name: build-artifacts
+          path: |
+            **/target/*.jar
+            **/target/classes
+          retention-days: 1
+      - uses: actions/upload-artifact@v7
+        with:
+          name: maven-repo
+          path: ~/.m2/repository/io/backbone
+          retention-days: 1
+          if-no-files-found: warn
+
+  unit-test:
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0  # Needed for commit range checks
+          ref: main  # check out the branch, not detached HEAD
+      - parallel:
+          - uses: ./.github/actions/java-temurin
+          - uses: ./.github/actions/shell-tools
+      - run: .github/scripts/configure-maven-github.sh
+      - uses: actions/download-artifact@v8
+        with:
+          name: build-artifacts
+      - uses: actions/download-artifact@v8
+        with:
+          name: maven-repo
+          path: ~/.m2/repository/io/backbone
+      - run: task test:unit -- -Dtest.thread.count=4
+      - if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: unit-test-results
+          path: '**/target/surefire-reports/TEST-*.xml'
+
+  int-auth-test:
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    env:
+      # Dummy AWS credentials for Floci (prevent SDK from using real AWS)
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_REGION: us-west-2
+      AWS_DEFAULT_REGION: us-west-2
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0  # Needed for commit range checks
+          ref: main  # check out the branch, not detached HEAD
+      - parallel:
+          - uses: ./.github/actions/java-temurin
+          - uses: ./.github/actions/shell-tools
+          - uses: ./.github/actions/floci
+      - run: .github/scripts/configure-maven-github.sh
+      - uses: actions/download-artifact@v8
+        with:
+          name: build-artifacts
+      - uses: actions/download-artifact@v8
+        with:
+          name: maven-repo
+          path: ~/.m2/repository/io/backbone
+      - run: |
+          task dev:floci
+          task seed:_it:cognito
+          MODULE=services/auth-service task test:_integration:ci -- -Dtest.thread.count=4
+      - if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: int-auth-test-results
+          path: '**/target/failsafe-reports/TEST-*.xml'
+
+  int-rest-test:
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    env:
+      # Dummy AWS credentials so SDK clients do not probe the real default chain
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+      AWS_REGION: us-west-2
+      AWS_DEFAULT_REGION: us-west-2
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0  # Needed for commit range checks
+          ref: main  # check out the branch, not detached HEAD
+      - parallel:
+          - uses: ./.github/actions/java-temurin
+          - uses: ./.github/actions/shell-tools
+      # Postgres apt-installs; keep it out of the shell-tools parallel group (dpkg lock).
+      - uses: ./.github/actions/postgres
+      - run: .github/scripts/configure-maven-github.sh
+      - uses: actions/download-artifact@v8
+        with:
+          name: build-artifacts
+      - uses: actions/download-artifact@v8
+        with:
+          name: maven-repo
+          path: ~/.m2/repository/io/backbone
+      - run: |
+          MODULE=services/actor-service,services/audit-service,services/notification-service \
+            task test:_integration:ci -- -Dtest.thread.count=4
+      - if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: int-rest-test-results
+          path: '**/target/failsafe-reports/TEST-*.xml'
+
+  unit-test-reporter:
+    runs-on: ubuntu-latest
+    needs: [ unit-test ]
+    name: 📝 Unit test report
+    if: always()
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v8
+        with:
+          name: unit-test-results
+          path: test-results/unit
+      - uses: dorny/test-reporter@v3
+        with:
+          name: Unit Tests
+          path: test-results/unit/**/*.xml
+          reporter: java-junit
+
+  int-test-reporter:
+    runs-on: ubuntu-latest
+    needs: [ int-auth-test, int-rest-test ]
+    name: 📝 Integration test report
+    if: always()
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v8
+        with:
+          name: int-auth-test-results
+          path: test-results/integration/auth
+      - uses: actions/download-artifact@v8
+        with:
+          name: int-rest-test-results
+          path: test-results/integration/rest
+      - uses: dorny/test-reporter@v3
+        with:
+          name: Integration Tests
+          path: test-results/integration/**/*.xml
+          reporter: java-junit

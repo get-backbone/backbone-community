@@ -1,0 +1,30 @@
+{
+  // Increase line length to match Java formatter (150 characters)
+  "MD013": {
+    "line_length": 150,
+    "code_blocks": false,
+    "tables": false,
+    "headings": false,
+    "stern": false
+  },
+  // Disable duplicate heading check for CHANGELOG files (they naturally have duplicate section headings)
+  "MD024": {
+    "siblings_only": true,
+    "allow_different_nesting": true
+  },
+  // Allow fenced code blocks without language specification
+  "MD040": false,
+  // Disable first-line heading requirement (CHANGELOG and some README files don't start with H1)
+  "MD041": false,
+  // Allow emphasis to be used as headings (some documents use this pattern)
+  "MD036": false,
+  // Disable table column style checks (allow compact tables)
+  "MD060": false,
+  // Allow heading increments by more than one level (for nested structures)
+  "MD001": false,
+  // Allow headings without blank lines around them (for compact formatting)
+  "MD022": false,
+  // Allow lists without blank lines around them
+  "MD032": false
+}
+

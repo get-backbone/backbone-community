@@ -1,0 +1,106 @@
+---
+name: '00 🧩 Hygiene checks'
+
+# yamllint disable-line rule:truthy
+on:
+  push:
+    branches: [ main, develop, release/* ]
+
+jobs:
+  validate:
+    name: Hygiene & secret scan
+    runs-on: ubuntu-latest
+    if: github.actor != 'renovate[bot]'  # pointless to run hygiene checks on renovate dependency updates
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0  # Needed for commit range checks
+      - uses: ./.github/actions/shell-tools
+
+      # ---------------------------
+      # Secrets scanning
+      # ---------------------------
+      - uses: ./.github/actions/secret-scan
+
+      # ---------------------------
+      # Commit message convention
+      # ---------------------------
+      - run: cz check --rev-range HEAD~5..HEAD
+
+      # ---------------------------
+      # Branch naming convention
+      # ---------------------------
+      - name: 🔖 Validate branch naming
+        run: |
+          BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+          echo "Branch name: $BRANCH_NAME"
+          if [[ "$BRANCH_NAME" =~ ^(main|develop|release/.+)$ ]]; then
+            echo "✅ Mainline branch detected — skipping branch name validation."
+            exit 0
+          fi
+          if ! [[ "$BRANCH_NAME" =~ ^(feature|bugfix|hotfix|chore|release)/[a-z0-9._-]+$ ]]; then
+            echo "❌ Invalid branch name. Use e.g. feature/my-change or bugfix/fix-typo"
+            exit 1
+          fi
+
+      # ---------------------------
+      # Semantic PR title validation
+      # ---------------------------
+      - name: 🏷️ Validate PR title
+        if: (github.event_name == 'pull_request' || github.event_name == 'pull_request_target')
+        uses: amannn/action-semantic-pull-request@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            feat
+            fix
+            chore
+            docs
+            style
+            refactor
+            perf
+            test
+            ci
+            build
+          scopes: "*"
+          requireScope: false
+
+      # ---------------------------
+      # YAML linting
+      # ---------------------------
+      - name: 🧾 Lint YAML files
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          config_file: .config/.yamllint.yml  # optional, defaults are fine too
+
+      # ---------------------------
+      # Markdown linting
+      # ---------------------------
+      - name: 📝 Lint Markdown
+        uses: DavidAnson/markdownlint-cli2-action@v23
+        continue-on-error: true
+        with:
+          config: '.config/.markdownlint.jsonc'
+          fix: true
+          globs: |
+            **/*.md
+            !CHANGELOG.md
+            !.grafana/**
+            !.agents/**
+
+      # ---------------------------
+      # Shell script linting
+      # ---------------------------
+      - name: 🐚 ShellCheck
+        run: |
+          find scripts infra .github/scripts perf -name '*.sh' -type f \
+            -not -path '*/node_modules/*' -print0 \
+            | xargs -0 shellcheck --rcfile=.config/.shellcheckrc --external-sources
+
+      # ---------------------------
+      # Container privilege posture
+      # ---------------------------
+      - name: 🐳 Non-root Dockerfiles and non-privileged ECS
+        run: .github/scripts/check-container-privilege-posture.sh

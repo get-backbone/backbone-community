@@ -1,0 +1,50 @@
+---
+name: 'Shell CLI tools'
+description: >-
+  Taskfile, gum, pwgen, gettext (envsubst), commitizen, and awscli-local for
+  GitHub-hosted Linux runners.
+
+runs:
+  using: composite
+  steps:
+    - name: Install Taskfile
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        curl -sL https://taskfile.dev/install.sh | sh -s -- -b /usr/local/bin
+
+    - name: Install ShellCheck
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        # ubuntu-latest apt shellcheck is <0.10 and lacks --rcfile (see .config/.shellcheckrc).
+        SHELLCHECK_VERSION=0.11.0
+        # Extract into a temp dir so the tarball never pollutes the checkout root.
+        tmp_dir="$(mktemp -d)"
+        trap 'rm -rf "$tmp_dir"' EXIT
+        curl -fsSL "https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VERSION}/shellcheck-v${SHELLCHECK_VERSION}.linux.x86_64.tar.xz" \
+          | tar -xJ -C "$tmp_dir"
+        sudo install -m 0755 "$tmp_dir/shellcheck-v${SHELLCHECK_VERSION}/shellcheck" /usr/local/bin/shellcheck
+        shellcheck --version
+
+    - name: Install apt and Charm packages
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        sudo mkdir -p /etc/apt/keyrings
+        curl -fsSL https://repo.charm.sh/apt/gpg.key \
+          | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+        echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" \
+          | sudo tee /etc/apt/sources.list.d/charm.list
+        sudo apt-get update
+        sudo apt-get install -y gum pwgen gettext-base
+
+    - name: Install Commitizen
+      if: runner.os == 'Linux'
+      shell: bash
+      run: python3 -m pip install --quiet 'commitizen==4.13.7'
+
+    - name: Install awslocal
+      if: runner.os == 'Linux'
+      shell: bash
+      run: python3 -m pip install --quiet awscli-local

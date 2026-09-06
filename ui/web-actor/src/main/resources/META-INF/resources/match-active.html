@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Backbone - In-flight Match</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://rsms.me">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+</head>
+
+<body class="dashboard-page">
+
+<script src="config.js"></script>
+<script src="auth-utils.js"></script>
+<script src="api-client.js"></script>
+<script src="actor-session.js"></script>
+<script src="common.js"></script>
+<script src="match-active.js"></script>
+
+<div class="container">
+
+    <div class="match-header">
+        <div class="match-header-left">
+            <div class="match-header-left-col">
+                <h1>Active Match</h1>
+                <p>Tech Solutions Group has indicated they are interested in moving forward with your application.</p>
+                <p>Please see below for the current status, interview dates and next steps.</p>
+            </div>
+            <div class="divider-vertical"></div>
+            <div class="match-header-right-col">
+                <h2>Senior Software Engineer</h2>
+                <div class="job-meta">
+                    <span class="job-company">Tech Solutions Group</span>
+                    <span class="job-separator">•</span>
+                    <span class="job-location">London, UK</span>
+                    <span class="job-separator">•</span>
+                    <span class="job-type">Full-time</span>
+                </div>
+                <p>Provider of business management platform for field service businesses, particularly in the landscaping and commercial cleaning industries.</p>
+                <div class="match-actions">
+                    <button class="btn btn-pursue" type="button" disabled>Pursued</button>
+                    <button class="btn btn-pursue" type="button">Withdraw</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-section">
+        <div class="timeline-container">
+            <div class="timeline">
+                <div class="timeline-line">
+                    <div class="timeline-line-solid"></div>
+                    <div class="timeline-line-dotted"></div>
+                </div>
+                <div class="timeline-events">
+                    <div class="timeline-event completed">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-label timeline-label-below">Mutual Match</div>
+                    </div>
+                    <div class="timeline-event completed">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-label timeline-label-above">Introductory Call</div>
+                    </div>
+                    <div class="timeline-event current">
+                        <div class="timeline-dot timeline-dot-current"></div>
+                        <div class="timeline-label timeline-label-below">1st Round Interview</div>
+                    </div>
+                    <div class="timeline-event pending">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-label timeline-label-above">2nd Round Interview</div>
+                    </div>
+                    <div class="timeline-event pending">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-label timeline-label-below">Offer stage</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table class="data-table data-table-5col">
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Details</th>
+                    <th>Invite</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Offer stage</td>
+                    <td>Contact details will be shared</td>
+                    <td></td>
+                    <td>TBC</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>2nd Round Interview</td>
+                    <td>Zoom call with Architect</td>
+                    <td></td>
+                    <td>TBC</td>
+                    <td></td>
+                </tr>
+                <tr class="current-stage">
+                    <td>1st Round Interview</td>
+                    <td>Zoom call with Engineer</td>
+                    <td><a href="#" class="calendar-invite-link">Calendar invite 📆</a></td>
+                    <td>Scheduled</td>
+                    <td>2024-01-20</td>
+                </tr>
+                <tr>
+                    <td>Introductory Call</td>
+                    <td>Phone call with TA</td>
+                    <td><a href="#" class="calendar-invite-link">Calendar invite 📆</a></td>
+                    <td>Completed</td>
+                    <td>2024-01-18</td>
+                </tr>
+                <tr>
+                    <td>Mutual Match</td>
+                    <td>Employer and candidate match</td>
+                    <td></td>
+                    <td>Completed</td>
+                    <td>2024-01-10</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="job-description">
+        <div class="job-content">
+            <div class="job-content-preview">
+                <h3>About the Role</h3>
+                <p>We are seeking an experienced Senior Software Engineer to join our dynamic engineering team. You will be responsible for designing, developing, and maintaining scalable software solutions that power our platform. This role offers the opportunity to work on challenging technical problems while collaborating with a talented team of engineers.</p>
+            </div>
+            <div class="job-content-expanded" id="jobContentExpanded">
+                <h3>Key Responsibilities</h3>
+            <ul>
+                <li>Design and implement robust, scalable backend systems using modern technologies</li>
+                <li>Collaborate with cross-functional teams to deliver high-quality features</li>
+                <li>Mentor junior engineers and contribute to technical decision-making</li>
+                <li>Participate in code reviews and maintain high coding standards</li>
+                <li>Optimize application performance and ensure system reliability</li>
+            </ul>
+
+            <h3>Requirements</h3>
+            <ul>
+                <li>5+ years of professional software development experience</li>
+                <li>Strong proficiency in Java, Spring Boot, and related frameworks</li>
+                <li>Experience with cloud platforms (AWS, Azure, or GCP)</li>
+                <li>Solid understanding of database design and optimization</li>
+                <li>Experience with microservices architecture and distributed systems</li>
+                <li>Excellent problem-solving skills and attention to detail</li>
+            </ul>
+
+            <h3>Nice to Have</h3>
+            <ul>
+                <li>Experience with containerization technologies (Docker, Kubernetes)</li>
+                <li>Knowledge of event-driven architectures and message queues</li>
+                <li>Familiarity with CI/CD pipelines and DevOps practices</li>
+                <li>Previous experience in a fast-paced startup environment</li>
+            </ul>
+            </div>
+            <button class="job-content-toggle" type="button" id="jobContentToggle">
+                <span class="toggle-text-expand">Show more</span>
+                <span class="toggle-text-collapse">Show less</span>
+            </button>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
+

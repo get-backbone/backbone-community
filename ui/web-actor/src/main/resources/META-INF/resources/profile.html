@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Backbone - Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://rsms.me">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+</head>
+
+<body class="profile-page">
+
+<script src="config.js"></script>
+<script src="auth-utils.js"></script>
+<script src="api-client.js"></script>
+<script src="actor-session.js"></script>
+<script src="common.js"></script>
+
+<div class="container">
+
+    <h1 style="margin-bottom: 32px;">Profile</h1>
+    
+    <div id="loading" class="loading">Loading profile...</div>
+    <div id="error" class="error"></div>
+    <div id="profile"></div>
+    
+    <div class="nav-links" style="margin-top: 32px; display: flex; flex-direction: row; gap: 12px;">
+        <a href="dashboard.html" class="btn btn-dashboard">← Dashboard</a>
+    </div>
+
+</div>
+
+<script src="profile.js"></script>
+
+</body>
+</html>
+
