@@ -1,8 +1,8 @@
 ---
 name: '02 🚧 Build and test'
 
-# Developer-mirror CI (promoted from 02-build-test.developer.yml by 92-mirror-developer).
-# Exercises template-service / actor-bff / web-actor — not core auth/rest service splits.
+# Developer-mirror CI (*.yml.disabled so core Actions ignores it;
+# 92-mirror-developer promotes this file to 02-build-test.yml).
 
 # yamllint disable-line rule:truthy
 on:

@@ -1,3 +1,16 @@
+## v2.0.7 (2026-09-08)
+
+### Fix
+
+- **ci**: keeping -developer workflow file alongside core components
+- **ci**: keep developer 02 workflow outside core Actions
+
+## v2.0.6 (2026-09-08)
+
+### Fix
+
+- **ci**: developer build-test workflow and sdk-bundle throttle dep
+
 ## v2.0.5 (2026-09-08)
 
 ### Fix
