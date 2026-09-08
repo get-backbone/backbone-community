@@ -88,6 +88,12 @@ assert_no_host_network_mode() {
 main() {
     local dockerfile
 
+    # Developer mirror excludes infra/ (see developer-mirror.rsync-filter).
+    if [[ ! -d "${REPO_ROOT}/infra" ]]; then
+        echo "SKIP: no infra/ directory (nothing to check)"
+        return 0
+    fi
+
     shopt -s nullglob
     local -a dockerfiles=("${REPO_ROOT}/infra/docker"/Dockerfile*)
     if ((${#dockerfiles[@]} == 0)); then

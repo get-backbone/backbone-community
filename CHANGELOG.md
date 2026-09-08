@@ -579,6 +579,109 @@
 
 - **publish**: major bump to trigger reactor uber jar publish
 
+## v2.0.0 (2026-09-08)
+
+### BREAKING CHANGE
+
+- licence file format adding tier
+
+### Feat
+
+- **sdk**: hide licence pairing behind shared obfuscated tripwires
+- **sdk**: harden common with api/impl split and obfuscation
+- **sdk**: harden audit with api/impl split and obfuscation
+- **sdk**: harden domain-clients AuthActorGateway behind api/impl
+- **sdk**: harden security-api with api/impl split and obfuscation
+- **sdk**: harden cache with Aidsfuscator and shared config base
+- **sdk**: pair reactor with licence jar digest at startup
+- **licence**: harden runtime with Aidsfuscator and api/impl split
+- **ci**: add backbone-developer mirror workflow and adjacent configs
+- **infra**: optional external OAuth with NAT gate and tighter ECS egress
+- **infra**: harden RuntimeStack from Well-Architected review
+- **bootstrap**: add github-ci for remaining Actions secrets
+- **bootstrap**: publish GHA env from .envrc.local
+- **licence**: load signed licence from file, not env
+- **bootstrap**: add tier-aware platform-config wizard and shared gum theme
+- **licence**: add commercial tier to licence payload
+- **infra**: harden DatastoreStack from Well-Architected review
+- **infra**: add opt-in customer-managed KMS per domain
+- **audit**: route events through EventBridge to SQS ingest
+- **metrics**: add audit SQS panels to Platform Ops dashboard
+- **audit**: Immutable central audit archive with S3 COMPLIANCE mode bucket and stage-aware retention
+- **hateoas**: rolling out HATEOAS so that HAL is now the authenticated session root across the UI
+- **actor-bff**: add HAL actor profile with LinkedIn link affordance
+- **auth**: adding Google OAuth2 impl 'Login with Google'
+- **auth**: add Google OAuth sign-in and refactor auth domain
+- **auth**: add forgotten-password reset via opaque token and SES
+- **infra**: wire STAGE/PROD pulls from central INT ECR
+
+### Fix
+
+- **ci**: skip privilege posture check when infra/ is absent
+- **sdk**: skip licence pairing on GitHub Actions for Quarkus ITs
+- **sdk**: skip licence pairing under Surefire without a kill-switch prop
+- **sdk**: few minor bug fixes related to recent hardening and obfuscation
+- **ci**: sync github-licence.sh to developer mirror
+- **ci**: prune developer mirror with delete-excluded and promote taskfiles
+- **ci**: allow same-version mirror re-sync without moving tags
+- **ci**: tighten developer mirror allowlist and share mirror-repos trigger
+- **infra**: fetch Cognito client secret at rotation validate step
+- **infra**: disable Cognito Hosted UI OAuth on app clients
+- **infra**: tighten ALB and Postgres SG outbound rules
+- **ci**: wire Google OAuth secrets into Actions env maps
+- **auth**: persist Cognito email on social user create
+- **deps**: downgrade Quarkus to 3.36.1 and bump backbone-kit to 1.0.1
+- **deps**: patch Quarkiverse prometheus-v1 for Quarkus 3.38
+- **ci**: grant contents write for ECS promote dispatches
+- **deps**: align Quarkus and protobuf with backbone-kit
+
+### Refactor
+
+- **logging**: minor log cleanup etc
+- **audit**: streamline ActorIdResolutionChain resolve loop
+- **sdk**: extract AuthenticatedUserExtractor from TokenAuthenticationFilter
+- **sdk**: rename reactor package publish to sdk-bundle
+- **naming**: settled on backbone-developer instead of -community
+- **naming**: making space in the gha workflow chain so repo mirrors are adjacent
+- **libs**: split modules into sdk, platform, and vendor
+- **packaging**: spotless seems to have missed some package optimisations on last commit
+- **packaging**: minor standardisation on package conventions
+- **packaging**: minor standardisation on package conventions
+- **packaging**: minor standardisation on package conventions
+- **packaging**: minor standardisation on package conventions
+- **document**: minor packaging issues
+- **document**: extract Tika parsing engine into libs/document
+- **notification**: move SES provider and Qute rendering into libs/notification
+- **notification**: removing redundant REST presentation package; legacy hangover
+- **notification**: move identified notification-service classes to libs/notifications module
+- **spotless**: reordering of import statements only; cursor being a chump
+- **oauth**: move Google/LinkedIn engines into libs/oauth providers
+- **oauth**: extract OAuth handoff primitives into libs/oauth
+- **security**: move Cognito token generator and refresh encryption
+- **security**: move Cognito providers from auth-service into libs
+- **security**: extract Cognito helpers from auth-service into libs
+- **infra**: env-scoped CloudWatch log retention
+- **infra**: move static site S3 buckets into DatastoreStack
+- **security**: collapse remote service auth paths and cover them
+- **bootstrap**: rename licence-github to github-licence
+- **infra**: synth a single BACKBONE_STAGE_ENV stage
+- **licence**: gated enterprise features by licence tier
+- **licence**: moving licence verification out to client accessible path/task
+- **licence**: removed duplicate human-readable verify when json is now available to human/machine
+- **common**: centralize Jackson via JsonFacade
+- **owasp**: flipping owasp db to docker to avoid the nightmare flaky server pulls
+- **audit**: decouple audit from http client and use sqs to guarantee delivery
+- **audit**: restrict mutate operations on audit postgres table
+- **logging**: chore debug statement cleanup only
+- **ui**: drop redirectUrl and needless reference web app complexity and tight coupling
+- **ci**: ensure infra and static site deployments work across multiple environments
+- **ci**: select INT or STAGE for infra hibernate
+- **ci**: split ECS promote into INT/STAGE/PROD workflows
+
+### Perf
+
+- **ci**: reuse Surefire/Failsafe forks and raise test threads
+
 ## v1.1.0 (2026-08-11)
 
 ### Feat
