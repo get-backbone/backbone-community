@@ -1,3 +1,9 @@
+## v2.0.12 (2026-09-08)
+
+### Fix
+
+- **sdk**: keep Quarkus Redis/cache deps on published sdk-bundle POM
+
 ## v2.0.11 (2026-09-08)
 
 ### Fix
