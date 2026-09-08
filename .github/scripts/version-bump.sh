@@ -85,8 +85,7 @@ main() {
     # Include root pom.xml explicitly: some Git versions' '**/pom.xml' pathspec
     # matches nested modules only and skips the aggregator POM.
     git add -- .cz.toml CHANGELOG.md pom.xml '**/pom.xml'
-    # Subject is what GitHub's commit list and 91's [sync] copy show. [skip actions] is GitHub-native
-    # it must stay in this message so 02 does not re-run on service POM updates
+    # [skip actions] is GitHub-native; it must stay in this message so 02 does not re-run on service POM updates
     git commit -m "$(
         cat << EOF
 chore(release): version ${next_version}. See

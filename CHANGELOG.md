@@ -579,6 +579,12 @@
 
 - **publish**: major bump to trigger reactor uber jar publish
 
+## v2.0.2 (2026-09-08)
+
+### Fix
+
+- **ci**: mvn flatten was skipped by build cache; now doing single clean deploy to avoid
+
 ## v2.0.1 (2026-09-08)
 
 ### Fix
