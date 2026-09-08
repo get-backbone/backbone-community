@@ -85,16 +85,9 @@ main() {
     # Include root pom.xml explicitly: some Git versions' '**/pom.xml' pathspec
     # matches nested modules only and skips the aggregator POM.
     git add -- .cz.toml CHANGELOG.md pom.xml '**/pom.xml'
-    # [skip actions] is GitHub-native; it must stay in this message so 02 does not re-run on service POM updates
-    git commit -m "$(
-        cat << EOF
-chore(release): version ${next_version}. See
-
-https://github.com/get-backbone/backbone-platform/blob/v${next_version}/CHANGELOG.md
-
-[skip actions]
-EOF
-    )" --signoff --no-verify
+    # [skip actions] is GitHub-native; it must stay in this message so 02 does not re-run on service POM updates.
+    # Point at repo-root CHANGELOG.md (relative) so mirrors do not advertise a private backbone-platform URL.
+    git commit -m "chore(release): version ${next_version}. See CHANGELOG.md [skip actions]" --signoff --no-verify
     git tag -s "v${next_version}" -m "Release v${next_version}"
 
     echo "bumped=true" >> "$github_output"

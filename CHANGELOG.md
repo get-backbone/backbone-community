@@ -1,583 +1,8 @@
-## Forge-era 1.0.0 (2026-07-25)
-
-### BREAKING CHANGE
-
-- **rebrand**: rename platform Forge → Backbone. Maven coordinates `io.forge.core:forge-platform` → `io.backbone.core:backbone-platform`; Java packages `io.forge.{core,services,application}` → `io.backbone.*`; app config keys `forge.*` → `backbone.*` and env vars `FORGE_*` → `BACKBONE_*`; CDK stacks/resources `forge-*` → `backbone-*`; GitHub Packages registry `get-forge/forge-platform` → `get-backbone/backbone-platform`. The external `forge-kit` dependency (`io.forge.kit.*`, `io.forge:forge-*`, `io.forge.version`, `forge.observability.*`) is unchanged.
-- **version**: reset project version `2.4.0` → `1.0.0` for the rebrand. Changelog history below is retained.
-
-## Forge-era 2.4.0 (2026-07-07)
-
-### Feat
-
-- **infra**: improve CloudWatch dashboard labels and panel order
-- **infra**: add runtime and datastore CloudWatch monitoring
+## v2.0.3 (2026-09-08)
 
 ### Fix
 
-- **xray**: logging added for tracing purposes
-- **infra**: re-run AMG provisioner after SigV4 datasource fix
-- **infra**: correct AMG Prometheus SigV4 and revert Phase 9 env overrides
-
-### Refactor
-
-- **bloat**: Cursor adding bloat when simplest action is to teardown and rebuild
-
-## Forge-era 2.3.2 (2026-07-03)
-
-### Fix
-
-- **no-op**: last fix was pom-only which does not (by design) trigger ECS image rebuild
-
-## Forge-era 2.3.1 (2026-07-03)
-
-### Fix
-
-- **prometheus**: picking up forge-kit mod to differentiate between service collisions on CloudWatch Prometheus metrics push
-- **infra**: append remote_write only to AMP PrometheusEndpoint
-- **infra**: correct AMP remote-write URL and hibernate observability
-
-## Forge-era 2.3.0 (2026-07-03)
-
-### Feat
-
-- **infra**: add observability VPC endpoints for NAT-less subnets
-
-### Fix
-
-- **config**: use formatted JSON exception output on deployed profiles
-- **config**: register Redis cache DTOs for native image reflection
-- **governance**: route ALB access logs to SSE-S3 bucket
-- **monitoring**: use per-stack CloudWatch dashboard names
-- **governance**: grant CloudTrail KMS access and extract IAM utils
-- **ci**: install Node via nvm in infra workflows
-- **ci**: use setup-node when nvm lacks .nvmrc version
-
-## Forge-era 2.2.0 (2026-07-02)
-
-### Feat
-
-- **governance**: add governance evidence stack and ADR-0027
-- **monitoring**: add per-stack CloudWatch monitoring and SNS alerts
-- **observability**: wire forge-kit export and ECS runtime integration
-- **observability**: add AMP, AMG, and Grafana dashboard provisioning
-
-### Fix
-
-- **test**: load metrics config in auth-service integration tests
-- **governance**: add evidence access logging and L2 ALB log delivery
-- **observability**: harden local dev config and bump forge-kit
-- **ci**: trim unused OWASP suppression rules for forge-core
-- **ci**: align OWASP with forge-kit aggregate scan pattern
-- **deps**: adopt forge-kit 1.2.1 forge-logging
-- **ci**: install ShellCheck 0.11 in hygiene workflow runners
-
-### Refactor
-
-- **utils**: consolidate infra utils by AWS resource and Forge stage
-- **bash**: add validate_dependencies to test seed scripts
-- **bash**: align grafana config and helpers with module template
-- **bash**: align metrics scripts with template conventions
-- **bash**: add Main section separator before main() entrypoints
-- **bash**: wrap Quarkus container entrypoint in main()
-- **bash**: standardize perf scripts layout to template conventions
-- **bash**: standardize scripts/licence layout to template conventions
-- **bash**: standardize .github/scripts layout to template conventions
-- **bash**: standardize port-manager and scripts/test layout
-- **bash**: align common.sh with module template layout
-- **bash**: standardize scripts/docker layout to template conventions
-- **bash**: standardize scripts/aws layout to template conventions
-- **bash**: standardize script templates and bootstrap layout
-- **bash**: polish portability follow-ups across scripts
-- **bash**: fixing remaining concerns and removing continue-on-error: true from CI hygience check gate
-- **bash**: cleanup of required cli tools approach
-- **scripts**: consolidate update_envrc_key in common.sh
-- **nvm**: removing proliferation of fixed nvm use directive; only required for infra module
-
-## Forge-era 2.1.0 (2026-06-20)
-
-### Feat
-
-- **throttle**: add Redis-backed distributed rate limiting
-- **cache**: add Redis-backed distributed caching for domain services
-- **redis**: ElastiCache Redis cluster infrastructure
-- **CloudFront**: migrate ui web module to CloudFront distribution + S3 (instead of ECS)
-
-### Fix
-
-- **cache**: keep qute-cache on Caffeine when Redis is the default backend
-- **deps**: update quarkus platform updates to v3.36.1 (#82)
-
-### Refactor
-
-- **cache**: stripping registration endpoint cache support which was prep never implemented - reg insert is cache-aside
-- **infra**: migrating hibernate to aws cli to avoid cdk/npx build/synth as latter is subject to drift
-- **infra**: ditto missing secret
-- **infra**: missing secrets for infra hibernate workflow
-- **infra**: dropping IPv6 prefix-list ingress rules as unneccessary
-- **infra**: fix to Jest ESM dependency chain which failed tests
-- **infra**: mirror Cognito client secrets and tier log retention
-- **infra**: CognitoIdp stack drift in relation to Lambda log groups - defining explicitly to counter
-- **infra**: removing type-check of every test file in cdk tests
-- **infra**: removed dormant port 80 listener on public ALB; historical throwback that was redirecting to 443, no longer needed since CloudFront edge routing refactor
-- **infra**: Excluding cdk.context.json from forge-platform mirror fork
-- **infra**: Restrict ingest ALB SG to CloudFront prefix lists
-- **infra**: Remove orphaned regional WAF
-- **cdk**: migrate the ECS toggle to full tear-down of cost-heavy stacks to optmise AWS spend in non-prod envs
-- **comments**: explanatory lifecycle tier comments
-- **cdk**: split stack termination protection from state concerns
-- **cdk**: GH role needs CloudFront permissions to invalidate the distribution on redeployment of the static frontend
-- **cdk**: static site S3 bucket policies
-- **cdk**: CloudFront standard logging still writes to S3 using ACLs; need to change bucket object ownership
-- **cdk**: cross-region refs required for DomainStack
-- **cdk**: dependencies do need to be declarative as they were before, introduced a bug by removing
-- **cdk**: us-east-1 needs to be bootstrapped
-- **cdk**: splitting global CloudFront stack provisioning
-
-## Forge-era 2.0.21 (2026-05-05)
-
-### Perf
-
-- **tuning**: testing with 2 count of ECS instances and think we are seeing datasource connection pool exhaustion
-
-## Forge-era 2.0.20 (2026-05-05)
-
-### Refactor
-
-- **test**: inconsistent test target fix
-- **test**: seed test data cleanup; clarified the control surface and refactored based on different test data lifecycles
-- **taskfile**: naming conventions drifted a bit; realigning
-
-### Perf
-
-- **tuning**: connection pool tuning for http and db at 200 VUs
-
-## Forge-era 2.0.19 (2026-05-03)
-
-### Fix
-
-- **ttl**: quarkus rest client connection pool ttl is in ms
-- **workflow**: changes to config dir now trigger the deployment pipeline
-
-### Refactor
-
-- **perf**: reducing collision risk on user email generation for performance tests to negligible
-- **perf**: reducing noisy EC2 instance provisioning script output
-
-### Perf
-
-- **ttl**: recycling pooled connections before a internal ALB idle timeout (60s)
-
-## Forge-era 2.0.18 (2026-05-03)
-
-### Fix
-
-- **ecs**: trigger to redeploy all ECS services (not sure previous config throttle.properties suffices)
-- **perf**: INT env is throttling on performance tests; refactoring to toggle rate-limiting by profile (effective env stage name)
-
-## Forge-era 2.0.17 (2026-05-03)
-
-### Fix
-
-- **documents**: document-service bug in bucket name configuration
-
-## Forge-era 2.0.16 (2026-05-03)
-
-### Fix
-
-- **native**: need to make a non-pom file change in document-service to trigger runtime ECS deploy
-
-## Forge-era 2.0.15 (2026-05-03)
-
-### Fix
-
-- **native**: apache tika document parsing issue in document-service with native image
-
-## Forge-era 2.0.14 (2026-05-03)
-
-### Fix
-
-- **native**: native image reflection issue with CacheKeyGenerator implementations
-- **infra**: RDS requires 2 subnets which conflicted with the change to 1 AZ to reduce costs
-
-### Refactor
-
-- **perf**: just breaking up the perf load generator script to aws-specific resource helpers for maintenance
-- **perf**: supporting test users / cleanup in AWS proper
-- **perf**: cleaning up on seed test data configuration
-- **infra**: cost optimisation; reducing AZ count to mirror ECS task count
-
-## Forge-era 2.0.13 (2026-05-01)
-
-### Fix
-
-- **native**: Native image strips Lombok-generated constructors/setters from Jackson's view unless the class is registered
-
-## Forge-era 2.0.12 (2026-05-01)
-
-### Fix
-
-- **native**: native images builds did not include the public licence file key
-
-## Forge-era 2.0.11 (2026-05-01)
-
-### Fix
-
-- **native**: libs dir trigger version bump and image builds
-- **native**: Fixing invalid maximum heap size
-
-## Forge-era 2.0.10 (2026-05-01)
-
-### Fix
-
-- **native**: optimisation to build only changes
-
-## Forge-era 2.0.9 (2026-05-01)
-
-### Fix
-
-- **native**: remove root dir as a global var as causing issues accross workflows
-- **native**: self-hosted gh runner needs mvnw to output mvn version to stdout maybe
-
-## Forge-era 2.0.8 (2026-05-01)
-
-### Fix
-
-- **native**: all services now succeeding the maven profile build
-
-## Forge-era 2.0.7 (2026-05-01)
-
-### Fix
-
-- **native**: odd dependency required for GraalVM touches jakarta.mail.Part (related to jaxb in document-service)
-
-## Forge-era 2.0.6 (2026-05-01)
-
-### Fix
-
-- **native**: trigger for native module rebuild
-
-## Forge-era 2.0.5 (2026-05-01)
-
-### Fix
-
-- **native**: single threading mvnd during native builds as it's trashing my self-hosted gha runner
-
-## Forge-era 2.0.4 (2026-05-01)
-
-### Fix
-
-- **native**: minimal change to trigger deployable unit of work in ECS
-
-## Forge-era 2.0.3 (2026-05-01)
-
-### Fix
-
-- **native**: removing workflow dispatch trigger
-
-## Forge-era 2.0.2 (2026-05-01)
-
-### Refactor
-
-- **rename**: slight tweak to task name to indicate not exposed
-- **rename**: backend-actor renamed more accurately to actor-bff (audience-function)
-
-## Forge-era 2.0.1 (2026-04-28)
-
-### Fix
-
-- **deps**: update aws-sdk-js-v3 monorepo to v3.1038.0 (#75)
-- **deps**: update quarkus platform updates to v3.34.6 (#77)
-- **deps**: update dependency org.projectlombok:lombok to v1.18.46 (#81)
-- **deps**: update dependency org.projectlombok:lombok to v1.18.46 (#76)
-- **deps**: update dependency io.quarkiverse.amazonservices:quarkus-amazon-services-bom to v3.17.0 (#78)
-- **deps**: update dependency aws-cdk-lib to v2.251.0 (#80)
-
-## Forge-era 2.0.0 (2026-04-27)
-
-### BREAKING CHANGE
-
-- Requires CI/CD repository secret name change
-
-### Refactor
-
-- **OAuth2**: Made LinkedIn authentication an optional configuration for clients
-
-## Forge-era 1.8.2 (2026-04-25)
-
-### Fix
-
-- **infra**: fixing node upgrade issues with missing dependency on infra tests
-
-## Forge-era 1.8.1 (2026-04-25)
-
-### Fix
-
-- **metrics**: disabling outbound http client binder as noisy and unused (no dashboards currently on outbound, only inbound)
-- **notifications**: auto-verify sender email address on quarkus:dev mode startup
-- **deps**: update dependency io.quarkiverse.amazonservices:quarkus-amazon-services-bom to v3.16.0 (#64)
-- **deps**: update dependency constructs to v10.6.0 (#63)
-- **deps**: update quarkus platform updates to v3.34.5 (#74)
-- **deps**: update aws-sdk-js-v3 monorepo to v3.1032.0 (#61)
-- **deps**: update dependency aws-cdk-lib to v2.250.0 (#62)
-- **deps**: update dependency yaml to v2.8.3 (#65)
-- **deps**: update quarkus platform updates to v3.34.3 (#66)
-- **deps**: update tika monorepo to v3.3.0 (#67)
-- **deps**: update dependency org.projectlombok:lombok to v1.18.44
-- **deps**: update dependency software.amazon.awssdk:bom to v2.42.34
-- **deps**: update dependency com.bucket4j:bucket4j_jdk17-core to v8.18.0
-
-### Refactor
-
-- **cleanup**: error handling cleanup on failed auth; just reducing noisy logs
-- **auth**: password validation in dto tier to reflect cognito
-- **github**: repository org transfer
-- **tools**: moving toolchain install from README to taskfile
-
-## Forge-era 1.8.0 (2026-04-14)
-
-### Feat
-
-- **security**: Encrypting postgres db at rest (AWS-managed key)
-
-### Refactor
-
-- **cleanup**: todo's removed, esp those where we had messy frontend app leakage
-
-## Forge-era 1.7.2 (2026-04-11)
-
-### Fix
-
-- **taskfile**: recent refactor lost a couple of localstack tasks; replaced and fit nicely in our new task architecture
-- **lefthook**: added markdown/yaml linters and trufflehog security tool to lefthook pre-push
-
-### Refactor
-
-- **rename**: scripts/init --> scripts/bootstrap only
-
-## Forge-era 1.7.1 (2026-04-10)
-
-### Fix
-
-- **scheme**: missed some http/s references now we have flipped to certificate on the public ALB
-
-### Refactor
-
-- **config**: moved aws region out of properties file to dedicated client platform config
-- **typo**: fixed
-
-## Forge-era 1.7.0 (2026-04-10)
-
-### Feat
-
-- **infra**: reimplementing https/certificate on the public ALB now deployment to AWS is confirmed
-
-### Refactor
-
-- **region**: AWS region and account id are now GitHub Repository variables leaving aws.properties as only other single source of truth
-- **chore**: minor cleanup only
-
-## Forge-era 1.6.7 (2026-04-06)
-
-### Fix
-
-- **infra**: ALB listener paths needed to be more exact so as not to mistakenly capture non-API requests
-
-### Refactor
-
-- **naming**: consolidating the internal ALB paths as now all the same (suffix removed) and renaming for consistency/clarity
-
-## Forge-era 1.6.6 (2026-04-06)
-
-### Fix
-
-- **routing**: REST client endpoint URLs duplicating the /auth etc. suffix
-- **infra**: playing with health check thresholds to see if I can get consistent ALB response
-
-## Forge-era 1.6.5 (2026-04-06)
-
-### Fix
-
-- **noop**: false positive to trigger ECS deployment (must be non pom file change)
-
-## Forge-era 1.6.4 (2026-04-06)
-
-### Fix
-
-- **infra**: ALB healthcheck timeout was too aggressive and not allowing service deployments
-
-## Forge-era 1.6.3 (2026-04-06)
-
-### Fix
-
-- **gha**: workflow 06 now does ecs update-service after being triggered by new images in the ECR repo
-
-## Forge-era 1.6.2 (2026-04-06)
-
-### Fix
-
-- **ci**: bug in module resolution script for 06-ecs-runtime-deploy
-
-## Forge-era 1.6.1 (2026-04-06)
-
-### Fix
-
-- **ci**: chaining ECS image deployment to package publishing and uploads to ECR
-
-## Forge-era 1.6.0 (2026-04-06)
-
-### Feat
-
-- **infra**: extract root apex domain name to client-generated config file
-
-### Refactor
-
-- **client**: removing need for window.location.origin in client web as felt flaky
-
-## Forge-era 1.5.0 (2026-04-05)
-
-### Feat
-
-- **infra**: adding A record so frontend is exposed from sub domain int.* etc
-- **infra**: moving licence file to CDK and GitHub secrets from manual script upload
-
-### Fix
-
-- **infra**: ECR repo was expiring images incorrectly
-- **infra**: grant read for ECS task role on Cognito user pool app client secrets (both actor and service pools)
-- **infra**: VPC endpoint required for SSM when no NAT Gateway present; also ECS task role requires read grant
-- **infra**: IAM resource regex on service account secrets uses : prefix
-- **infra**: ECS tasks need access to service account secrets
-- **infra**: ECS task execution role permissions for secrets/ssm access during provisioning
-
-## Forge-era 1.4.5 (2026-04-05)
-
-### Fix
-
-- **infra**: user pool lookup by id rather than arn
-
-## Forge-era 1.4.4 (2026-04-05)
-
-### Refactor
-
-- **postgres**: cleaned up postgres db name and configuration
-
-## Forge-era 1.4.3 (2026-04-05)
-
-### Fix
-
-- **auth**: finally found our auth bug; reference impl extractor in forge-kit to blame
-- **gha**: cleaning up the gha workflows
-
-## Forge-era 1.4.2 (2026-04-04)
-
-### Fix
-
-- **gha**: hoping to chain triggers together post- 04-publish-packages
-
-## Forge-era 1.4.1 (2026-04-04)
-
-### Fix
-
-- **lefthook**: build cache issue with protobuf now we are verify-fast restricted to just test
-- **auth**: bug fix in CognitoUserPrincipalExtractor, which now prefers email then cognito:username, matching the same USERNAME used for login / SECRET_HASH
-
-### Refactor
-
-- **infra**: migrating GHA role and permissions to CDK
-- **gha**: splitting lightweight/heavyweight toolchains so we can be more explicit/optimised in imports to gha workflows
-- **infra**: rename/reorg of the infra triggers as infra bootstrap needs to run before build-test so Cognito resources are in place
-- **infra**: 01-build-test aws tests now succeed with infra bootstrap / seed resources
-
-## Forge-era 1.4.0 (2026-04-03)
-
-### Feat
-
-- **infra**: SES configuration
-- **infra**: make ECS task count and NAT Gateway count configurable for clients
-- **infra**: adding storage stack; rds, dynnamo, s3 and cognito resources
-
-### Refactor
-
-- **infra**: aligning LinkedIn secrets/env vars naming convention
-- **infra**: retention policy configuration based on stage.
-- **infra**: renaming only of infra commands/tasks to separate local cdk from aws deployments
-- **cognito**: moved all cognito setup to development CDK stack instead of bash scripts
-- **deploy**: all modules and services now deploy to AWS ECS successfully
-
-## Forge-era 1.3.0 (2026-03-17)
-
-### Feat
-
-- **infra**: datastore stack
-
-## Forge-era 1.2.2 (2026-03-17)
-
-### Refactor
-
-- **mvn**: making the github deploy token a reusable script for workflow conciseness
-
-## Forge-era 1.2.1 (2026-03-16)
-
-### Refactor
-
-- **cleanup**: docs and tidy up really, nothing of note
-- **infra**: docs and refactoring of cdklocal taskfile
-
-## Forge-era 1.2.0 (2026-03-09)
-
-### Feat
-
-- **infra**: moving public hosted zone (route 53) out to it's own stack
-- **infra**: network, security and runtime stacks deploying to AWS real
-- **infra**: first pass at infra impl with network, security and runtime stacks
-
-### Fix
-
-- **deps**: update dependency com.google.protobuf:protobuf-java to v4
-- **deps**: update dependency software.amazon.awssdk:bom to v2.42.8
-- **deps**: update dependency com.google.protobuf:protobuf-java to v3.25.8
-
-## Forge-era 1.1.2 (2026-02-21)
-
-### Fix
-
-- **deps**: update quarkus platform updates to v3.31.4
-- **deps**: update dependency software.amazon.awssdk:bom to v2.41.32
-
-## Forge-era 1.1.1 (2026-02-17)
-
-### Fix
-
-- **mirror**: script is working locally with PAT but not in CI/CD; trying a different url
-
-## Forge-era 1.1.0 (2026-02-16)
-
-### Feat
-
-- **mirror**: mirror this repo to forge-platform
-
-### Fix
-
-- **mirror**: reactor libs pom rewritten to reference published github packages
-
-## Forge-era 1.0.1 (2026-02-16)
-
-### Fix
-
-- **bump**: gpg signing issue fix to allow version bump with pinned commitizen version
-- **bump**: attempting to suppress git commit from trying to open an editor - should use default message instead
-- **tests**: reverting to prior unit/int test execution with flags which gave greater control/isolation
-- **package**: the reactor task was running the lifecycle for every module the reactor depends on, so all those libs were being deployed as well as the reactor
-
-## Forge-era 1.0.0 (2026-02-15)
-
-### BREAKING CHANGE
-
-- placeholder to bump version
-
-### Feat
-
-- **publish**: major bump to trigger reactor uber jar publish
+- **ci**: package deploy reverted to leaf with -am; reverted to 2-step install/deploy but with -Dmaven.build.cache.enabled
 
 ## v2.0.2 (2026-09-08)
 
@@ -1296,3 +721,585 @@ Point io.backbone.version at 0.0.0 until the kit pipeline publishes v1.0.0.
 - **ttl**: recycling pooled connections before a internal ALB idle timeout (60s)
 - **quarkus**: graceful shutdown config
 - **jvm**: Replacing Tomcat with Undertow; jvm and build optimisations
+
+## Forge-era 1.0.0 (2026-07-25)
+
+### BREAKING CHANGE
+
+- **rebrand**: rename platform Forge → Backbone. Maven coordinates `io.forge.core:forge-platform` → `io.backbone.core:backbone-platform`; Java packages `io.forge.{core,services,application}` → `io.backbone.*`; app config keys `forge.*` → `backbone.*` and env vars `FORGE_*` → `BACKBONE_*`; CDK stacks/resources `forge-*` → `backbone-*`; GitHub Packages registry `get-forge/forge-platform` → `get-backbone/backbone-platform`. The external `forge-kit` dependency (`io.forge.kit.*`, `io.forge:forge-*`, `io.forge.version`, `forge.observability.*`) is unchanged.
+- **version**: reset project version `2.4.0` → `1.0.0` for the rebrand. Changelog history below is retained.
+
+## Forge-era 2.4.0 (2026-07-07)
+
+### Feat
+
+- **infra**: improve CloudWatch dashboard labels and panel order
+- **infra**: add runtime and datastore CloudWatch monitoring
+
+### Fix
+
+- **xray**: logging added for tracing purposes
+- **infra**: re-run AMG provisioner after SigV4 datasource fix
+- **infra**: correct AMG Prometheus SigV4 and revert Phase 9 env overrides
+
+### Refactor
+
+- **bloat**: Cursor adding bloat when simplest action is to teardown and rebuild
+
+## Forge-era 2.3.2 (2026-07-03)
+
+### Fix
+
+- **no-op**: last fix was pom-only which does not (by design) trigger ECS image rebuild
+
+## Forge-era 2.3.1 (2026-07-03)
+
+### Fix
+
+- **prometheus**: picking up forge-kit mod to differentiate between service collisions on CloudWatch Prometheus metrics push
+- **infra**: append remote_write only to AMP PrometheusEndpoint
+- **infra**: correct AMP remote-write URL and hibernate observability
+
+## Forge-era 2.3.0 (2026-07-03)
+
+### Feat
+
+- **infra**: add observability VPC endpoints for NAT-less subnets
+
+### Fix
+
+- **config**: use formatted JSON exception output on deployed profiles
+- **config**: register Redis cache DTOs for native image reflection
+- **governance**: route ALB access logs to SSE-S3 bucket
+- **monitoring**: use per-stack CloudWatch dashboard names
+- **governance**: grant CloudTrail KMS access and extract IAM utils
+- **ci**: install Node via nvm in infra workflows
+- **ci**: use setup-node when nvm lacks .nvmrc version
+
+## Forge-era 2.2.0 (2026-07-02)
+
+### Feat
+
+- **governance**: add governance evidence stack and ADR-0027
+- **monitoring**: add per-stack CloudWatch monitoring and SNS alerts
+- **observability**: wire forge-kit export and ECS runtime integration
+- **observability**: add AMP, AMG, and Grafana dashboard provisioning
+
+### Fix
+
+- **test**: load metrics config in auth-service integration tests
+- **governance**: add evidence access logging and L2 ALB log delivery
+- **observability**: harden local dev config and bump forge-kit
+- **ci**: trim unused OWASP suppression rules for forge-core
+- **ci**: align OWASP with forge-kit aggregate scan pattern
+- **deps**: adopt forge-kit 1.2.1 forge-logging
+- **ci**: install ShellCheck 0.11 in hygiene workflow runners
+
+### Refactor
+
+- **utils**: consolidate infra utils by AWS resource and Forge stage
+- **bash**: add validate_dependencies to test seed scripts
+- **bash**: align grafana config and helpers with module template
+- **bash**: align metrics scripts with template conventions
+- **bash**: add Main section separator before main() entrypoints
+- **bash**: wrap Quarkus container entrypoint in main()
+- **bash**: standardize perf scripts layout to template conventions
+- **bash**: standardize scripts/licence layout to template conventions
+- **bash**: standardize .github/scripts layout to template conventions
+- **bash**: standardize port-manager and scripts/test layout
+- **bash**: align common.sh with module template layout
+- **bash**: standardize scripts/docker layout to template conventions
+- **bash**: standardize scripts/aws layout to template conventions
+- **bash**: standardize script templates and bootstrap layout
+- **bash**: polish portability follow-ups across scripts
+- **bash**: fixing remaining concerns and removing continue-on-error: true from CI hygience check gate
+- **bash**: cleanup of required cli tools approach
+- **scripts**: consolidate update_envrc_key in common.sh
+- **nvm**: removing proliferation of fixed nvm use directive; only required for infra module
+
+## Forge-era 2.1.0 (2026-06-20)
+
+### Feat
+
+- **throttle**: add Redis-backed distributed rate limiting
+- **cache**: add Redis-backed distributed caching for domain services
+- **redis**: ElastiCache Redis cluster infrastructure
+- **CloudFront**: migrate ui web module to CloudFront distribution + S3 (instead of ECS)
+
+### Fix
+
+- **cache**: keep qute-cache on Caffeine when Redis is the default backend
+- **deps**: update quarkus platform updates to v3.36.1 (#82)
+
+### Refactor
+
+- **cache**: stripping registration endpoint cache support which was prep never implemented - reg insert is cache-aside
+- **infra**: migrating hibernate to aws cli to avoid cdk/npx build/synth as latter is subject to drift
+- **infra**: ditto missing secret
+- **infra**: missing secrets for infra hibernate workflow
+- **infra**: dropping IPv6 prefix-list ingress rules as unneccessary
+- **infra**: fix to Jest ESM dependency chain which failed tests
+- **infra**: mirror Cognito client secrets and tier log retention
+- **infra**: CognitoIdp stack drift in relation to Lambda log groups - defining explicitly to counter
+- **infra**: removing type-check of every test file in cdk tests
+- **infra**: removed dormant port 80 listener on public ALB; historical throwback that was redirecting to 443, no longer needed since CloudFront edge routing refactor
+- **infra**: Excluding cdk.context.json from forge-platform mirror fork
+- **infra**: Restrict ingest ALB SG to CloudFront prefix lists
+- **infra**: Remove orphaned regional WAF
+- **cdk**: migrate the ECS toggle to full tear-down of cost-heavy stacks to optmise AWS spend in non-prod envs
+- **comments**: explanatory lifecycle tier comments
+- **cdk**: split stack termination protection from state concerns
+- **cdk**: GH role needs CloudFront permissions to invalidate the distribution on redeployment of the static frontend
+- **cdk**: static site S3 bucket policies
+- **cdk**: CloudFront standard logging still writes to S3 using ACLs; need to change bucket object ownership
+- **cdk**: cross-region refs required for DomainStack
+- **cdk**: dependencies do need to be declarative as they were before, introduced a bug by removing
+- **cdk**: us-east-1 needs to be bootstrapped
+- **cdk**: splitting global CloudFront stack provisioning
+
+## Forge-era 2.0.21 (2026-05-05)
+
+### Perf
+
+- **tuning**: testing with 2 count of ECS instances and think we are seeing datasource connection pool exhaustion
+
+## Forge-era 2.0.20 (2026-05-05)
+
+### Refactor
+
+- **test**: inconsistent test target fix
+- **test**: seed test data cleanup; clarified the control surface and refactored based on different test data lifecycles
+- **taskfile**: naming conventions drifted a bit; realigning
+
+### Perf
+
+- **tuning**: connection pool tuning for http and db at 200 VUs
+
+## Forge-era 2.0.19 (2026-05-03)
+
+### Fix
+
+- **ttl**: quarkus rest client connection pool ttl is in ms
+- **workflow**: changes to config dir now trigger the deployment pipeline
+
+### Refactor
+
+- **perf**: reducing collision risk on user email generation for performance tests to negligible
+- **perf**: reducing noisy EC2 instance provisioning script output
+
+### Perf
+
+- **ttl**: recycling pooled connections before a internal ALB idle timeout (60s)
+
+## Forge-era 2.0.18 (2026-05-03)
+
+### Fix
+
+- **ecs**: trigger to redeploy all ECS services (not sure previous config throttle.properties suffices)
+- **perf**: INT env is throttling on performance tests; refactoring to toggle rate-limiting by profile (effective env stage name)
+
+## Forge-era 2.0.17 (2026-05-03)
+
+### Fix
+
+- **documents**: document-service bug in bucket name configuration
+
+## Forge-era 2.0.16 (2026-05-03)
+
+### Fix
+
+- **native**: need to make a non-pom file change in document-service to trigger runtime ECS deploy
+
+## Forge-era 2.0.15 (2026-05-03)
+
+### Fix
+
+- **native**: apache tika document parsing issue in document-service with native image
+
+## Forge-era 2.0.14 (2026-05-03)
+
+### Fix
+
+- **native**: native image reflection issue with CacheKeyGenerator implementations
+- **infra**: RDS requires 2 subnets which conflicted with the change to 1 AZ to reduce costs
+
+### Refactor
+
+- **perf**: just breaking up the perf load generator script to aws-specific resource helpers for maintenance
+- **perf**: supporting test users / cleanup in AWS proper
+- **perf**: cleaning up on seed test data configuration
+- **infra**: cost optimisation; reducing AZ count to mirror ECS task count
+
+## Forge-era 2.0.13 (2026-05-01)
+
+### Fix
+
+- **native**: Native image strips Lombok-generated constructors/setters from Jackson's view unless the class is registered
+
+## Forge-era 2.0.12 (2026-05-01)
+
+### Fix
+
+- **native**: native images builds did not include the public licence file key
+
+## Forge-era 2.0.11 (2026-05-01)
+
+### Fix
+
+- **native**: libs dir trigger version bump and image builds
+- **native**: Fixing invalid maximum heap size
+
+## Forge-era 2.0.10 (2026-05-01)
+
+### Fix
+
+- **native**: optimisation to build only changes
+
+## Forge-era 2.0.9 (2026-05-01)
+
+### Fix
+
+- **native**: remove root dir as a global var as causing issues accross workflows
+- **native**: self-hosted gh runner needs mvnw to output mvn version to stdout maybe
+
+## Forge-era 2.0.8 (2026-05-01)
+
+### Fix
+
+- **native**: all services now succeeding the maven profile build
+
+## Forge-era 2.0.7 (2026-05-01)
+
+### Fix
+
+- **native**: odd dependency required for GraalVM touches jakarta.mail.Part (related to jaxb in document-service)
+
+## Forge-era 2.0.6 (2026-05-01)
+
+### Fix
+
+- **native**: trigger for native module rebuild
+
+## Forge-era 2.0.5 (2026-05-01)
+
+### Fix
+
+- **native**: single threading mvnd during native builds as it's trashing my self-hosted gha runner
+
+## Forge-era 2.0.4 (2026-05-01)
+
+### Fix
+
+- **native**: minimal change to trigger deployable unit of work in ECS
+
+## Forge-era 2.0.3 (2026-05-01)
+
+### Fix
+
+- **native**: removing workflow dispatch trigger
+
+## Forge-era 2.0.2 (2026-05-01)
+
+### Refactor
+
+- **rename**: slight tweak to task name to indicate not exposed
+- **rename**: backend-actor renamed more accurately to actor-bff (audience-function)
+
+## Forge-era 2.0.1 (2026-04-28)
+
+### Fix
+
+- **deps**: update aws-sdk-js-v3 monorepo to v3.1038.0 (#75)
+- **deps**: update quarkus platform updates to v3.34.6 (#77)
+- **deps**: update dependency org.projectlombok:lombok to v1.18.46 (#81)
+- **deps**: update dependency org.projectlombok:lombok to v1.18.46 (#76)
+- **deps**: update dependency io.quarkiverse.amazonservices:quarkus-amazon-services-bom to v3.17.0 (#78)
+- **deps**: update dependency aws-cdk-lib to v2.251.0 (#80)
+
+## Forge-era 2.0.0 (2026-04-27)
+
+### BREAKING CHANGE
+
+- Requires CI/CD repository secret name change
+
+### Refactor
+
+- **OAuth2**: Made LinkedIn authentication an optional configuration for clients
+
+## Forge-era 1.8.2 (2026-04-25)
+
+### Fix
+
+- **infra**: fixing node upgrade issues with missing dependency on infra tests
+
+## Forge-era 1.8.1 (2026-04-25)
+
+### Fix
+
+- **metrics**: disabling outbound http client binder as noisy and unused (no dashboards currently on outbound, only inbound)
+- **notifications**: auto-verify sender email address on quarkus:dev mode startup
+- **deps**: update dependency io.quarkiverse.amazonservices:quarkus-amazon-services-bom to v3.16.0 (#64)
+- **deps**: update dependency constructs to v10.6.0 (#63)
+- **deps**: update quarkus platform updates to v3.34.5 (#74)
+- **deps**: update aws-sdk-js-v3 monorepo to v3.1032.0 (#61)
+- **deps**: update dependency aws-cdk-lib to v2.250.0 (#62)
+- **deps**: update dependency yaml to v2.8.3 (#65)
+- **deps**: update quarkus platform updates to v3.34.3 (#66)
+- **deps**: update tika monorepo to v3.3.0 (#67)
+- **deps**: update dependency org.projectlombok:lombok to v1.18.44
+- **deps**: update dependency software.amazon.awssdk:bom to v2.42.34
+- **deps**: update dependency com.bucket4j:bucket4j_jdk17-core to v8.18.0
+
+### Refactor
+
+- **cleanup**: error handling cleanup on failed auth; just reducing noisy logs
+- **auth**: password validation in dto tier to reflect cognito
+- **github**: repository org transfer
+- **tools**: moving toolchain install from README to taskfile
+
+## Forge-era 1.8.0 (2026-04-14)
+
+### Feat
+
+- **security**: Encrypting postgres db at rest (AWS-managed key)
+
+### Refactor
+
+- **cleanup**: todo's removed, esp those where we had messy frontend app leakage
+
+## Forge-era 1.7.2 (2026-04-11)
+
+### Fix
+
+- **taskfile**: recent refactor lost a couple of localstack tasks; replaced and fit nicely in our new task architecture
+- **lefthook**: added markdown/yaml linters and trufflehog security tool to lefthook pre-push
+
+### Refactor
+
+- **rename**: scripts/init --> scripts/bootstrap only
+
+## Forge-era 1.7.1 (2026-04-10)
+
+### Fix
+
+- **scheme**: missed some http/s references now we have flipped to certificate on the public ALB
+
+### Refactor
+
+- **config**: moved aws region out of properties file to dedicated client platform config
+- **typo**: fixed
+
+## Forge-era 1.7.0 (2026-04-10)
+
+### Feat
+
+- **infra**: reimplementing https/certificate on the public ALB now deployment to AWS is confirmed
+
+### Refactor
+
+- **region**: AWS region and account id are now GitHub Repository variables leaving aws.properties as only other single source of truth
+- **chore**: minor cleanup only
+
+## Forge-era 1.6.7 (2026-04-06)
+
+### Fix
+
+- **infra**: ALB listener paths needed to be more exact so as not to mistakenly capture non-API requests
+
+### Refactor
+
+- **naming**: consolidating the internal ALB paths as now all the same (suffix removed) and renaming for consistency/clarity
+
+## Forge-era 1.6.6 (2026-04-06)
+
+### Fix
+
+- **routing**: REST client endpoint URLs duplicating the /auth etc. suffix
+- **infra**: playing with health check thresholds to see if I can get consistent ALB response
+
+## Forge-era 1.6.5 (2026-04-06)
+
+### Fix
+
+- **noop**: false positive to trigger ECS deployment (must be non pom file change)
+
+## Forge-era 1.6.4 (2026-04-06)
+
+### Fix
+
+- **infra**: ALB healthcheck timeout was too aggressive and not allowing service deployments
+
+## Forge-era 1.6.3 (2026-04-06)
+
+### Fix
+
+- **gha**: workflow 06 now does ecs update-service after being triggered by new images in the ECR repo
+
+## Forge-era 1.6.2 (2026-04-06)
+
+### Fix
+
+- **ci**: bug in module resolution script for 06-ecs-runtime-deploy
+
+## Forge-era 1.6.1 (2026-04-06)
+
+### Fix
+
+- **ci**: chaining ECS image deployment to package publishing and uploads to ECR
+
+## Forge-era 1.6.0 (2026-04-06)
+
+### Feat
+
+- **infra**: extract root apex domain name to client-generated config file
+
+### Refactor
+
+- **client**: removing need for window.location.origin in client web as felt flaky
+
+## Forge-era 1.5.0 (2026-04-05)
+
+### Feat
+
+- **infra**: adding A record so frontend is exposed from sub domain int.* etc
+- **infra**: moving licence file to CDK and GitHub secrets from manual script upload
+
+### Fix
+
+- **infra**: ECR repo was expiring images incorrectly
+- **infra**: grant read for ECS task role on Cognito user pool app client secrets (both actor and service pools)
+- **infra**: VPC endpoint required for SSM when no NAT Gateway present; also ECS task role requires read grant
+- **infra**: IAM resource regex on service account secrets uses : prefix
+- **infra**: ECS tasks need access to service account secrets
+- **infra**: ECS task execution role permissions for secrets/ssm access during provisioning
+
+## Forge-era 1.4.5 (2026-04-05)
+
+### Fix
+
+- **infra**: user pool lookup by id rather than arn
+
+## Forge-era 1.4.4 (2026-04-05)
+
+### Refactor
+
+- **postgres**: cleaned up postgres db name and configuration
+
+## Forge-era 1.4.3 (2026-04-05)
+
+### Fix
+
+- **auth**: finally found our auth bug; reference impl extractor in forge-kit to blame
+- **gha**: cleaning up the gha workflows
+
+## Forge-era 1.4.2 (2026-04-04)
+
+### Fix
+
+- **gha**: hoping to chain triggers together post- 04-publish-packages
+
+## Forge-era 1.4.1 (2026-04-04)
+
+### Fix
+
+- **lefthook**: build cache issue with protobuf now we are verify-fast restricted to just test
+- **auth**: bug fix in CognitoUserPrincipalExtractor, which now prefers email then cognito:username, matching the same USERNAME used for login / SECRET_HASH
+
+### Refactor
+
+- **infra**: migrating GHA role and permissions to CDK
+- **gha**: splitting lightweight/heavyweight toolchains so we can be more explicit/optimised in imports to gha workflows
+- **infra**: rename/reorg of the infra triggers as infra bootstrap needs to run before build-test so Cognito resources are in place
+- **infra**: 01-build-test aws tests now succeed with infra bootstrap / seed resources
+
+## Forge-era 1.4.0 (2026-04-03)
+
+### Feat
+
+- **infra**: SES configuration
+- **infra**: make ECS task count and NAT Gateway count configurable for clients
+- **infra**: adding storage stack; rds, dynnamo, s3 and cognito resources
+
+### Refactor
+
+- **infra**: aligning LinkedIn secrets/env vars naming convention
+- **infra**: retention policy configuration based on stage.
+- **infra**: renaming only of infra commands/tasks to separate local cdk from aws deployments
+- **cognito**: moved all cognito setup to development CDK stack instead of bash scripts
+- **deploy**: all modules and services now deploy to AWS ECS successfully
+
+## Forge-era 1.3.0 (2026-03-17)
+
+### Feat
+
+- **infra**: datastore stack
+
+## Forge-era 1.2.2 (2026-03-17)
+
+### Refactor
+
+- **mvn**: making the github deploy token a reusable script for workflow conciseness
+
+## Forge-era 1.2.1 (2026-03-16)
+
+### Refactor
+
+- **cleanup**: docs and tidy up really, nothing of note
+- **infra**: docs and refactoring of cdklocal taskfile
+
+## Forge-era 1.2.0 (2026-03-09)
+
+### Feat
+
+- **infra**: moving public hosted zone (route 53) out to it's own stack
+- **infra**: network, security and runtime stacks deploying to AWS real
+- **infra**: first pass at infra impl with network, security and runtime stacks
+
+### Fix
+
+- **deps**: update dependency com.google.protobuf:protobuf-java to v4
+- **deps**: update dependency software.amazon.awssdk:bom to v2.42.8
+- **deps**: update dependency com.google.protobuf:protobuf-java to v3.25.8
+
+## Forge-era 1.1.2 (2026-02-21)
+
+### Fix
+
+- **deps**: update quarkus platform updates to v3.31.4
+- **deps**: update dependency software.amazon.awssdk:bom to v2.41.32
+
+## Forge-era 1.1.1 (2026-02-17)
+
+### Fix
+
+- **mirror**: script is working locally with PAT but not in CI/CD; trying a different url
+
+## Forge-era 1.1.0 (2026-02-16)
+
+### Feat
+
+- **mirror**: mirror this repo to forge-platform
+
+### Fix
+
+- **mirror**: reactor libs pom rewritten to reference published github packages
+
+## Forge-era 1.0.1 (2026-02-16)
+
+### Fix
+
+- **bump**: gpg signing issue fix to allow version bump with pinned commitizen version
+- **bump**: attempting to suppress git commit from trying to open an editor - should use default message instead
+- **tests**: reverting to prior unit/int test execution with flags which gave greater control/isolation
+- **package**: the reactor task was running the lifecycle for every module the reactor depends on, so all those libs were being deployed as well as the reactor
+
+## Forge-era 1.0.0 (2026-02-15)
+
+### BREAKING CHANGE
+
+- placeholder to bump version
+
+### Feat
+
+- **publish**: major bump to trigger reactor uber jar publish
+

@@ -5,7 +5,7 @@ set -euo pipefail
 # Type: executable
 # Build a mirror commit message from backbone-core HEAD:
 #   - insert [sync] after type(scope): on the subject line
-#   - keep the remaining body (release commits put the CHANGELOG URL there)
+#   - keep the remaining body (release commits are usually one line: See CHANGELOG.md)
 #   - drop Signed-off-by (mirror commit is re-signed)
 # Usage: .github/scripts/mirror-commit-message.sh [core-repo-dir] [commit]
 # Prints the message on stdout (suitable for git commit -m).
