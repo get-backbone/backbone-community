@@ -12,6 +12,7 @@ logs/
 # IntelliJ
 .idea/*
 *.iml
+.junie/
 
 # Cursor IDE
 .cursor

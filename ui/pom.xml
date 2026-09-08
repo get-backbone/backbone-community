@@ -12,7 +12,6 @@
 
     <modules>
         <module>web-actor</module>
-        <module>web-admin</module>
     </modules>
 
 
