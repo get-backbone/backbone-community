@@ -30,7 +30,12 @@ main() {
 <settings>
   <servers>
     <server>
-      <id>github</id>
+      <id>ghp-kit</id>
+      <username>${GITHUB_MAVEN_USERNAME}</username>
+      <password>${GITHUB_MAVEN_TOKEN}</password>
+    </server>
+    <server>
+      <id>ghp-platform</id>
       <username>${GITHUB_MAVEN_USERNAME}</username>
       <password>${GITHUB_MAVEN_TOKEN}</password>
     </server>

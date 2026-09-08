@@ -579,6 +579,12 @@
 
 - **publish**: major bump to trigger reactor uber jar publish
 
+## v2.0.1 (2026-09-08)
+
+### Fix
+
+- **poms**: flatten published packages to remove parents
+
 ## v2.0.0 (2026-09-08)
 
 ### BREAKING CHANGE

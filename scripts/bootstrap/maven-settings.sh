@@ -49,7 +49,12 @@ main() {
 <settings>
   <servers>
     <server>
-      <id>github</id>
+      <id>ghp-kit</id>
+      <username>${github_username}</username>
+      <password>${github_token}</password>
+    </server>
+    <server>
+      <id>ghp-platform</id>
       <username>${github_username}</username>
       <password>${github_token}</password>
     </server>
