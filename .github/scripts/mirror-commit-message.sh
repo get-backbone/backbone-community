@@ -5,9 +5,13 @@ set -euo pipefail
 # Type: executable
 # Build a mirror commit message from backbone-core HEAD:
 #   - insert [sync] after type(scope): on the subject line
-#   - keep the remaining body (release commits are usually one line: See CHANGELOG.md)
+#   - rewrite "See CHANGELOG.md" to this mirror's blob URL (GitHub does not link bare paths)
+#   - keep the remaining body
 #   - drop Signed-off-by (mirror commit is re-signed)
 # Usage: .github/scripts/mirror-commit-message.sh [core-repo-dir] [commit]
+# Env:
+#   MIRROR_REPO  owner/name of the mirror (e.g. get-backbone/backbone-developer)
+#   VERSION      release version without v-prefix (e.g. 2.0.3)
 # Prints the message on stdout (suitable for git commit -m).
 
 # ---- Functions --------------------------------------------------------------
@@ -16,6 +20,10 @@ usage() {
     cat << EOF
 Usage:
     $(basename "$0") [core-repo-dir] [commit]
+
+Env:
+    MIRROR_REPO  required for CHANGELOG link rewrite (owner/name)
+    VERSION      required for CHANGELOG link rewrite (no v-prefix)
 
 Examples:
     $(basename "$0")
@@ -36,6 +44,23 @@ insert_sync_marker() {
     else
         printf '%s\n' "[sync] ${subject}"
     fi
+}
+
+# Core keeps a portable "See CHANGELOG.md"; mirrors need a full URL so GitHub makes it clickable
+# and each mirror points at its own tree (not a private sibling repo).
+link_changelog_reference() {
+    local text="$1"
+    local repo="${MIRROR_REPO:-}"
+    local version="${VERSION:-}"
+    local changelog_url
+
+    if [[ -z "${repo}" || -z "${version}" ]]; then
+        printf '%s\n' "${text}"
+        return 0
+    fi
+
+    changelog_url="https://github.com/${repo}/blob/v${version}/CHANGELOG.md"
+    printf '%s\n' "${text//See CHANGELOG.md/See ${changelog_url}}"
 }
 
 print_commit_message() {
@@ -65,6 +90,8 @@ main() {
     subject="$(printf '%s\n' "${message}" | head -n 1)"
     body="$(printf '%s\n' "${message}" | tail -n +2)"
     subject="$(insert_sync_marker "${subject}")"
+    subject="$(link_changelog_reference "${subject}")"
+    body="$(link_changelog_reference "${body}")"
     print_commit_message "${subject}" "${body}"
 }
 

@@ -8,6 +8,7 @@ set -euo pipefail
 # Usage: .github/scripts/mirror-commit-tag-push.sh
 # Env:
 #   GITHUB_WORKSPACE  core checkout (message source + scripts)
+#   MIRROR_REPO       owner/name for CHANGELOG blob URL in the commit message
 #   MIRROR_BRANCH     branch to push (e.g. main)
 #   VERSION           release version for tag v${VERSION}
 
@@ -28,6 +29,10 @@ validate_env() {
     fi
     if [[ -z "${VERSION:-}" ]]; then
         echo "VERSION must be set." >&2
+        exit 1
+    fi
+    if [[ -z "${MIRROR_REPO:-}" ]]; then
+        echo "MIRROR_REPO must be set (owner/name) for the CHANGELOG commit-message link." >&2
         exit 1
     fi
 }

@@ -35,6 +35,15 @@ tasks:
     cmds:
       - '{{.MAVEN_CMD}} verify {{.PL_FLAG}} -DskipUnitTests -am {{.CLI_ARGS}}'
 
+  _integration:ci:
+    desc: mvn verify; IT only (no package/quarkus:build; MODULE=…)
+    dir: "{{.ROOT_DIR}}"
+    vars:
+      MODULE: '{{.MODULE | default ""}}'
+      PL_FLAG: '{{if eq .MODULE ""}}{{else}}-pl ''{{.MODULE}}''{{end}}'
+    cmds:
+      - '{{.MAVEN_CMD}} {{.PL_FLAG}} test-compile failsafe:integration-test failsafe:verify -DskipUnitTests {{.CLI_ARGS}}'
+
   static:
     dir: "{{.ROOT_DIR}}"
     desc: Static analysis + OWASP (no tests)
