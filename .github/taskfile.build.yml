@@ -43,3 +43,9 @@ tasks:
     dir: "{{.ROOT_DIR}}"
     cmds:
       - '{{.MAVEN_CMD}} install -Dmaven.test.skip -am'
+
+  _install:ci:
+    desc: mvn install -DskipTests -Dquarkus.build.skip
+    dir: "{{.ROOT_DIR}}"
+    cmds:
+      - '{{.MAVEN_CMD}} install -Dmaven.test.skip -Dquarkus.build.skip=true -pl ''!libs/sdk/dist,!ui,!ui/web-actor,!services/template-service'' -am {{.CLI_ARGS}}'
