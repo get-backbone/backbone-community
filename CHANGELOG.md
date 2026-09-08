@@ -1,3 +1,21 @@
+## v2.0.11 (2026-09-08)
+
+### Fix
+
+- **ci**: disable inherited copy-obfuscator-libs / obfuscate-jar on dist packaging; dist only ProGuards
+
+## v2.0.10 (2026-09-08)
+
+### Fix
+
+- **ci**: do not force sdk.obfuscate.skip=false on package publish
+
+## v2.0.9 (2026-09-08)
+
+### Fix
+
+- **audit**: gate EventBridge dispatcher on backbone.audit.enabled
+
 ## v2.0.8 (2026-09-08)
 
 ### Fix

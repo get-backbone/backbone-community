@@ -7,6 +7,7 @@ version: '3'
 vars:
   MAVEN_CMD: '$(command -v mvnd >/dev/null 2>&1 && echo mvnd || echo "./mvnw")'
   ROOT_DIR: "{{.TASKFILE_DIR}}/.."
+  HARDEN_SKIP: '-Dsdk.obfuscate.skip=true -Dharden.skip=true'
 
 tasks:
   _default:
@@ -36,16 +37,16 @@ tasks:
     desc: mvn package -DskipTests
     dir: "{{.ROOT_DIR}}"
     cmds:
-      - '{{.MAVEN_CMD}} package -Dmaven.test.skip -am'
+      - '{{.MAVEN_CMD}} package -Dmaven.test.skip {{.HARDEN_SKIP}} -am'
 
   install:
     desc: mvn install -DskipTests
     dir: "{{.ROOT_DIR}}"
     cmds:
-      - '{{.MAVEN_CMD}} install -Dmaven.test.skip -am'
+      - '{{.MAVEN_CMD}} install -Dmaven.test.skip {{.HARDEN_SKIP}} -am'
 
   _install:ci:
     desc: mvn install -DskipTests -Dquarkus.build.skip
     dir: "{{.ROOT_DIR}}"
     cmds:
-      - '{{.MAVEN_CMD}} install -Dmaven.test.skip -Dquarkus.build.skip=true -am {{.CLI_ARGS}}'
+      - '{{.MAVEN_CMD}} install -Dmaven.test.skip -Dquarkus.build.skip=true {{.HARDEN_SKIP}} -am {{.CLI_ARGS}}'
