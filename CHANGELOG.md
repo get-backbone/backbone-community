@@ -1,3 +1,9 @@
+## v2.0.4 (2026-09-08)
+
+### Fix
+
+- **ci**: External APIs not shaded into the uber JAR; must remain on the consumer classpath
+
 ## v2.0.3 (2026-09-08)
 
 ### Fix
