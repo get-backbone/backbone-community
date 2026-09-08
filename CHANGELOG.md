@@ -1,3 +1,9 @@
+## v2.0.5 (2026-09-08)
+
+### Fix
+
+- **ci**: backbone-developer missing task _integration:ci
+
 ## v2.0.4 (2026-09-08)
 
 ### Fix
