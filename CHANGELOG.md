@@ -1,3 +1,9 @@
+## v2.0.8 (2026-09-08)
+
+### Fix
+
+- **sdk**: reindex shaded sdk-bundle jandex after shade
+
 ## v2.0.7 (2026-09-08)
 
 ### Fix
