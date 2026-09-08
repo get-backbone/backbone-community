@@ -4,8 +4,8 @@ import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static java.util.Map.of;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import io.backbone.core.client.auth.AuthServiceClient;
-import io.backbone.core.common.json.JsonFacade;
+import io.backbone.core.client.api.auth.AuthServiceClient;
+import io.backbone.core.common.api.json.JsonFacade;
 import io.backbone.kit.security.api.rest.Secured;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;

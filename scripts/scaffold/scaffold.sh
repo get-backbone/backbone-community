@@ -82,9 +82,9 @@ EOF
     cat > "${java_root}/domain/TemplateService.java" << 'EOF'
 package io.backbone.services.template.domain;
 
-import io.backbone.core.audit.domain.AuditEvent;
-import io.backbone.core.audit.domain.EventSeverity;
-import io.backbone.core.audit.domain.EventType;
+import io.backbone.core.audit.api.domain.AuditEvent;
+import io.backbone.core.audit.api.domain.EventSeverity;
+import io.backbone.core.audit.api.domain.EventType;
 import io.backbone.kit.logging.api.LogMethodEntry;
 import io.backbone.kit.metrics.api.domain.ServiceMetrics;
 import io.backbone.services.template.domain.dto.TemplateEventRequest;
@@ -125,8 +125,8 @@ EOF
     cat > "${test_root}/rest/TemplateResourceIT.java" << 'EOF'
 package io.backbone.services.template.rest;
 
-import io.backbone.core.common.test.QuarkusLoggingTestResource;
-import io.backbone.core.common.test.QuarkusPortsEnvTestResource;
+import io.backbone.core.common.api.test.QuarkusLoggingTestResource;
+import io.backbone.core.common.api.test.QuarkusPortsEnvTestResource;
 import io.backbone.kit.throttle.impl.test.ThrottlingDisabledTestProfile;
 import io.backbone.services.template.domain.dto.TemplateEventRequest;
 import io.quarkus.test.common.QuarkusTestResource;

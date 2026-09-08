@@ -1,6 +1,6 @@
 package io.backbone.application.backend.rest;
 
-import io.backbone.core.client.actor.ActorServiceClient;
+import io.backbone.core.client.api.actor.ActorServiceClient;
 import io.backbone.core.domain.dto.actor.ActorResponse;
 import io.backbone.kit.security.api.rest.Secured;
 import io.opentelemetry.instrumentation.annotations.WithSpan;

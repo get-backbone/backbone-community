@@ -2,7 +2,7 @@
 version: '3'
 
 # Developer-mirror Taskfile (promoted to taskfile.yml on 92 sync).
-# Omits infra/CDK, reactor publish, perf, and metrics (needs infra catalog).
+# Omits infra/CDK, packages publish, perf, and metrics (needs infra catalog).
 # template-service is scaffold-only — no dev:template wrapper.
 # Includes use post-promote names (.github/taskfile.build.yml / test.yml).
 

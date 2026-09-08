@@ -14,7 +14,7 @@
         <!-- Published from backbone-core (no libs source on the developer mirror) -->
         <dependency>
             <groupId>io.backbone.core</groupId>
-            <artifactId>reactor</artifactId>
+            <artifactId>sdk-bundle</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

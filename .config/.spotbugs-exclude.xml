@@ -5,12 +5,12 @@
         <Package name="~io\.backbone\.core\.licence\.infrastructure\.proto" />
     </Match>
     <Match>
-        <Class name="io.backbone.core.audit.auth.ResolutionContext"/>
+        <Class name="io.backbone.core.audit.api.auth.ResolutionContext"/>
         <Method name="requestContext"/>
         <Bug pattern="EI_EXPOSE_REP"/>
     </Match>
     <Match>
-        <Class name="io.backbone.core.audit.auth.ResolutionContext"/>
+        <Class name="io.backbone.core.audit.api.auth.ResolutionContext"/>
         <Bug pattern="EI_EXPOSE_REP2"/>
     </Match>
     <Match>
@@ -22,7 +22,7 @@
         <Bug pattern="EI_EXPOSE_REP2"/>
     </Match>
     <Match>
-        <Class name="io.backbone.core.security.infrastructure.http.ContainerRequestContextProducer"/>
+        <Class name="io.backbone.core.security.api.http.ContainerRequestContextProducer"/>
         <Method name="getRequestContext"/>
         <Bug pattern="EI_EXPOSE_REP"/>
     </Match>
@@ -102,7 +102,7 @@
         <Bug pattern="EI_EXPOSE_REP2"/>
     </Match>
     <Match>
-        <Class name="io.backbone.core.audit.infrastructure.EventBridgeAuditEventDispatcher"/>
+        <Class name="io.backbone.core.audit.impl.dispatch.EventBridgeAuditPublish"/>
         <Bug pattern="EI_EXPOSE_REP2"/>
     </Match>
     <Match>

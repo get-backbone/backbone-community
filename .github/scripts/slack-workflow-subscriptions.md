@@ -31,7 +31,7 @@ Verify an active channel subscription:
 
 ```text
 /github unsubscribe get-backbone/backbone-core workflows
-/github subscribe get-backbone/backbone-core workflows:{name:"02 🚧 Build and test","03 👊🏽 Auto version bump","03a ☢️ Publish reactor","04 📦 ECR image upload","05 🔨 INT runtime deploy","06 🧪 STAGE runtime deploy","07 🚀 PROD runtime deploy","09 🌐 Static site deploy","10 🐿️ Infra deploy","11 💤 Infra hibernate","50 🔎 Static analysis","51 ☘️ Code coverage","90 🗄️ OWASP db cache","91 🪩 Mirror platform repo","92 📚 Mirror docs repo" event:"push","schedule","workflow_dispatch","repository_dispatch" branch:"main"}
+/github subscribe get-backbone/backbone-core workflows:{name:"02 🚧 Build and test","03 👊🏽 Auto version bump","03a 📦 Publish packages","04 📦 ECR image upload","05 🔨 INT runtime deploy","06 🧪 STAGE runtime deploy","07 🚀 PROD runtime deploy","09 🌐 Static site deploy","10 🐿️ Infra deploy","11 💤 Infra hibernate","50 🔎 Static analysis","51 ☘️ Code coverage","90 🗄️ OWASP db cache","91 🪩 Mirror platform repo","92 📚 Mirror docs repo" event:"push","schedule","workflow_dispatch","repository_dispatch" branch:"main"}
 ```
 
 ## get-backbone/forge-kit

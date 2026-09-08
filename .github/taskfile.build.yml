@@ -2,7 +2,7 @@
 version: '3'
 
 # Developer-mirror build tasks (included from taskfile.developer.yml).
-# No libs/sdk/reactor module and no template/ui exclusions.
+# No libs/sdk/dist module and no template/ui exclusions.
 
 vars:
   MAVEN_CMD: '$(command -v mvnd >/dev/null 2>&1 && echo mvnd || echo "./mvnw")'

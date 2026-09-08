@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import io.backbone.core.client.actor.ActorServiceClient;
+import io.backbone.core.client.api.actor.ActorServiceClient;
 import io.backbone.core.domain.dto.actor.ActorResponse;
 import io.quarkus.hal.HalEntityWrapper;
 import jakarta.ws.rs.core.Response;

@@ -1,8 +1,8 @@
 package io.backbone.services.template.domain;
 
-import io.backbone.core.audit.domain.AuditEvent;
-import io.backbone.core.audit.domain.EventSeverity;
-import io.backbone.core.audit.domain.EventType;
+import io.backbone.core.audit.api.domain.AuditEvent;
+import io.backbone.core.audit.api.domain.EventSeverity;
+import io.backbone.core.audit.api.domain.EventType;
 import io.backbone.kit.logging.api.LogMethodEntry;
 import io.backbone.kit.metrics.api.domain.ServiceMetrics;
 import io.backbone.services.template.domain.dto.TemplateEventRequest;
@@ -40,8 +40,8 @@ public class TemplateService
      */
     @WithSpan
     @ServiceMetrics(TemplateMetricsRecorder.class)
-    @LogMethodEntry(message = "for event: %s", argPaths = {"#request#eventId"})
-    @AuditEvent(message = "Template event: %s", argPaths = {"#request#eventId"}, type = EventType.DATA_ACCESS, severity = EventSeverity.INFO)
+    @LogMethodEntry(message = "for event: %s", argPaths = {"#eventId"})
+    @AuditEvent(message = "Template event: %s", argPaths = {"#eventId"}, type = EventType.DATA_ACCESS, severity = EventSeverity.INFO)
     public TemplateEventResponse processEvent(final TemplateEventRequest request)
     {
         final TemplateEventRecord record = templateEventMapper.toRecord(request);

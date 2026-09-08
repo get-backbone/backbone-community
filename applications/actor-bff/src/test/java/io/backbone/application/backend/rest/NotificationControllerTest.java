@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-import io.backbone.core.client.actor.ActorServiceClient;
-import io.backbone.core.client.notification.NotificationServiceClient;
+import io.backbone.core.client.api.actor.ActorServiceClient;
+import io.backbone.core.client.api.notification.NotificationServiceClient;
 import io.backbone.core.domain.dto.actor.ActorResponse;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;

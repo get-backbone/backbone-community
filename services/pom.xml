@@ -15,22 +15,6 @@
     </modules>
 
 
-    <properties>
-        <!-- document-service module (Tika Graal feature touches jakarta.mail.Part) -->
-        <jakarta.mail.api.version>2.1.3</jakarta.mail.api.version>
-    </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <!-- document-service module -->
-            <dependency>
-                <groupId>jakarta.mail</groupId>
-                <artifactId>jakarta.mail-api</artifactId>
-                <version>${jakarta.mail.api.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <dependencies>
         <!-- Common -->
         <dependency>
@@ -131,10 +115,11 @@
             <groupId>io.backbone</groupId>
             <artifactId>backbone-observability-aws</artifactId>
         </dependency>
+        <!-- libs/sdk (leaf GAVs for local/dev hot reload; published clients use sdk-bundle) -->
         <!-- libs (published binaries; no libs source on developer mirror) -->
         <dependency>
             <groupId>io.backbone.core</groupId>
-            <artifactId>reactor</artifactId>
+            <artifactId>sdk-bundle</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

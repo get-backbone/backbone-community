@@ -4,7 +4,7 @@ set -euo pipefail
 # verify-licence.sh
 # Type: executable
 # Verifies a signed licence (signature and expiry) against the bundled public key
-# in the licence/reactor JAR (META-INF/backbone-licence.pub). Prints JSON
+# in the licence/sdk-bundle JAR (META-INF/backbone-licence.pub). Prints JSON
 # {clientId, tier, expiresAt} to stdout. Exits 0 if valid, 1 otherwise.
 # Licence defaults to /etc/backbone-config/backbone-licence.
 # Usage: task bootstrap:licence-verify [-- --licence <path>]
@@ -23,7 +23,7 @@ validate_dependencies() {
 }
 
 maven_pl() {
-    # Core has libs/vendor/licence-runtime; mirrored clients only have libs (reactor dependency).
+    # Core has libs/vendor/licence-runtime; mirrored clients only have libs (sdk dependency).
     if [[ -f "${ROOT_DIR}/libs/vendor/licence-runtime/pom.xml" ]]; then
         echo "libs/vendor/licence-runtime"
     else

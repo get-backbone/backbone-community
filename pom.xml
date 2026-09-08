@@ -55,8 +55,15 @@
         <!-- Override Quarkus BOM / Tika transitive BC 1.84 (OWASP CVSS>=7).
              Coordinated 1.85 across jdk18on modules; bcprov alone has 1.85.2 — keep the set aligned. -->
         <bouncycastle.version>1.85</bouncycastle.version>
+
+        <!-- other java deps -->
+        <bucket4j.version>8.18.0</bucket4j.version>
+        <caffeine.version>3.2.3</caffeine.version>
+        <!-- document-service native: Tika Graal feature touches jakarta.mail.Part -->
+        <jakarta.mail.api.version>2.1.3</jakarta.mail.api.version>
         <!-- Override Tika 3.3.0 transitive jsoup 1.22.1 (CVE-2026-71497). -->
         <jsoup.version>1.23.1</jsoup.version>
+        <tika.version>3.3.0</tika.version>
 
         <!-- Maven plugin versions -->
         <maven.build.cache.version>1.2.2</maven.build.cache.version>
@@ -67,6 +74,7 @@
         <maven.dependency.version>3.10.0</maven.dependency.version>
         <maven.deploy.version>3.1.4</maven.deploy.version>
         <maven.enforcer.version>3.6.2</maven.enforcer.version>
+        <maven.exec.version>3.5.0</maven.exec.version>
         <maven.failsafe.version>3.5.5</maven.failsafe.version>
         <maven.gpg.version>3.2.8</maven.gpg.version>
         <maven.min.version>3.9.9</maven.min.version>
@@ -170,6 +178,29 @@
                 <artifactId>quarkus-micrometer-registry-prometheus-v1</artifactId>
                 <version>${quarkus.micrometer.registry.version}</version>
             </dependency>
+            <!-- bucket4j -->
+            <dependency>
+                <groupId>com.bucket4j</groupId>
+                <artifactId>bucket4j_jdk17-core</artifactId>
+                <version>${bucket4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.bucket4j</groupId>
+                <artifactId>bucket4j_jdk17-vertx</artifactId>
+                <version>${bucket4j.version}</version>
+            </dependency>
+            <!-- caffeine -->
+            <dependency>
+                <groupId>com.github.ben-manes.caffeine</groupId>
+                <artifactId>caffeine</artifactId>
+                <version>${caffeine.version}</version>
+            </dependency>
+            <!-- mail -->
+            <dependency>
+                <groupId>jakarta.mail</groupId>
+                <artifactId>jakarta.mail-api</artifactId>
+                <version>${jakarta.mail.api.version}</version>
+            </dependency>
             <!-- Bouncy Castle 1.85: fixes CVE-2026-* on 1.84 (Tika crypto parser + Quarkus BOM pin). -->
             <dependency>
                 <groupId>org.bouncycastle</groupId>
@@ -215,6 +246,17 @@
                 <groupId>org.jsoup</groupId>
                 <artifactId>jsoup</artifactId>
                 <version>${jsoup.version}</version>
+            </dependency>
+            <!-- tika -->
+            <dependency>
+                <groupId>org.apache.tika</groupId>
+                <artifactId>tika-core</artifactId>
+                <version>${tika.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tika</groupId>
+                <artifactId>tika-parsers-standard-package</artifactId>
+                <version>${tika.version}</version>
             </dependency>
             <!-- backbone-kit -->
             <dependency>
@@ -525,6 +567,11 @@
                     <groupId>com.github.wvengen</groupId>
                     <artifactId>proguard-maven-plugin</artifactId>
                     <version>${maven.proguard.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>${maven.exec.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

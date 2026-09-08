@@ -1,6 +1,6 @@
 package io.backbone.services.template.rest;
 
-import io.backbone.core.security.rest.AbstractRestResource;
+import io.backbone.core.security.api.rest.AbstractRestResource;
 import io.backbone.kit.security.api.rest.AllowedServices;
 import io.backbone.services.template.domain.TemplateService;
 import io.backbone.services.template.domain.dto.TemplateEventRequest;

@@ -3,7 +3,7 @@ package io.backbone.application.backend.rest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-import io.backbone.core.client.auth.AuthServiceClient;
+import io.backbone.core.client.api.auth.AuthServiceClient;
 import io.backbone.core.domain.dto.auth.ForgotPasswordRequest;
 import io.backbone.core.domain.dto.auth.ResetPasswordRequest;
 import jakarta.ws.rs.core.Response;

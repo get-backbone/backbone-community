@@ -18,7 +18,7 @@ runs:
         cache: ${{ inputs.cache-maven == 'true' && 'maven' || '' }}
 
     # Temurin 24+ omits jmods (JEP 493). setup-java v5 has no jdk+jmods package;
-    # download matching Adoptium jmods into $JAVA_HOME for ProGuard (libs/sdk/reactor).
+    # download matching Adoptium jmods into $JAVA_HOME for ProGuard (libs/sdk/dist).
     - if: runner.os == 'Linux'
       shell: bash
       run: bash .github/scripts/install-temurin-jmods.sh
