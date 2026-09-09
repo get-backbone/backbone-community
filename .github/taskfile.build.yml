@@ -2,12 +2,13 @@
 version: '3'
 
 # Developer-mirror build tasks (included from taskfile.developer.yml).
-# No libs/sdk/dist module and no template/ui exclusions.
+# template-service is scaffold-only — never build it here.
 
 vars:
   MAVEN_CMD: '$(command -v mvnd >/dev/null 2>&1 && echo mvnd || echo "./mvnw")'
   ROOT_DIR: "{{.TASKFILE_DIR}}/.."
   HARDEN_SKIP: '-Dsdk.obfuscate.skip=true -Dharden.skip=true'
+  EXCLUDED_MODULES: '-pl ''!services/template-service'''
 
 tasks:
   _default:
@@ -25,28 +26,28 @@ tasks:
     desc: mvn clean
     dir: "{{.ROOT_DIR}}"
     cmds:
-      - '{{.MAVEN_CMD}} clean -am'
+      - '{{.MAVEN_CMD}} clean {{.EXCLUDED_MODULES}} -am'
 
   compile:
     desc: mvn compile
     dir: "{{.ROOT_DIR}}"
     cmds:
-      - '{{.MAVEN_CMD}} compile -am'
+      - '{{.MAVEN_CMD}} compile {{.EXCLUDED_MODULES}} -am'
 
   package:
     desc: mvn package -DskipTests
     dir: "{{.ROOT_DIR}}"
     cmds:
-      - '{{.MAVEN_CMD}} package -Dmaven.test.skip {{.HARDEN_SKIP}} -am'
+      - '{{.MAVEN_CMD}} package -Dmaven.test.skip {{.HARDEN_SKIP}} {{.EXCLUDED_MODULES}} -am'
 
   install:
     desc: mvn install -DskipTests
     dir: "{{.ROOT_DIR}}"
     cmds:
-      - '{{.MAVEN_CMD}} install -Dmaven.test.skip {{.HARDEN_SKIP}} -am'
+      - '{{.MAVEN_CMD}} install -Dmaven.test.skip {{.HARDEN_SKIP}} {{.EXCLUDED_MODULES}} -am'
 
   _install:ci:
     desc: mvn install -DskipTests -Dquarkus.build.skip
     dir: "{{.ROOT_DIR}}"
     cmds:
-      - '{{.MAVEN_CMD}} install -Dmaven.test.skip -Dquarkus.build.skip=true {{.HARDEN_SKIP}} -am {{.CLI_ARGS}}'
+      - '{{.MAVEN_CMD}} install -Dmaven.test.skip -Dquarkus.build.skip=true {{.HARDEN_SKIP}} {{.EXCLUDED_MODULES}} -am {{.CLI_ARGS}}'

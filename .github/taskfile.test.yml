@@ -2,11 +2,12 @@
 version: '3'
 
 # Developer-mirror test tasks (included from taskfile.developer.yml).
-# Exercises template-service / actor-bff / web-actor present in the mirror.
+# template-service is scaffold-only — never build or test it here.
 
 vars:
   MAVEN_CMD: '$(command -v mvnd >/dev/null 2>&1 && echo mvnd || echo "./mvnw")'
   ROOT_DIR: "{{.TASKFILE_DIR}}/.."
+  EXCLUDED_MODULES: '-pl ''!services/template-service'''
 
 tasks:
 
@@ -18,20 +19,20 @@ tasks:
     desc: mvn verify
     dir: "{{.ROOT_DIR}}"
     cmds:
-      - '{{.MAVEN_CMD}} verify -am'
+      - '{{.MAVEN_CMD}} verify {{.EXCLUDED_MODULES}} -am'
 
   unit:
     desc: mvn test; no IT
     dir: "{{.ROOT_DIR}}"
     cmds:
-      - '{{.MAVEN_CMD}} test -am {{.CLI_ARGS}}'
+      - '{{.MAVEN_CMD}} test {{.EXCLUDED_MODULES}} -am {{.CLI_ARGS}}'
 
   integration:
     desc: mvn verify; IT only (MODULE=…)
     dir: "{{.ROOT_DIR}}"
     vars:
       MODULE: '{{.MODULE | default ""}}'
-      PL_FLAG: '{{if eq .MODULE ""}}{{else}}-pl ''{{.MODULE}}''{{end}}'
+      PL_FLAG: '{{if eq .MODULE ""}}{{.EXCLUDED_MODULES}}{{else}}-pl ''{{.MODULE}}''{{end}}'
     cmds:
       - '{{.MAVEN_CMD}} verify {{.PL_FLAG}} -DskipUnitTests -am {{.CLI_ARGS}}'
 
@@ -40,7 +41,7 @@ tasks:
     dir: "{{.ROOT_DIR}}"
     vars:
       MODULE: '{{.MODULE | default ""}}'
-      PL_FLAG: '{{if eq .MODULE ""}}{{else}}-pl ''{{.MODULE}}''{{end}}'
+      PL_FLAG: '{{if eq .MODULE ""}}{{.EXCLUDED_MODULES}}{{else}}-pl ''{{.MODULE}}''{{end}}'
     cmds:
       - '{{.MAVEN_CMD}} {{.PL_FLAG}} test-compile failsafe:integration-test failsafe:verify -DskipUnitTests {{.CLI_ARGS}}'
 
@@ -48,5 +49,5 @@ tasks:
     dir: "{{.ROOT_DIR}}"
     desc: Static analysis + OWASP (no tests)
     cmds:
-      - '{{.MAVEN_CMD}} -Pcode-quality verify -am -DautoUpdate=false {{.CLI_ARGS}}'
+      - '{{.MAVEN_CMD}} -Pcode-quality verify {{.EXCLUDED_MODULES}} -am -DautoUpdate=false {{.CLI_ARGS}}'
       - '{{.MAVEN_CMD}} -Pdependency-check dependency-check:aggregate -DautoUpdate=false {{.CLI_ARGS}}'

@@ -43,8 +43,19 @@ strip_rds_for_stateless() {
     local dest_dir="$1"
     local java_root="${dest_dir}/src/main/java/io/backbone/services/template"
     local test_root="${dest_dir}/src/test/java/io/backbone/services/template"
+    local parent_version
 
     log_info "Stripping RDS persistence (stateless scaffold)"
+
+    parent_version="$(
+        awk '/<parent>/,/<\/parent>/' "${dest_dir}/pom.xml" |
+            sed -n 's/^[[:space:]]*<version>\([^<]*\)<\/version>.*/\1/p' |
+            head -1
+    )"
+    if [[ -z "$parent_version" ]]; then
+        log_error "Could not read parent version from ${dest_dir}/pom.xml"
+        exit 1
+    fi
 
     rm -rf \
         "${java_root}/infrastructure/persistence" \
@@ -53,7 +64,7 @@ strip_rds_for_stateless() {
         "${java_root}/infrastructure/TemplateEventMapper.java" \
         "${java_root}/infrastructure/TemplateServiceHealthChecks.java"
 
-    cat > "${dest_dir}/pom.xml" << 'EOF'
+    cat > "${dest_dir}/pom.xml" << EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -62,7 +73,7 @@ strip_rds_for_stateless() {
     <parent>
         <groupId>io.backbone.core</groupId>
         <artifactId>services</artifactId>
-        <version>1.0.0</version>
+        <version>${parent_version}</version>
     </parent>
 
     <artifactId>template-service</artifactId>
@@ -77,6 +88,9 @@ quarkus.config.locations=quarkus.properties,platform-config.yml,aws.properties,t
 
 # REST service client configurations (AuthServiceClient for S2S tokens)
 quarkus.rest-client.AuthServiceClient.url=${BACKBONE_INTERNAL_ALB_URL:http://localhost:${AUTH_SERVICE_PORT}}
+
+# No aws-api EventBridgeClient on developer/client scaffolds; build-gates EventBridge dispatcher.
+backbone.audit.enabled=false
 EOF
 
     cat > "${java_root}/domain/TemplateService.java" << 'EOF'
@@ -89,7 +103,7 @@ import io.backbone.kit.logging.api.LogMethodEntry;
 import io.backbone.kit.metrics.api.domain.ServiceMetrics;
 import io.backbone.services.template.domain.dto.TemplateEventRequest;
 import io.backbone.services.template.domain.dto.TemplateEventResponse;
-import io.backbone.services.template.infrastructure.metrics.TemplateMetricsRecorder;
+import io.backbone.services.template.infrastructure.TemplateMetricsRecorder;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.jboss.logging.Logger;
@@ -363,6 +377,9 @@ add_backbone_services_entry() {
     local alb_path="$3"
     local tmp_file
 
+    # Absent on developer / client forks (no infra/); present when scaffolding in-core.
+    [[ -f "$json_file" ]] || return 0
+
     if jq -e --arg name "$service_name" '.services[] | select(.serviceName == $name)' "$json_file" > /dev/null; then
         log_warn "Service ${service_name} already present in backbone-services.json"
         return 0
@@ -459,17 +476,15 @@ print_followups() {
 Scaffold complete for ${service_name}.
 
 Next steps (manual):
-  1. Review ALB path ${alb_path} in infra/src/lib/constant/backbone-services.json
-  2. Optionally add "task dev:${task_alias}" to .mertrc
-  3. Add BFF routes / domain-clients when clients need this service
-  4. Deploy via existing CDK / release workflows after merge
-  5. Run locally: task dev:${task_alias}
-  6. Regen local metrics scrape/dashboards: task metrics:grafana-dashboard (reads backbone-services.json)
+  1. Optionally add "task dev:${task_alias}" to .mertrc
+  2. Add BFF routes / domain-clients when clients need this service
+  3. Deploy via existing CDK / release workflows after merge
+  4. Run locally: task dev:${task_alias}
 EOF
 
     if [[ "$with_rds" -eq 1 ]]; then
         cat << EOF
-  7. Ensure local Postgres is running for integration tests (Flyway schema: ${PACKAGE_SEGMENT})
+  5. Ensure local Postgres is running for integration tests (Flyway schema: ${PACKAGE_SEGMENT})
 EOF
     fi
 

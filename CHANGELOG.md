@@ -1,3 +1,11 @@
+## v2.0.14 (2026-09-09)
+
+### Fix
+
+- **obfuscator**: disable Aidsfuscator control-flow and salting on Java 25
+- **scaffold**: make stateless service scaffold work without infra
+- **ci**: exclude template-service from developer mirror builds
+
 ## v2.0.13 (2026-09-08)
 
 ### Fix
