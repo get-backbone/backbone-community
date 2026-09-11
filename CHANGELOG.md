@@ -1,3 +1,10 @@
+## v2.0.15 (2026-09-11)
+
+### Refactor
+
+- **sdk**: graft ClassBytecodeDigest via bootstrap tree
+- **sdk**: add Facade/Handler/IntegrityCanary pattern on throttle
+
 ## v2.0.14 (2026-09-09)
 
 ### Fix

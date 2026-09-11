@@ -89,6 +89,7 @@ jobs:
         with:
           name: unit-test-results
           path: '**/target/surefire-reports/TEST-*.xml'
+          if-no-files-found: warn
 
   int-test:
     runs-on: ubuntu-latest
@@ -129,6 +130,7 @@ jobs:
         with:
           name: int-test-results
           path: '**/target/failsafe-reports/TEST-*.xml'
+          if-no-files-found: warn
 
   unit-test-reporter:
     runs-on: ubuntu-latest
