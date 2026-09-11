@@ -1,3 +1,9 @@
+## v2.0.18 (2026-09-11)
+
+### Fix
+
+- **sdk**: restore ProGuard pass-through before Aidsfuscator hashIntegrity
+
 ## v2.0.17 (2026-09-11)
 
 ### Fix
