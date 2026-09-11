@@ -1,3 +1,9 @@
+## v2.0.17 (2026-09-11)
+
+### Fix
+
+- **sdk**: exclude domain DTOs from sdk-bundle Aidsfuscator rename
+
 ## v2.0.16 (2026-09-11)
 
 ### Refactor
