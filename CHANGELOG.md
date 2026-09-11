@@ -1,3 +1,9 @@
+## v2.0.19 (2026-09-11)
+
+### Fix
+
+- **sdk**: keep Aidsfuscator hashIntegrity intact under Quarkus
+
 ## v2.0.18 (2026-09-11)
 
 ### Fix
