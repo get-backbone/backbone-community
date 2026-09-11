@@ -7,7 +7,7 @@ version: '3'
 vars:
   MAVEN_CMD: '$(command -v mvnd >/dev/null 2>&1 && echo mvnd || echo "./mvnw")'
   ROOT_DIR: "{{.TASKFILE_DIR}}/.."
-  HARDEN_SKIP: '-Dsdk.obfuscate.skip=true -Dharden.skip=true'
+  HARDEN_SKIP: '-Dharden.skip=true'
   EXCLUDED_MODULES: '-pl ''!services/template-service'''
 
 tasks:

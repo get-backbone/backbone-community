@@ -1,3 +1,9 @@
+## v2.0.16 (2026-09-11)
+
+### Refactor
+
+- **sdk**: harden sdk-bundle once after shade via ProGuard then Aidsfuscator
+
 ## v2.0.15 (2026-09-11)
 
 ### Refactor
