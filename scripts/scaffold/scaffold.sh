@@ -84,6 +84,8 @@ EOF
     cat > "${dest_dir}/src/main/resources/application.properties" << 'EOF'
 quarkus.application.name=template-service
 quarkus.http.port=${TEMPLATE_SERVICE_PORT:8080}
+# Class-loading is read before normal config (Quarkus docs): must be in application.properties.
+quarkus.class-loading.parent-first-artifacts=io.backbone.core:sdk-bundle
 quarkus.config.locations=quarkus.properties,platform-config.yml,aws.properties,throttle.properties,otel.properties,logging.properties,metrics.properties,cache.properties,redis.properties
 
 # REST service client configurations (AuthServiceClient for S2S tokens)

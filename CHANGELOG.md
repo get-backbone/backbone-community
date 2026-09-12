@@ -1,3 +1,9 @@
+## v2.0.20 (2026-09-11)
+
+### Fix
+
+- **class-loader**: quarkus.class-loading.* is ignored in quarkus.properties; must be direct in all application.properties files
+
 ## v2.0.19 (2026-09-11)
 
 ### Fix
