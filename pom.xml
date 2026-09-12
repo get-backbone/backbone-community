@@ -4,7 +4,7 @@
 
     <groupId>io.backbone.core</groupId>
     <artifactId>backbone-platform</artifactId>
-    <version>2.0.20</version>
+    <version>2.0.21</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -346,6 +346,11 @@
                 <artifactId>security-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.backbone.core</groupId>
+                <artifactId>test-support</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <!-- libs/platform -->
             <dependency>
                 <groupId>io.backbone.core</groupId>
@@ -383,18 +388,26 @@
 
     <repositories>
         <repository>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
             <id>ghp-kit</id>
             <name>GitHub Packages (backbone-kit)</name>
             <url>https://maven.pkg.github.com/get-backbone/backbone-kit</url>
-            <releases><enabled>true</enabled></releases>
-            <snapshots><enabled>true</enabled></snapshots>
         </repository>
         <repository>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
             <id>ghp-platform</id>
             <name>GitHub Packages (backbone-platform)</name>
             <url>https://maven.pkg.github.com/get-backbone/backbone-platform</url>
-            <releases><enabled>true</enabled></releases>
-            <snapshots><enabled>true</enabled></snapshots>
         </repository>
     </repositories>
 

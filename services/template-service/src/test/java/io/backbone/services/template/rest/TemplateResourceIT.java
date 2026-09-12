@@ -3,8 +3,8 @@ package io.backbone.services.template.rest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import io.backbone.core.common.api.test.QuarkusLoggingTestResource;
-import io.backbone.core.common.api.test.QuarkusPortsEnvTestResource;
+import io.backbone.core.test.common.QuarkusLoggingTestResource;
+import io.backbone.core.test.common.QuarkusPortsEnvTestResource;
 import io.backbone.kit.throttle.impl.test.ThrottlingDisabledTestProfile;
 import io.backbone.services.template.domain.dto.TemplateEventRequest;
 import io.backbone.services.template.infrastructure.persistence.TemplateEventRecord;

@@ -1,3 +1,10 @@
+## v2.0.21 (2026-09-12)
+
+### Fix
+
+- **test**: publish clear test-support; ignore ProGuard licence jars in workspace lookup
+- **test**: parent-first quarkus-test-common with sdk-bundle to avoid QuarkusTestResource CCE
+
 ## v2.0.20 (2026-09-11)
 
 ### Fix
