@@ -1,3 +1,9 @@
+## v2.0.22 (2026-09-12)
+
+### Fix
+
+- **sdk**: make parent-first sdk-bundle CDI beans Arc-proxyable
+
 ## v2.0.21 (2026-09-12)
 
 ### Fix
