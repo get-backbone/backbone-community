@@ -1,3 +1,9 @@
+## v2.0.25 (2026-09-12)
+
+### Fix
+
+- **sdk**: make Arc-invoked parent-first lifecycle methods public
+
 ## v2.0.24 (2026-09-12)
 
 ### Fix
