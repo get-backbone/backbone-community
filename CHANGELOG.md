@@ -1,3 +1,9 @@
+## v2.0.24 (2026-09-12)
+
+### Fix
+
+- **sdk**: fix(sdk): avoid Quarkus types in parent-first CDI signatures
+
 ## v2.0.23 (2026-09-12)
 
 ### Fix
