@@ -1,3 +1,9 @@
+## v2.0.26 (2026-09-12)
+
+### Fix
+
+- **sdk**: make parent-first injectable fields public for Arc
+
 ## v2.0.25 (2026-09-12)
 
 ### Fix
