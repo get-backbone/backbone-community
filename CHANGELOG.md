@@ -1,3 +1,9 @@
+## v2.0.23 (2026-09-12)
+
+### Fix
+
+- **sdk**: publish clear sdk-api; keep domain-dtos off sdk-bundle
+
 ## v2.0.22 (2026-09-12)
 
 ### Fix
