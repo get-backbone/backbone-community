@@ -1,3 +1,9 @@
+## v2.0.27 (2026-09-12)
+
+### Fix
+
+- **sdk**: keep parent-first proxy ctors from running Facade/canary
+
 ## v2.0.26 (2026-09-12)
 
 ### Fix
