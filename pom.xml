@@ -343,7 +343,12 @@
             </dependency>
             <dependency>
                 <groupId>io.backbone.core</groupId>
-                <artifactId>security-api</artifactId>
+                <artifactId>sdk-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.backbone.core</groupId>
+                <artifactId>security</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
