@@ -1,3 +1,15 @@
+## v2.0.28 (2026-09-13)
+
+### Fix
+
+- **sdk**: route clear sdk-api through Gateways, not impl Facades
+- **sdk**: inject clear RateLimitMetricsApplication into request filter
+- **sdk**: move JAX-RS CDI entrypoints off parent-first sdk-bundle
+
+### Refactor
+
+- **sdk**: rename security-api module to security
+
 ## v2.0.27 (2026-09-12)
 
 ### Fix
