@@ -4,7 +4,7 @@
 
     <groupId>io.backbone.core</groupId>
     <artifactId>backbone-platform</artifactId>
-    <version>2.0.28</version>
+    <version>2.1.0</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -344,6 +344,11 @@
             <dependency>
                 <groupId>io.backbone.core</groupId>
                 <artifactId>sdk-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.backbone.core</groupId>
+                <artifactId>sdk-bundle</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

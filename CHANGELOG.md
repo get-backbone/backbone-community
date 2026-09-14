@@ -1,3 +1,9 @@
+## v2.1.0 (2026-09-14)
+
+### Feat
+
+- **sdk**: IntegrityCanaries, drop parent-first, prove hardened bundle
+
 ## v2.0.28 (2026-09-13)
 
 ### Fix
