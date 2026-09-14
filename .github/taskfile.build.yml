@@ -1,7 +1,7 @@
 ---
 version: '3'
 
-# Developer-mirror build tasks (included from taskfile.developer.yml).
+# Community-mirror build tasks (included from taskfile.community.yml).
 # template-service is scaffold-only — never build it here.
 
 vars:

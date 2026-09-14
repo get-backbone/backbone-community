@@ -88,7 +88,7 @@ assert_no_host_network_mode() {
 main() {
     local dockerfile
 
-    # Developer mirror excludes infra/ (see developer-mirror.rsync-filter).
+    # Community mirror excludes infra/ (see community-mirror.rsync-filter).
     if [[ ! -d "${REPO_ROOT}/infra" ]]; then
         echo "SKIP: no infra/ directory (nothing to check)"
         return 0

@@ -1,8 +1,8 @@
 ---
 name: '02 🚧 Build and test'
 
-# Developer-mirror CI (*.yml.disabled so core Actions ignores it;
-# 92-mirror-developer promotes this file to 02-build-test.yml).
+# Community-mirror CI (*.yml.disabled so core Actions ignores it;
+# 92-mirror-community promotes this file to 02-build-test.yml).
 
 # yamllint disable-line rule:truthy
 on:

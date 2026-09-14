@@ -4,7 +4,7 @@
 
     <groupId>io.backbone.core</groupId>
     <artifactId>backbone-platform</artifactId>
-    <version>2.1.2</version>
+    <version>3.0.0</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -21,9 +21,9 @@
 
     <distributionManagement>
         <repository>
-            <id>ghp-platform</id>
-            <name>Target repo for licence/sdk-bundle package is backbone-platform</name>
-            <url>https://maven.pkg.github.com/get-backbone/backbone-platform</url>
+            <id>ghp-community</id>
+            <name>Target repo for licence/sdk-api/sdk-bundle packages is backbone-community</name>
+            <url>https://maven.pkg.github.com/get-backbone/backbone-community</url>
         </repository>
     </distributionManagement>
 
@@ -415,9 +415,9 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-            <id>ghp-platform</id>
-            <name>GitHub Packages (backbone-platform)</name>
-            <url>https://maven.pkg.github.com/get-backbone/backbone-platform</url>
+            <id>ghp-community</id>
+            <name>GitHub Packages (backbone-community)</name>
+            <url>https://maven.pkg.github.com/get-backbone/backbone-community</url>
         </repository>
     </repositories>
 

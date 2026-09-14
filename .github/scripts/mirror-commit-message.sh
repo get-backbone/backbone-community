@@ -10,7 +10,7 @@ set -euo pipefail
 #   - drop Signed-off-by (mirror commit is re-signed)
 # Usage: .github/scripts/mirror-commit-message.sh [core-repo-dir] [commit]
 # Env:
-#   MIRROR_REPO  owner/name of the mirror (e.g. get-backbone/backbone-developer)
+#   MIRROR_REPO  owner/name of the mirror (e.g. get-backbone/backbone-community)
 #   VERSION      release version without v-prefix (e.g. 2.0.3)
 # Prints the message on stdout (suitable for git commit -m).
 

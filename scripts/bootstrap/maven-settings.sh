@@ -54,7 +54,7 @@ main() {
       <password>${github_token}</password>
     </server>
     <server>
-      <id>ghp-platform</id>
+      <id>ghp-community</id>
       <username>${github_username}</username>
       <password>${github_token}</password>
     </server>

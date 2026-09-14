@@ -1,7 +1,7 @@
 ---
 version: '3'
 
-# Developer-mirror Taskfile (promoted to taskfile.yml on 92 sync).
+# Community-mirror Taskfile (promoted to taskfile.yml on 92 sync).
 # Omits infra/CDK, packages publish, perf, and metrics (needs infra catalog).
 # template-service is scaffold-only — no dev:template wrapper.
 # Includes use post-promote names (.github/taskfile.build.yml / test.yml).
@@ -13,7 +13,7 @@ includes:
   seed: "scripts/taskfile.seed.yml"
   # internal tasks (not exposed via cli)
   _static: ".github/taskfile.static.yml"
-  # developer tasks (promoted from *.developer.yml on sync)
+  # community tasks (promoted from *.community.yml on sync)
   dev: "scripts/taskfile.development.yml"
   build: ".github/taskfile.build.yml"
   test: ".github/taskfile.test.yml"

@@ -1,3 +1,17 @@
+## v3.0.0 (2026-09-14)
+
+### Feat
+
+- **community**: publishing to backbone-community open source edition
+
+### Fix
+
+- **ci**: repair packages deploy script and allow 03a republish
+
+### Refactor
+
+- **community**: rename developer mirror and retarget packages registry
+
 ## v2.1.2 (2026-09-14)
 
 ### Fix

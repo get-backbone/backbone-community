@@ -35,7 +35,7 @@ main() {
       <password>${GITHUB_MAVEN_TOKEN}</password>
     </server>
     <server>
-      <id>ghp-platform</id>
+      <id>ghp-community</id>
       <username>${GITHUB_MAVEN_USERNAME}</username>
       <password>${GITHUB_MAVEN_TOKEN}</password>
     </server>

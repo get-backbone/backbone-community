@@ -1,5 +1,5 @@
 ---
-# Developer mirror local backing services only.
+# Community mirror local backing services only.
 # Pre-baked native service images will be added here later (auth/actor/etc.).
 services:
 

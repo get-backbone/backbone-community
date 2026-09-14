@@ -4,7 +4,7 @@
     <parent>
         <groupId>io.backbone.core</groupId>
         <artifactId>backbone-platform</artifactId>
-        <version>2.1.2</version>
+        <version>3.0.0</version>
     </parent>
 
     <artifactId>services</artifactId>
@@ -116,7 +116,7 @@
             <artifactId>backbone-observability-aws</artifactId>
         </dependency>
         <!-- libs/sdk (leaf GAVs for local/dev hot reload; published clients use sdk-bundle) -->
-        <!-- libs (published binaries; no libs source on developer mirror) -->
+        <!-- libs (published binaries; no libs source on community mirror) -->
         <dependency>
             <groupId>io.backbone.core</groupId>
             <artifactId>sdk-api</artifactId>

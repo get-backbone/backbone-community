@@ -4,14 +4,14 @@
     <parent>
         <groupId>io.backbone.core</groupId>
         <artifactId>libs</artifactId>
-        <version>2.1.2</version>
+        <version>3.0.0</version>
     </parent>
 
     <artifactId>sdk</artifactId>
     <packaging>pom</packaging>
 
     <dependencies>
-        <!-- Published from backbone-core (no libs source on the developer mirror) -->
+        <!-- Published from backbone-core (no libs source on the community mirror) -->
         <dependency>
             <groupId>io.backbone.core</groupId>
             <artifactId>sdk-bundle</artifactId>
