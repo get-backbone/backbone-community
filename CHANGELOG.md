@@ -1,3 +1,15 @@
+## v2.1.2 (2026-09-14)
+
+### Fix
+
+- **sdk**: use grep in packages HI jar guard
+
+## v2.1.1 (2026-09-14)
+
+### Fix
+
+- **sdk**: stop double-harden when publishing sdk-bundle
+
 ## v2.1.0 (2026-09-14)
 
 ### Feat

@@ -18,6 +18,21 @@ validate_dependencies() {
     require_cli jq
 }
 
+resolve_version() {
+    local version
+    version=$(jq -r '.client_payload.version // empty' "$GITHUB_EVENT_PATH")
+    if [[ -n "$version" && "$version" != "null" ]]; then
+        printf '%s\n' "$version"
+        return
+    fi
+    if [[ -n "${PUBLISH_VERSION:-}" ]]; then
+        printf '%s\n' "$PUBLISH_VERSION"
+        return
+    fi
+    # workflow_dispatch / missing payload: version is whatever the checked-out pom says
+    ./mvnw -q -DforceStdout help:evaluate -Dexpression=project.version
+}
+
 # ---- Main -------------------------------------------------------------------
 
 main() {
@@ -26,8 +41,7 @@ main() {
 
     validate_dependencies
 
-    version=$(jq -r '.client_payload.version' "$GITHUB_EVENT_PATH")
-
+    version="$(resolve_version)"
     if [[ -n "$version" && "$version" != "null" ]]; then
         published=true
     fi
