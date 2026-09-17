@@ -44,6 +44,9 @@ replay_pid*
 # local .env file (only)
 .envrc.local
 
+# Vendor-only AO mapping archive (build-specific; do not commit)
+.ao-artifacts/
+
 # local data/cache files
 .floci/
 .localstack/

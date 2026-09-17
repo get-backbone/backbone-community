@@ -1,3 +1,10 @@
 # Infrastructure provisioning and AWS deployment pipelines are a commercial licence feature.
 # See https://backbonehq.io/#pricing
 # Local apps need this classpath resource present, so quarkus.config.locations resolves.
+
+github:
+  organization: get-backbone
+  repo: backbone-community
+domainRoot: backbonehq.io
+googleOauthEnabled: true
+linkedInOauthEnabled: true

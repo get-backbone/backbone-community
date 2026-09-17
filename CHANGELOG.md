@@ -1,3 +1,16 @@
+## v3.1.0 (2026-09-17)
+
+### Feat
+
+- **ao**: ship document-service community AO image wiring
+- **ao**: ship notification-service community AO image wiring
+- **ao**: community native compose, %community logging, and AO carve-outs
+- **ao**: vendor-only community native packaging and AO carve-outs
+
+### Fix
+
+- **config**: skip decorative licence panel under %test
+
 ## v3.0.0 (2026-09-14)
 
 ### Feat

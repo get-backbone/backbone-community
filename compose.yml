@@ -1,13 +1,11 @@
 ---
-# Community mirror local backing services only.
-# Pre-baked native service images will be added here later (auth/actor/etc.).
+# Backbone Community pre-baked native images and local backing infra services.
 services:
 
-  floci:
+  floci-ce:
     image: floci/floci:1.7.0
-    container_name: floci
+    container_name: floci-ce
     environment:
-      # Local AWS emulator on :4566 (S3, DynamoDB, SES, SSM, Cognito, CloudFormation, etc.).
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
       - FLOCI_HOSTNAME=localhost
@@ -17,12 +15,18 @@ services:
     ports:
       - "4566:4566"
     volumes:
-      - "./.floci:/app/data"  # visible local folder .floci
+      - "./.floci:/app/data"
       - "/var/run/docker.sock:/var/run/docker.sock"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:4566/_floci/health || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 15s
 
-  postgres:
+  postgres-ce:
     image: postgres:18-alpine
-    container_name: postgres
+    container_name: postgres-ce
     command: ["postgres", "-c", "max_connections=200"]
     environment:
       - POSTGRES_USER=postgres
@@ -31,16 +35,16 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - "./.postgres:/var/lib/postgresql"  # visible local folder .postgres
+      - "./.postgres:/var/lib/postgresql"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  redis:
+  redis-ce:
     image: redis:7-alpine
-    container_name: redis
+    container_name: redis-ce
     command: ["redis-server", "--port", "6380"]
     ports:
       - "6380:6380"
@@ -49,3 +53,164 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  auth-service:
+    image: ghcr.io/get-backbone/auth-service:${BACKBONE_VERSION:-3.0.0}
+    container_name: auth-service
+    ports:
+      - "${AUTH_SERVICE_PORT:-8100}:8080"
+    environment:
+      - QUARKUS_PROFILE=community
+      - QUARKUS_HTTP_HOST=0.0.0.0
+      - QUARKUS_HTTP_PORT=8080
+      - WEB_ACTOR_PORT=${WEB_ACTOR_PORT:-9100}
+      - BACKBONE_PUBLIC_ALB_URL=${BACKBONE_PUBLIC_ALB_URL:-http://localhost:9100}
+      - BACKBONE_OAUTH2_REFRESH_TOKEN_ENCRYPTION_KEY=${BACKBONE_OAUTH2_REFRESH_TOKEN_ENCRYPTION_KEY}
+      - GOOGLE_OAUTH2_CLIENT_ID=${GOOGLE_OAUTH2_CLIENT_ID}
+      - GOOGLE_OAUTH2_CLIENT_SECRET=${GOOGLE_OAUTH2_CLIENT_SECRET}
+      - LINKEDIN_OAUTH2_CLIENT_ID=${LINKEDIN_OAUTH2_CLIENT_ID}
+      - LINKEDIN_OAUTH2_CLIENT_SECRET=${LINKEDIN_OAUTH2_CLIENT_SECRET}
+      - SMALLRYE_CONFIG_SECRET_KEY=${SMALLRYE_CONFIG_SECRET_KEY:-}
+      - BACKBONE_OBSERVABILITY_AMP_REMOTE_WRITE_ENABLED=false
+      - BACKBONE_OBSERVABILITY_XRAY_EXPORT_ENABLED=false
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_REGION=${AWS_REGION:-us-west-2}
+      - AWS_SECRETS_MANAGER_ENDPOINT=http://floci-ce:4566
+      - AWS_SSM_ENDPOINT=http://floci-ce:4566
+      - AWS_COGNITO_ENDPOINT=http://floci-ce:4566
+      - AWS_COGNITO_ISSUER_BASE_URL=http://floci-ce:4566
+      - AWS_DYNAMODB_ENDPOINT=http://floci-ce:4566
+      - AWS_S3_ENDPOINT=http://floci-ce:4566
+      - AWS_SES_ENDPOINT=http://floci-ce:4566
+      - AWS_SQS_ENDPOINT=http://floci-ce:4566
+      - AWS_EVENTBRIDGE_ENDPOINT=http://floci-ce:4566
+      - QUARKUS_REDIS_HOSTS=redis://redis-ce:6380
+      - QUARKUS_REDIS_TLS_ENABLED=false
+      - QUARKUS_REST_CLIENT_ACTORSERVICECLIENT_URL=http://actor-service:8080
+    volumes:
+      - "${BACKBONE_LICENCE_FILE:-/etc/backbone-config/backbone-licence}:/etc/backbone-config/backbone-licence:ro"
+    depends_on:
+      floci-ce:
+        condition: service_healthy
+      postgres-ce:
+        condition: service_healthy
+      redis-ce:
+        condition: service_healthy
+
+  actor-service:
+    image: ghcr.io/get-backbone/actor-service:${BACKBONE_VERSION:-3.0.0}
+    container_name: actor-service
+    ports:
+      - "${ACTOR_SERVICE_PORT:-8101}:8080"
+    environment:
+      - QUARKUS_PROFILE=community
+      - QUARKUS_HTTP_HOST=0.0.0.0
+      - QUARKUS_HTTP_PORT=8080
+      - BACKBONE_OBSERVABILITY_AMP_REMOTE_WRITE_ENABLED=false
+      - BACKBONE_OBSERVABILITY_XRAY_EXPORT_ENABLED=false
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_REGION=${AWS_REGION:-us-west-2}
+      - AWS_SECRETS_MANAGER_ENDPOINT=http://floci-ce:4566
+      - AWS_SSM_ENDPOINT=http://floci-ce:4566
+      - AWS_COGNITO_ENDPOINT=http://floci-ce:4566
+      - AWS_COGNITO_ISSUER_BASE_URL=http://floci-ce:4566
+      - AWS_DYNAMODB_ENDPOINT=http://floci-ce:4566
+      - AWS_S3_ENDPOINT=http://floci-ce:4566
+      - AWS_SES_ENDPOINT=http://floci-ce:4566
+      - AWS_SQS_ENDPOINT=http://floci-ce:4566
+      - AWS_EVENTBRIDGE_ENDPOINT=http://floci-ce:4566
+      - DB_URL=jdbc:postgresql://postgres-ce:5432/backbone
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+      - QUARKUS_REDIS_HOSTS=redis://redis-ce:6380
+      - QUARKUS_REDIS_TLS_ENABLED=false
+      - QUARKUS_REST_CLIENT_AUTHSERVICECLIENT_URL=http://auth-service:8080
+    volumes:
+      - "${BACKBONE_LICENCE_FILE:-/etc/backbone-config/backbone-licence}:/etc/backbone-config/backbone-licence:ro"
+    depends_on:
+      floci-ce:
+        condition: service_healthy
+      postgres-ce:
+        condition: service_healthy
+      redis-ce:
+        condition: service_healthy
+
+  notification-service:
+    image: ghcr.io/get-backbone/notification-service:${BACKBONE_VERSION:-3.0.0}
+    container_name: notification-service
+    ports:
+      - "${NOTIFICATION_SERVICE_PORT:-8103}:8080"
+    environment:
+      - QUARKUS_PROFILE=community
+      - QUARKUS_HTTP_HOST=0.0.0.0
+      - QUARKUS_HTTP_PORT=8080
+      - NOTIFICATION_UNSUBSCRIBE_BASE_URL=${NOTIFICATION_UNSUBSCRIBE_BASE_URL:-http://localhost:8103}
+      - WEB_ACTOR_PORT=${WEB_ACTOR_PORT:-9100}
+      - BACKBONE_PUBLIC_ALB_URL=${BACKBONE_PUBLIC_ALB_URL:-http://localhost:9100}
+      - BACKBONE_OBSERVABILITY_AMP_REMOTE_WRITE_ENABLED=false
+      - BACKBONE_OBSERVABILITY_XRAY_EXPORT_ENABLED=false
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_REGION=${AWS_REGION:-us-west-2}
+      - AWS_SECRETS_MANAGER_ENDPOINT=http://floci-ce:4566
+      - AWS_SSM_ENDPOINT=http://floci-ce:4566
+      - AWS_COGNITO_ENDPOINT=http://floci-ce:4566
+      - AWS_COGNITO_ISSUER_BASE_URL=http://floci-ce:4566
+      - AWS_DYNAMODB_ENDPOINT=http://floci-ce:4566
+      - AWS_S3_ENDPOINT=http://floci-ce:4566
+      - AWS_SES_ENDPOINT=http://floci-ce:4566
+      - AWS_SQS_ENDPOINT=http://floci-ce:4566
+      - AWS_EVENTBRIDGE_ENDPOINT=http://floci-ce:4566
+      - DB_URL=jdbc:postgresql://postgres-ce:5432/backbone
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+      - QUARKUS_REDIS_HOSTS=redis://redis-ce:6380
+      - QUARKUS_REDIS_TLS_ENABLED=false
+      - QUARKUS_REST_CLIENT_AUTHSERVICECLIENT_URL=http://auth-service:8080
+      - QUARKUS_REST_CLIENT_ACTORSERVICECLIENT_URL=http://actor-service:8080
+    volumes:
+      - "${BACKBONE_LICENCE_FILE:-/etc/backbone-config/backbone-licence}:/etc/backbone-config/backbone-licence:ro"
+    depends_on:
+      floci-ce:
+        condition: service_healthy
+      postgres-ce:
+        condition: service_healthy
+      redis-ce:
+        condition: service_healthy
+
+  document-service:
+    image: ghcr.io/get-backbone/document-service:${BACKBONE_VERSION:-3.0.0}
+    container_name: document-service
+    ports:
+      - "${DOCUMENT_SERVICE_PORT:-8102}:8080"
+    environment:
+      - QUARKUS_PROFILE=community
+      - QUARKUS_HTTP_HOST=0.0.0.0
+      - QUARKUS_HTTP_PORT=8080
+      - BACKBONE_DOCUMENTS_BUCKET_NAME=${BACKBONE_DOCUMENTS_BUCKET_NAME:-backbone-documents}
+      - BACKBONE_OBSERVABILITY_AMP_REMOTE_WRITE_ENABLED=false
+      - BACKBONE_OBSERVABILITY_XRAY_EXPORT_ENABLED=false
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_REGION=${AWS_REGION:-us-west-2}
+      - AWS_SECRETS_MANAGER_ENDPOINT=http://floci-ce:4566
+      - AWS_SSM_ENDPOINT=http://floci-ce:4566
+      - AWS_COGNITO_ENDPOINT=http://floci-ce:4566
+      - AWS_COGNITO_ISSUER_BASE_URL=http://floci-ce:4566
+      - AWS_DYNAMODB_ENDPOINT=http://floci-ce:4566
+      - AWS_S3_ENDPOINT=http://floci-ce:4566
+      - AWS_SES_ENDPOINT=http://floci-ce:4566
+      - AWS_SQS_ENDPOINT=http://floci-ce:4566
+      - AWS_EVENTBRIDGE_ENDPOINT=http://floci-ce:4566
+      - QUARKUS_REDIS_HOSTS=redis://redis-ce:6380
+      - QUARKUS_REDIS_TLS_ENABLED=false
+      - QUARKUS_REST_CLIENT_AUTHSERVICECLIENT_URL=http://auth-service:8080
+    volumes:
+      - "${BACKBONE_LICENCE_FILE:-/etc/backbone-config/backbone-licence}:/etc/backbone-config/backbone-licence:ro"
+    depends_on:
+      floci-ce:
+        condition: service_healthy
+      redis-ce:
+        condition: service_healthy
