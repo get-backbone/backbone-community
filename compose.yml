@@ -8,7 +8,7 @@ services:
     environment:
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
-      - FLOCI_HOSTNAME=localhost
+      - FLOCI_HOSTNAME=floci-ce
       - FLOCI_STORAGE_MODE=persistent
       - FLOCI_STORAGE_PERSISTENT_PATH=/app/data
       - QUARKUS_LOG_LEVEL=INFO
@@ -23,6 +23,13 @@ services:
       timeout: 3s
       retries: 12
       start_period: 15s
+
+  jaeger-ce:
+    image: jaegertracing/all-in-one:1.60
+    container_name: jaeger-ce
+    ports:
+      - "16686:16686"  # UI
+      - "4317:4317"    # OTLP gRPC receiver
 
   postgres-ce:
     image: postgres:18-alpine
@@ -58,11 +65,11 @@ services:
     image: ghcr.io/get-backbone/auth-service:${BACKBONE_VERSION:-3.1.0}
     container_name: auth-service
     ports:
-      - "${AUTH_SERVICE_PORT:-8100}:8080"
+      - "8100:8100"
     environment:
       - QUARKUS_PROFILE=community
       - QUARKUS_HTTP_HOST=0.0.0.0
-      - QUARKUS_HTTP_PORT=8080
+      - QUARKUS_HTTP_PORT=8100
       - WEB_ACTOR_PORT=${WEB_ACTOR_PORT:-9100}
       - BACKBONE_PUBLIC_ALB_URL=${BACKBONE_PUBLIC_ALB_URL:-http://localhost:9100}
       - BACKBONE_OAUTH2_REFRESH_TOKEN_ENCRYPTION_KEY=${BACKBONE_OAUTH2_REFRESH_TOKEN_ENCRYPTION_KEY}
@@ -87,7 +94,8 @@ services:
       - AWS_EVENTBRIDGE_ENDPOINT=http://floci-ce:4566
       - QUARKUS_REDIS_HOSTS=redis://redis-ce:6380
       - QUARKUS_REDIS_TLS_ENABLED=false
-      - QUARKUS_REST_CLIENT_ACTORSERVICECLIENT_URL=http://actor-service:8080
+      - QUARKUS_REST_CLIENT_ACTORSERVICECLIENT_URL=http://actor-service:8101
+      - QUARKUS_REST_CLIENT_NOTIFICATIONSERVICECLIENT_URL=http://notification-service:8103
     volumes:
       - "${BACKBONE_LICENCE_FILE:-/etc/backbone-config/backbone-licence}:/etc/backbone-config/backbone-licence:ro"
     depends_on:
@@ -102,11 +110,11 @@ services:
     image: ghcr.io/get-backbone/actor-service:${BACKBONE_VERSION:-3.1.0}
     container_name: actor-service
     ports:
-      - "${ACTOR_SERVICE_PORT:-8101}:8080"
+      - "8101:8101"
     environment:
       - QUARKUS_PROFILE=community
       - QUARKUS_HTTP_HOST=0.0.0.0
-      - QUARKUS_HTTP_PORT=8080
+      - QUARKUS_HTTP_PORT=8101
       - BACKBONE_OBSERVABILITY_AMP_REMOTE_WRITE_ENABLED=false
       - BACKBONE_OBSERVABILITY_XRAY_EXPORT_ENABLED=false
       - AWS_ACCESS_KEY_ID=test
@@ -126,7 +134,8 @@ services:
       - DB_PASSWORD=postgres
       - QUARKUS_REDIS_HOSTS=redis://redis-ce:6380
       - QUARKUS_REDIS_TLS_ENABLED=false
-      - QUARKUS_REST_CLIENT_AUTHSERVICECLIENT_URL=http://auth-service:8080
+      - QUARKUS_REST_CLIENT_AUTHSERVICECLIENT_URL=http://auth-service:8100
+      - QUARKUS_REST_CLIENT_NOTIFICATIONSERVICECLIENT_URL=http://notification-service:8103
     volumes:
       - "${BACKBONE_LICENCE_FILE:-/etc/backbone-config/backbone-licence}:/etc/backbone-config/backbone-licence:ro"
     depends_on:
@@ -141,11 +150,11 @@ services:
     image: ghcr.io/get-backbone/notification-service:${BACKBONE_VERSION:-3.1.0}
     container_name: notification-service
     ports:
-      - "${NOTIFICATION_SERVICE_PORT:-8103}:8080"
+      - "8103:8103"
     environment:
       - QUARKUS_PROFILE=community
       - QUARKUS_HTTP_HOST=0.0.0.0
-      - QUARKUS_HTTP_PORT=8080
+      - QUARKUS_HTTP_PORT=8103
       - NOTIFICATION_UNSUBSCRIBE_BASE_URL=${NOTIFICATION_UNSUBSCRIBE_BASE_URL:-http://localhost:8103}
       - WEB_ACTOR_PORT=${WEB_ACTOR_PORT:-9100}
       - BACKBONE_PUBLIC_ALB_URL=${BACKBONE_PUBLIC_ALB_URL:-http://localhost:9100}
@@ -168,8 +177,8 @@ services:
       - DB_PASSWORD=postgres
       - QUARKUS_REDIS_HOSTS=redis://redis-ce:6380
       - QUARKUS_REDIS_TLS_ENABLED=false
-      - QUARKUS_REST_CLIENT_AUTHSERVICECLIENT_URL=http://auth-service:8080
-      - QUARKUS_REST_CLIENT_ACTORSERVICECLIENT_URL=http://actor-service:8080
+      - QUARKUS_REST_CLIENT_AUTHSERVICECLIENT_URL=http://auth-service:8100
+      - QUARKUS_REST_CLIENT_ACTORSERVICECLIENT_URL=http://actor-service:8101
     volumes:
       - "${BACKBONE_LICENCE_FILE:-/etc/backbone-config/backbone-licence}:/etc/backbone-config/backbone-licence:ro"
     depends_on:
@@ -184,11 +193,11 @@ services:
     image: ghcr.io/get-backbone/document-service:${BACKBONE_VERSION:-3.1.0}
     container_name: document-service
     ports:
-      - "${DOCUMENT_SERVICE_PORT:-8102}:8080"
+      - "8102:8102"
     environment:
       - QUARKUS_PROFILE=community
       - QUARKUS_HTTP_HOST=0.0.0.0
-      - QUARKUS_HTTP_PORT=8080
+      - QUARKUS_HTTP_PORT=8102
       - BACKBONE_DOCUMENTS_BUCKET_NAME=${BACKBONE_DOCUMENTS_BUCKET_NAME:-backbone-documents}
       - BACKBONE_OBSERVABILITY_AMP_REMOTE_WRITE_ENABLED=false
       - BACKBONE_OBSERVABILITY_XRAY_EXPORT_ENABLED=false
@@ -206,7 +215,7 @@ services:
       - AWS_EVENTBRIDGE_ENDPOINT=http://floci-ce:4566
       - QUARKUS_REDIS_HOSTS=redis://redis-ce:6380
       - QUARKUS_REDIS_TLS_ENABLED=false
-      - QUARKUS_REST_CLIENT_AUTHSERVICECLIENT_URL=http://auth-service:8080
+      - QUARKUS_REST_CLIENT_AUTHSERVICECLIENT_URL=http://auth-service:8100
     volumes:
       - "${BACKBONE_LICENCE_FILE:-/etc/backbone-config/backbone-licence}:/etc/backbone-config/backbone-licence:ro"
     depends_on:

@@ -1,3 +1,17 @@
+## v3.2.0 (2026-09-18)
+
+### Feat
+
+- **auth**: remote user-token validation for community actor-bff
+
+### Refactor
+
+- **api**: align REST paths to plural nouns and channel nesting
+- **chore**: rename dist module to sdk-bundle
+- **naming**: package naming to avoid SplitProcessor WARN
+- **community**: Circuit Breakers were showing up as diabled in startup panel
+- **community**: aligning community-edition docker ports with local development version
+
 ## v3.1.0 (2026-09-17)
 
 ### Feat

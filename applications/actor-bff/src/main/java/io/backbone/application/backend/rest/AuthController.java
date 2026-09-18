@@ -60,7 +60,7 @@ public final class AuthController
     }
 
     @POST
-    @Path("/refresh-user-token")
+    @Path("/tokens/refresh")
     @Operation(summary = "Refresh a user access token")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

@@ -44,7 +44,7 @@ const AppConfig = {
   API_PATHS: {
     AUTH_LOGIN: '/auth/login',
     AUTH_REGISTER: '/auth/register',
-    AUTH_REFRESH: '/auth/refresh-user-token',
+    AUTH_REFRESH: '/auth/tokens/refresh',
     AUTH_FORGOT_PASSWORD: '/auth/forgot-password',
     AUTH_RESET_PASSWORD: '/auth/reset-password',
     AUTH_LINKEDIN_LOGIN: '/auth/linkedin/login',

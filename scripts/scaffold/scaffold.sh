@@ -155,7 +155,7 @@ import org.junit.jupiter.api.Test;
 /**
  * REST API integration test for template event ingest.
  * <p>
- * Tests the HTTP layer: POST /template/events, request validation, and status codes.
+ * Tests the HTTP layer: POST /templates/events, request validation, and status codes.
  * Stateless scaffold has no persistence assertions.
  */
 @QuarkusTest
@@ -176,7 +176,7 @@ class TemplateResourceIT
             .contentType("application/json")
             .body(request)
             .when()
-            .post("/template/events")
+            .post("/templates/events")
             .then()
             .statusCode(201);
     }
@@ -194,7 +194,7 @@ class TemplateResourceIT
             .contentType("application/json")
             .body(request)
             .when()
-            .post("/template/events")
+            .post("/templates/events")
             .then()
             .statusCode(400);
     }
@@ -206,7 +206,7 @@ class TemplateResourceIT
             .contentType("application/json")
             .body("{}")
             .when()
-            .post("/template/events")
+            .post("/templates/events")
             .then()
             .statusCode(400);
     }

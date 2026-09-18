@@ -53,7 +53,7 @@ class TemplateResourceIT
             .contentType("application/json")
             .body(request)
             .when()
-            .post("/template/events")
+            .post("/templates/events")
             .then()
             .statusCode(201);
 
@@ -76,7 +76,7 @@ class TemplateResourceIT
             .contentType("application/json")
             .body(request)
             .when()
-            .post("/template/events")
+            .post("/templates/events")
             .then()
             .statusCode(400);
     }
@@ -88,7 +88,7 @@ class TemplateResourceIT
             .contentType("application/json")
             .body("{}")
             .when()
-            .post("/template/events")
+            .post("/templates/events")
             .then()
             .statusCode(400);
     }

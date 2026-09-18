@@ -16,9 +16,9 @@ import jakarta.ws.rs.core.Response;
 
 /**
  * Example REST resource for scaffolded services.
- * POST /template/events accepts a single event and returns 201 when accepted.
+ * POST /templates/events accepts a single event and returns 201 when accepted.
  */
-@Path("/template")
+@Path("/templates")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @SuppressWarnings("unused")

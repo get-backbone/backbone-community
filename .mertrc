@@ -3,8 +3,8 @@ layout:
     - docker compose up auth-service
     - docker compose up actor-service
   -
-    - docker compose up notification-service
     - docker compose up document-service
+    - docker compose up notification-service
   -
     - task dev:bff
     - task dev:web

@@ -22,7 +22,7 @@
         <Bug pattern="EI_EXPOSE_REP2"/>
     </Match>
     <Match>
-        <Class name="io.backbone.core.security.api.http.ContainerRequestContextProducer"/>
+        <Class name="io.backbone.core.security.cdi.http.ContainerRequestContextProducer"/>
         <Method name="getRequestContext"/>
         <Bug pattern="EI_EXPOSE_REP"/>
     </Match>

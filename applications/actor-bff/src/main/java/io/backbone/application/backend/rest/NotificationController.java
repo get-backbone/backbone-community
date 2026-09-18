@@ -43,7 +43,7 @@ public final class NotificationController
     @GET
     @WithSpan
     @Secured
-    @Path("/subscription-status")
+    @Path("/subscriptions")
     @Operation(summary = "Get notification subscription status for an actor")
     public Response getSubscriptionStatus(@QueryParam("actorId") final String actorId, @QueryParam("channel") final String channel)
     {
