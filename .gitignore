@@ -64,10 +64,10 @@ infra/dist/
 infra/cdk.out/
 infra/reports/
 
-infra/attest/node_modules/
-infra/attest/dist/
-infra/attest/cdk.out/
-infra/attest/reports/
+infra/licence/node_modules/
+infra/licence/dist/
+infra/licence/cdk.out/
+infra/licence/reports/
 
 # Maven flatten / shade working POMs (generated under module roots)
 **/.flattened-pom.xml

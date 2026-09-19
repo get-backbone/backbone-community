@@ -62,7 +62,7 @@ services:
       retries: 5
 
   auth-service:
-    image: ghcr.io/get-backbone/auth-service:${BACKBONE_VERSION:-3.1.0}
+    image: ghcr.io/get-backbone/auth-service:${BACKBONE_VERSION:-3.2.0}
     container_name: auth-service
     ports:
       - "8100:8100"
@@ -107,7 +107,7 @@ services:
         condition: service_healthy
 
   actor-service:
-    image: ghcr.io/get-backbone/actor-service:${BACKBONE_VERSION:-3.1.0}
+    image: ghcr.io/get-backbone/actor-service:${BACKBONE_VERSION:-3.2.0}
     container_name: actor-service
     ports:
       - "8101:8101"
@@ -147,7 +147,7 @@ services:
         condition: service_healthy
 
   notification-service:
-    image: ghcr.io/get-backbone/notification-service:${BACKBONE_VERSION:-3.1.0}
+    image: ghcr.io/get-backbone/notification-service:${BACKBONE_VERSION:-3.2.0}
     container_name: notification-service
     ports:
       - "8103:8103"
@@ -190,7 +190,7 @@ services:
         condition: service_healthy
 
   document-service:
-    image: ghcr.io/get-backbone/document-service:${BACKBONE_VERSION:-3.1.0}
+    image: ghcr.io/get-backbone/document-service:${BACKBONE_VERSION:-3.2.0}
     container_name: document-service
     ports:
       - "8102:8102"

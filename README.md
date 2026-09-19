@@ -125,3 +125,5 @@ task dev:scaffold -- search-service --with-rds
 ---
 
 **Backbone** — *Enterprise foundations. Startup speed.*
+
+Community licence — see [LICENCE_COMMUNITY.md](LICENCE_COMMUNITY.md).
