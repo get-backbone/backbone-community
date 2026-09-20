@@ -2,7 +2,7 @@
 <FindBugsFilter>
     <!-- Exclude generated protobuf classes (e.g. libs/vendor/licence-runtime target/generated-sources/protobuf) -->
     <Match>
-        <Package name="~io\.backbone\.core\.licence\.infrastructure\.proto" />
+        <Package name="~io\.backbone\.core\.licence\.impl\.proto" />
     </Match>
     <Match>
         <Class name="io.backbone.core.audit.api.auth.ResolutionContext"/>
@@ -94,7 +94,7 @@
         <Bug pattern="EI_EXPOSE_REP2"/>
     </Match>
     <Match>
-        <Class name="io.backbone.services.notification.infrastructure.provider.AwsSesProvider"/>
+        <Class name="io.backbone.core.notification.provider.AwsSesProvider"/>
         <Bug pattern="EI_EXPOSE_REP2"/>
     </Match>
     <Match>
@@ -110,7 +110,27 @@
         <Bug pattern="EI_EXPOSE_REP2"/>
     </Match>
     <Match>
-        <Class name="io.backbone.services.notification.infrastructure.template.TemplateRenderingService"/>
+        <Class name="io.backbone.core.notification.template.TemplateRenderingService"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.core.common.api.runtime.startup.PanelRenderer"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.core.security.impl.http.authorization.ServiceAuthorizationEnforcement"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.core.security.impl.http.authorization.UserAuthenticationEnforcement"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.core.audit.impl.intercept.AuditEventRequestAssembly"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="io.backbone.core.audit.impl.metrics.AuditDeliveryCounters"/>
         <Bug pattern="EI_EXPOSE_REP2"/>
     </Match>
     <Match>

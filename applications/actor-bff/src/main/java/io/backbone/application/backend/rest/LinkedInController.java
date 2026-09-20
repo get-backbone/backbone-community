@@ -30,10 +30,10 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 /**
  * REST controller for LinkedIn OAuth2 endpoints.
- * Proxy LinkedIn login and account linking requests to auth-service, providing a single entry point for frontend clients.
+ * Proxies LinkedIn login and account connect requests to auth-service.
  */
-@Path("/auth")
-@Tag(name = "Auth")
+@Path("/auth/linkedin")
+@Tag(name = "Provider Auth")
 public final class LinkedInController
 {
     @Inject
@@ -43,16 +43,9 @@ public final class LinkedInController
     @ConfigProperty(name = "quarkus.rest-client.AuthServiceClient.url")
     String authServiceUrl;
 
-    /**
-     * Proxy LinkedIn OAuth2 login initiation to auth-service.
-     * This endpoint redirects to auth-service's LinkedIn login endpoint, which then redirects to LinkedIn.
-     * The OAuth callback will return to auth-service, which handles token exchange and redirects back to the UI.
-     *
-     * @return Redirect response to auth-service's LinkedIn login endpoint
-     */
     @GET
-    @Path("/linkedin/login")
-    @Operation(summary = "Start LinkedIn login (redirect)", operationId = "linkedInLogin")
+    @Path("/login")
+    @Operation(summary = "LinkedIn login (redirect)", operationId = "linkedInLogin")
     public Response login()
     {
         final String baseUrl = authServiceUrl.endsWith("/") ? authServiceUrl.substring(0, authServiceUrl.length() - 1) : authServiceUrl;
@@ -60,21 +53,12 @@ public final class LinkedInController
         return Response.seeOther(URI.create(baseUrl + "/auth/linkedin/login")).build();
     }
 
-    /**
-     * Proxies LinkedIn OAuth2 account linking initiation to auth-service.
-     * This endpoint requires authentication and forwards the request to auth-service with the Authorization header.
-     * Auth-service will then redirect to LinkedIn for OAuth authorization.
-     *
-     * @return Redirect response to LinkedIn authorization endpoint
-     */
     @GET
     @Secured
-    @Path("/linkedin/link")
-    @Operation(summary = "Start LinkedIn account linking")
-    public Response linkAccount(final HttpHeaders headers)
+    @Path("/connect")
+    @Operation(summary = "Start LinkedIn connect")
+    public Response startConnect(final HttpHeaders headers)
     {
-        // Use HttpClient to make the request without following redirects
-        // This allows us to get the Location header from the redirect response
         try (final HttpClient client = HttpClient.newBuilder()
             .followRedirects(HttpClient.Redirect.NEVER)
             .build())
@@ -87,12 +71,11 @@ public final class LinkedInController
                     .build();
             }
 
-            // Build URL to auth-service's LinkedIn linking endpoint
             final String baseUrl = authServiceUrl.endsWith("/") ? authServiceUrl.substring(0, authServiceUrl.length() - 1) : authServiceUrl;
-            final String linkedInLinkUrl = baseUrl + "/auth/linkedin/link";
+            final String linkedInConnectUrl = baseUrl + "/auth/linkedin/connect";
 
             final HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(linkedInLinkUrl))
+                .uri(URI.create(linkedInConnectUrl))
                 .header(AUTHORIZATION, authorizationHeader)
                 .GET()
                 .build();
@@ -100,26 +83,23 @@ public final class LinkedInController
             final HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             final int statusCode = response.statusCode();
 
-            // Auth-service now returns the authorization URL in the response body (JSON)
             if (statusCode == Response.Status.OK.getStatusCode())
             {
                 final String responseBody = response.body();
                 final Map<String, Object> jsonResponse = JsonFacade.fromPlainJson(
                     responseBody, new TypeReference<>()
                     {
-                    }, "LinkedIn link response");
+                    }, "LinkedIn connect response");
                 final String authorizationUrl = (String) jsonResponse.get("authorizationUrl");
 
                 if (authorizationUrl != null)
                 {
-                    // Return the authorization URL in response body for frontend to handle
                     return Response.ok()
                         .entity(Map.of("authorizationUrl", authorizationUrl))
                         .build();
                 }
             }
 
-            // If not successful, return error with status code
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                 .entity(of("error", "Unexpected response from auth-service: HTTP " + statusCode))
                 .build();
@@ -132,20 +112,13 @@ public final class LinkedInController
         }
     }
 
-    /**
-     * Proxies LinkedIn account linking completion to auth-service.
-     * Called by frontend after successful LinkedIn linking to store refresh token for OAuth login.
-     *
-     * @param request request body containing actorId and refreshToken (Cognito user refresh token)
-     * @return success response
-     */
     @POST
-    @Path("/linkedin/link/complete")
-    @Operation(summary = "Complete LinkedIn account linking")
+    @Path("/connect/complete")
+    @Operation(summary = "Finish LinkedIn connect")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response completeLinking(final Map<String, String> request)
+    public Response finishConnect(final Map<String, String> request)
     {
-        return authServiceClient.completeLinkedInLinking(request);
+        return authServiceClient.completeLinkedInConnect(request);
     }
 }

@@ -34,7 +34,7 @@ public final class DocumentController
     @GET
     @Secured
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(summary = "List documents for an actor")
+    @Operation(summary = "Get documents")
     public Response getDocuments(@QueryParam("actorId") final String actorId)
     {
         requireActorId(actorId);
@@ -45,8 +45,8 @@ public final class DocumentController
     @Secured
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(summary = "Upload and parse documents for an actor")
-    public Response upload(@RestForm("actorId") final String actorId, @RestForm("documents") final List<FileUpload> documents)
+    @Operation(summary = "Upload and parse documents")
+    public Response uploadAndParse(@RestForm("actorId") final String actorId, @RestForm("documents") final List<FileUpload> documents)
     {
         validateUploadRequest(actorId, documents);
 
@@ -88,7 +88,7 @@ public final class DocumentController
 
     private Object processDocument(final String actorId, final FileUpload document)
     {
-        try (Response parseResponse = documentServiceClient.createDocument(actorId, document.filePath().toFile()))
+        try (final Response parseResponse = documentServiceClient.createDocument(actorId, document.filePath().toFile()))
         {
             if (isSuccess(parseResponse))
             {

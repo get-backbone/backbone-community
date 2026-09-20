@@ -45,7 +45,7 @@ public final class ActorController
     @WithSpan
     @Secured
     @Path("/{actorId}")
-    @Operation(summary = "Get an actor profile")
+    @Operation(summary = "Get profile")
     public Response getActor(@PathParam("actorId") final String actorId)
     {
         try

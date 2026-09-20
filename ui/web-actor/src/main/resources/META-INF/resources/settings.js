@@ -21,7 +21,7 @@ async function initiateLinkedInLinking() {
         return;
     }
 
-    const linkedInLinkHref = ActorSession.link('link-linkedin');
+    const linkedInLinkHref = ActorSession.link('linkedin-connect');
     if (!linkedInLinkHref) {
         showLinkedInMessage(document.getElementById('linkedinMessage'), 'LinkedIn linking is not available for this account.', 'error');
         return;
@@ -75,7 +75,7 @@ async function initiateLinkedInLinking() {
 async function checkLinkedInStatus() {
     try {
         const profile = await ActorSession.load();
-        if (ActorSession.link('link-linkedin')) {
+        if (ActorSession.link('linkedin-connect')) {
             updateLinkedInStatus('not-linked');
         } else if (profile && profile.linkedInSub) {
             updateLinkedInStatus('linked');
@@ -91,7 +91,7 @@ async function checkLinkedInStatus() {
 function updateLinkedInStatus(status) {
     const statusDiv = document.getElementById('linkedinStatus');
     const linkBtn = document.getElementById('linkLinkedInBtn');
-    const linkedInLinkHref = ActorSession.link('link-linkedin');
+    const linkedInLinkHref = ActorSession.link('linkedin-connect');
 
     if (!statusDiv || !linkBtn) {
         return;

@@ -13,7 +13,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
  * Proxies Google OAuth2 login initiation to auth-service.
  */
 @Path("/auth")
-@Tag(name = "Auth")
+@Tag(name = "Provider Auth")
 public final class GoogleController
 {
     private final String authServiceUrl;
@@ -26,7 +26,7 @@ public final class GoogleController
 
     @GET
     @Path("/google/login")
-    @Operation(summary = "Start Google login (redirect)", operationId = "googleLogin")
+    @Operation(summary = "Google login (redirect)", operationId = "googleLogin")
     public Response login()
     {
         final String baseUrl = authServiceUrl.endsWith("/") ? authServiceUrl.substring(0, authServiceUrl.length() - 1) : authServiceUrl;

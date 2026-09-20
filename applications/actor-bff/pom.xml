@@ -9,36 +9,5 @@
 
     <artifactId>actor-bff</artifactId>
 
-    <build>
-        <plugins>
-            <!-- After quarkus:build writes target/openapi/actor-bff.json, copy it into docs for ReadMe. -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-openapi-to-docs</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${maven.multiModuleProjectDirectory}/docs/openapi</outputDirectory>
-                            <overwrite>true</overwrite>
-                            <resources>
-                                <resource>
-                                    <directory>${project.build.directory}/openapi</directory>
-                                    <includes>
-                                        <include>actor-bff.json</include>
-                                    </includes>
-                                    <filtering>false</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

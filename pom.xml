@@ -69,7 +69,7 @@
         <maven.build.cache.version>1.2.2</maven.build.cache.version>
         <maven.build.helper.version>3.6.1</maven.build.helper.version>
         <maven.clean.version>3.5.0</maven.clean.version>
-        <maven.clover.version>4.5.2</maven.clover.version>
+        <maven.clover.version>5.1.0.1</maven.clover.version>
         <maven.compiler.version>3.15.0</maven.compiler.version>
         <maven.dependency.version>3.10.0</maven.dependency.version>
         <maven.deploy.version>3.1.4</maven.deploy.version>
@@ -91,6 +91,8 @@
 
         <!-- Profile / annotation-processor plugin versions -->
         <checkstyle.version>3.6.0</checkstyle.version>
+        <!-- Plugin defaults to Checkstyle 9.3; override for Java 21+ switch patterns (when / case null). -->
+        <checkstyle.lib.version>10.26.1</checkstyle.lib.version>
         <lombok.version>1.18.46</lombok.version>
         <owasp.version>13.0.0</owasp.version>
         <pmd.version>3.28.0</pmd.version>
@@ -563,6 +565,9 @@
                         <cloverDatabase>${maven.multiModuleProjectDirectory}/.clover/clover.db</cloverDatabase>
                         <snapshot>${maven.multiModuleProjectDirectory}/.clover/atlassian-plugins-clover.snapshot</snapshot>
                         <singleCloverDatabase>true</singleCloverDatabase>
+                        <!-- 5.1+ at language level 25 puts probes before super()/this() inside try{}, which javac rejects.
+                             Level 21 keeps post-super probes and still parses pattern switch / when. -->
+                        <jdk>21</jdk>
                     </configuration>
                 </plugin>
 
@@ -794,6 +799,13 @@
                             <configLocation>google_checks.xml</configLocation>
                             <failsOnError>true</failsOnError>
                         </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>com.puppycrawl.tools</groupId>
+                                <artifactId>checkstyle</artifactId>
+                                <version>${checkstyle.lib.version}</version>
+                            </dependency>
+                        </dependencies>
                         <executions>
                             <execution>
                                 <goals>

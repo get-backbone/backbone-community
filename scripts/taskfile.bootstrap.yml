@@ -82,8 +82,18 @@ tasks:
         require_cli gum
         gum_panel "${GUM_PANEL_WIDTH}" "Install Backbone licence to /etc/backbone-config"
         sudo mkdir -p /etc/backbone-config
-        licence_path="$(gum input --prompt "Path to Backbone licence: " --placeholder "/path/to/backbone-licence-you-received")"
-        sudo cp "$licence_path" /etc/backbone-config/backbone-licence
+        licence_body="$(gum write \
+          --header "Paste the licence you copied from backbonehq.io/licence/done" \
+          --placeholder "1|<payload>|<signature>" \
+          --width 72 \
+          --height 5)"
+        licence_body="$(printf '%s' "${licence_body}" | tr -d '\r' | sed '/^[[:space:]]*$/d' | head -n 1)"
+        if [ -z "${licence_body}" ]; then
+          gum_panel "${GUM_PANEL_WIDTH}" \
+            "$(gum_error "❌ No licence content pasted.")"
+          exit 1
+        fi
+        printf '%s\n' "${licence_body}" | sudo tee /etc/backbone-config/backbone-licence > /dev/null
         if [ -f "/etc/backbone-config/backbone-licence" ]; then
           gum_panel "${GUM_PANEL_WIDTH}" \
             "$(gum_success "✅ Licence file successfully installed to /etc/backbone-config/backbone-licence")"

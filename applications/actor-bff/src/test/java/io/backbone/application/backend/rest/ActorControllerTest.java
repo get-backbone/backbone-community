@@ -27,7 +27,7 @@ final class ActorControllerTest
     }
 
     @Test
-    @DisplayName("getActor wraps successful profile in HAL with link-linkedin when unlinked")
+    @DisplayName("getActor wraps successful profile in HAL with linkedin-connect when unlinked")
     void getActor_ReturnsHalWrapperWithLinkLinkedIn()
     {
         final ActorResponse actor = ActorResponse.success("actor-1", "ada@example.com", "Ada", null, null, null, Instant
@@ -41,12 +41,12 @@ final class ActorControllerTest
         assertEquals(actor, wrapper.getEntity());
         assertTrue(wrapper.getLinks().containsKey("self"));
         assertTrue(wrapper.getLinks().containsKey("documents"));
-        assertTrue(wrapper.getLinks().containsKey("complete-linkedin-link"));
-        assertTrue(wrapper.getLinks().containsKey("link-linkedin"));
+        assertTrue(wrapper.getLinks().containsKey("complete-linkedin-connect"));
+        assertTrue(wrapper.getLinks().containsKey("linkedin-connect"));
     }
 
     @Test
-    @DisplayName("getActor omits link-linkedin when already linked")
+    @DisplayName("getActor omits linkedin-connect when already linked")
     void getActor_OmitsLinkLinkedInWhenLinked()
     {
         final ActorResponse actor = ActorResponse.success("actor-1", "ada@example.com", "Ada", "linkedin-sub", null, null, Instant
@@ -57,8 +57,8 @@ final class ActorControllerTest
 
         @SuppressWarnings("unchecked") final HalEntityWrapper<ActorResponse> wrapper = assertInstanceOf(HalEntityWrapper.class, response.getEntity());
         assertTrue(wrapper.getLinks().containsKey("self"));
-        assertTrue(wrapper.getLinks().containsKey("complete-linkedin-link"));
-        assertFalse(wrapper.getLinks().containsKey("link-linkedin"));
+        assertTrue(wrapper.getLinks().containsKey("complete-linkedin-connect"));
+        assertFalse(wrapper.getLinks().containsKey("linkedin-connect"));
     }
 
     @Test

@@ -28,7 +28,6 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
  * by {@link ClientWebApplicationExceptionMapper}.
  */
 @Path("/auth")
-@Tag(name = "Auth")
 public final class AuthController
 {
     private final AuthServiceClient authServiceClient;
@@ -41,7 +40,8 @@ public final class AuthController
 
     @POST
     @Path("/login")
-    @Operation(summary = "Log in with email and password", operationId = "login")
+    @Tag(name = "Actor Auth")
+    @Operation(summary = "Login")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(@Valid final LoginRequest request)
@@ -51,7 +51,8 @@ public final class AuthController
 
     @POST
     @Path("/register")
-    @Operation(summary = "Register a new actor account")
+    @Tag(name = "Actor Auth")
+    @Operation(summary = "Register")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response register(@Valid final RegisterRequest request)
@@ -60,18 +61,9 @@ public final class AuthController
     }
 
     @POST
-    @Path("/tokens/refresh")
-    @Operation(summary = "Refresh a user access token")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response refreshUserToken(@Valid final RefreshRequest request)
-    {
-        return authServiceClient.refreshUserToken(request);
-    }
-
-    @POST
     @Path("/forgot-password")
-    @Operation(summary = "Request a password reset email")
+    @Tag(name = "Actor Auth")
+    @Operation(summary = "Forgot password")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response forgotPassword(@Valid final ForgotPasswordRequest request)
@@ -81,7 +73,8 @@ public final class AuthController
 
     @POST
     @Path("/reset-password")
-    @Operation(summary = "Reset password with a one-time token")
+    @Tag(name = "Actor Auth")
+    @Operation(summary = "Reset password")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response resetPassword(@Valid final ResetPasswordRequest request)
@@ -90,10 +83,24 @@ public final class AuthController
     }
 
     @POST
-    @Path("/tokens/exchange")
-    @Operation(summary = "Exchange tokens for a browser session")
+    @Path("/tokens/refresh")
+    @Tag(name = "Provider Auth")
+    @Operation(summary = "Refresh access token")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    // keep the browser session alive: swap a Cognito refresh token for a new access/id token pair
+    public Response refreshUserToken(@Valid final RefreshRequest request)
+    {
+        return authServiceClient.refreshUserToken(request);
+    }
+
+    @POST
+    @Path("/tokens/exchange")
+    @Tag(name = "Provider Auth")
+    @Operation(summary = "Exchange token")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    // after Google/LinkedIn OAuth redirect: swap the one-time opaque token for Cognito session tokens
     public Response exchangeToken(final Map<String, String> request)
     {
         return authServiceClient.exchangeToken(request);

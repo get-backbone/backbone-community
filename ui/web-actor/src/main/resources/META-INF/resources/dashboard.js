@@ -18,7 +18,7 @@ function showLinkedInLinkOutcome() {
 
   if (linkedinStatus === 'linked') {
     showLinkedInLinkMessage(messageDiv, linkedInSuccessMessage(urlParams), urlParams.get('emailWarning') === 'true' ? 'warning' : 'success');
-    completeLinkedInLinking();
+    completeLinkedInConnect();
     return;
   }
 
@@ -46,7 +46,7 @@ function showLinkedInLinkMessage(container, message, type) {
   container.innerHTML = `<div style="padding: 12px; border-radius: 4px; background-color: ${colors[type]}20; color: ${colors[type]}; border: 1px solid ${colors[type]}40;">${escapeHtml(message)}</div>`;
 }
 
-async function completeLinkedInLinking() {
+async function completeLinkedInConnect() {
   const actorId = AuthUtils.getCandidateId();
   const refreshToken = AuthUtils.getRefreshToken();
   if (!actorId || !refreshToken) {
@@ -56,9 +56,9 @@ async function completeLinkedInLinking() {
 
   try {
     await ActorSession.load();
-    const completeHref = ActorSession.link('complete-linkedin-link');
+    const completeHref = ActorSession.link('complete-linkedin-connect');
     if (!completeHref) {
-      console.warn('Cannot complete LinkedIn linking: complete-linkedin-link affordance missing');
+      console.warn('Cannot complete LinkedIn linking: complete-linkedin-connect affordance missing');
       return;
     }
 
