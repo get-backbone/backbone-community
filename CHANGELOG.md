@@ -1,3 +1,20 @@
+## v3.3.0 (2026-09-20)
+
+### Feat
+
+- **licence**: slack notifications for licence violations + community licence issuance
+- **licence**: free community licence issuance after GitHub OAuth
+
+### Fix
+
+- **clover**: putting back supported switch since we upgraded checkstyle
+- **native**: skip licence pairing at Graal buildtime; merge FT reflect
+
+### Refactor
+
+- **licence**: minor tweaks to licence issuance process
+- **licence**: add COMMUNITY as a signed licence tier
+
 ## v3.2.0 (2026-09-18)
 
 ### Feat
