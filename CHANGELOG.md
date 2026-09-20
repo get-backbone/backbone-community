@@ -1,3 +1,9 @@
+## v3.3.1 (2026-09-20)
+
+### Fix
+
+- **openapi**: unit test largely worthless; was being mirrored to -community even though the OpenApiFilter is excluded
+
 ## v3.3.0 (2026-09-20)
 
 ### Feat
