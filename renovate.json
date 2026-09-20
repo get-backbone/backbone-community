@@ -4,9 +4,7 @@
     "config:recommended",
     ":dependencyDashboard",
     ":semanticCommits",
-    ":automergeMinor",
-    ":automergeBranch",
-    ":prHourlyLimitNone"
+    ":automergeMinor"
   ],
   "schedule": [
     "before 6am on the first day of the month"
@@ -21,11 +19,16 @@
   "automergeStrategy": "squash",
   "automergeComment": "🤖 Auto-merged by Renovate after CI checks passed",
   "dependencyDashboardAutoclose": true,
+  "dependencyDashboardApproval": true,
+  "prConcurrentLimit": 3,
+  "prHourlyLimit": 2,
   "packageRules": [
     {
+      "description": "Ignore in-repo reactor parents (not on Maven Central).",
       "enabled": false,
       "matchPackageNames": [
-        "/^io\\.backbone:.*$/"
+        "/^io\\.backbone:.*$/",
+        "/^io\\.forge\\.core:.*$/"
       ]
     },
     {
@@ -39,32 +42,15 @@
       "enabled": false
     },
     {
-      "matchManagers": [
-        "maven"
+      "description": "Pinned at quarkus.platform.version 3.36.1 after parent-first protobuf / RuntimeVersion conflict; re-enable only with a deliberate Quarkus upgrade.",
+      "groupName": "Quarkus platform updates",
+      "matchPackageNames": [
+        "/^io\\.quarkus/"
       ],
-      "matchUpdateTypes": [
-        "patch",
-        "minor"
-      ],
-      "automerge": true
+      "enabled": false
     },
     {
-      "matchManagers": [
-        "github-actions"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "automerge": true
-    },
-    {
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "automerge": true
-    },
-    {
-      "description": "One Renovate PR for all CDK/infra npm dependencies (infra/package.json).",
+      "description": "One PR for CDK/infra npm dependencies.",
       "matchManagers": [
         "npm"
       ],
@@ -74,7 +60,7 @@
       "groupName": "infra npm"
     },
     {
-      "description": "Single PR for Maven production-ish scopes; Quarkus and AWS SDK stay in dedicated groups below.",
+      "description": "One PR for Maven production scopes; Quarkus and AWS SDK stay in dedicated groups.",
       "matchManagers": [
         "maven"
       ],
@@ -93,21 +79,49 @@
       "groupName": "Maven dependencies"
     },
     {
+      "description": "One PR for Maven plugin / build-tooling version properties.",
+      "matchManagers": [
+        "maven"
+      ],
+      "matchPackageNames": [
+        "/.*maven-plugin$/",
+        "/^com\\.diffplug\\.spotless:/",
+        "/^com\\.github\\.spotbugs:/",
+        "/^io\\.takari\\.maven\\.plugins:/",
+        "/^org\\.owasp:dependency-check-maven$/",
+        "/^com\\.guardsquare:proguard-/"
+      ],
+      "groupName": "Maven plugins"
+    },
+    {
       "groupName": "AWS SDK v2 monorepo",
       "matchPackageNames": [
         "/^software\\.amazon\\.awssdk/"
       ]
     },
     {
-      "groupName": "Quarkus platform updates",
-      "matchPackageNames": [
-        "/^io\\.quarkus/"
+      "description": "GitHub Actions: group and do not automerge majors.",
+      "matchManagers": [
+        "github-actions"
       ],
-      "minimumReleaseAge": "7 days"
+      "groupName": "GitHub Actions",
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "automerge": false
     },
     {
-      "description": "Stability: only suggest Maven versions that have been published for a few days (avoids Maven Central vs other repos lag)",
-      "matchManagers": ["maven"],
+      "description": "Majors need a human; no silent platform/language jumps.",
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "automerge": false
+    },
+    {
+      "description": "Stability: only suggest Maven versions published for a few days.",
+      "matchManagers": [
+        "maven"
+      ],
       "minimumReleaseAge": "3 days"
     }
   ]

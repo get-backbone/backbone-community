@@ -84,7 +84,7 @@
         <maven.protobuf.version>0.6.1</maven.protobuf.version>
         <maven.resources.version>3.5.0</maven.resources.version>
         <maven.shade.version>3.6.2</maven.shade.version>
-        <maven.spotless.version>3.6.0</maven.spotless.version>
+        <maven.spotless.version>3.10.2</maven.spotless.version>
         <maven.surefire.version>3.5.5</maven.surefire.version>
         <maven.versions.version>2.21.0</maven.versions.version>
         <jandex.version>3.5.3</jandex.version>
@@ -93,13 +93,13 @@
         <checkstyle.version>3.6.0</checkstyle.version>
         <!-- Plugin defaults to Checkstyle 9.3; override for Java 21+ switch patterns (when / case null). -->
         <checkstyle.lib.version>10.26.1</checkstyle.lib.version>
-        <lombok.version>1.18.46</lombok.version>
+        <lombok.version>1.18.48</lombok.version>
         <owasp.version>13.0.0</owasp.version>
         <pmd.version>3.28.0</pmd.version>
-        <proguard.base.version>7.9.1</proguard.base.version>
-        <proguard.core.version>9.3.2</proguard.core.version>
-        <spotbugs.version>4.10.2.0</spotbugs.version>
-        <takari.lifecycle.version>2.3.3</takari.lifecycle.version>
+        <proguard.base.version>7.10.0</proguard.base.version>
+        <proguard.core.version>9.4.0</proguard.core.version>
+        <spotbugs.version>4.10.4.1</spotbugs.version>
+        <takari.lifecycle.version>2.3.4</takari.lifecycle.version>
 
         <!-- Quarkus BOM(s) -->
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
