@@ -67,4 +67,31 @@
         <packageUrl regex="true">^pkg:maven/org\.apache\.pdfbox/(jbig2-imageio@3\.0\.4|[^/]+@3\.0\.7)$</packageUrl>
         <vulnerabilityName regex="true">(?s).*</vulnerabilityName>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+           Hibernate ORM 7.3.6.Final (Quarkus 3.36.1 BOM).
+           CVE-2026-77874 High (CVSS ~7.1); JSON-path SQLi on Oracle / DB2 / HANA dialects.
+           We use PostgreSQL dialects only. Revisit on quarkus.platform.version bump that ships a patched Hibernate.
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.hibernate\.orm/hibernate-core@7\.3\.6\.Final$</packageUrl>
+        <cve>CVE-2026-77874</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+           jsoup 1.23.2 (override of Tika transitive).
+           CVE-2026-75140 High (CVSS ~8.7); XmlTreeBuilder DoS. Affects through 1.23.2; fix is commit-only —
+           no patched Maven release yet. Revisit when jsoup > 1.23.2 publishes.
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.jsoup/jsoup@1\.23\.2$</packageUrl>
+        <cve>CVE-2026-75140</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+           snappy-java 1.1.10.8 (Quarkus / Kafka transitive).
+           CVE-2026-90559 High (CVSS ~8.7); Snappy.uncompress ByteBuffer OOB write. No fixed Maven release
+           beyond 1.1.10.8 yet. Revisit when xerial publishes a patch.
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.xerial\.snappy/snappy-java@1\.1\.10\.8$</packageUrl>
+        <cve>CVE-2026-90559</cve>
+    </suppress>
 </suppressions>

@@ -52,17 +52,20 @@
              comes from that copy. libs/vendor/licence-runtime gencode (protoc) must use the same line. Do not bump above BOM
              without checking quarkus.class-loading or Quarkus release notes. Keep in step with backbone-kit. -->
         <protobuf.version>4.32.1</protobuf.version>
-        <!-- Override Quarkus BOM / Tika transitive BC 1.84 (OWASP CVSS>=7).
-             Coordinated 1.85 across jdk18on modules; bcprov alone has 1.85.2 — keep the set aligned. -->
-        <bouncycastle.version>1.85</bouncycastle.version>
+        <!-- Override Quarkus BOM / Tika transitive BC (OWASP CVSS>=7). Coordinated across jdk18on modules. -->
+        <bouncycastle.version>1.86</bouncycastle.version>
+        <!-- Override Quarkus / Kafka transitive zstd-jni (CVE-2026-87823 / CVE-2026-87795; fixed in 1.5.7-14+). -->
+        <zstd.jni.version>1.5.7-18</zstd.jni.version>
+        <!-- Override Quarkus BOM micrometer-core (CVE-2026-40983 / CVE-2026-59295; fixed in 1.16.7+). -->
+        <micrometer.core.version>1.16.7</micrometer.core.version>
 
         <!-- other java deps -->
         <bucket4j.version>8.18.0</bucket4j.version>
         <caffeine.version>3.2.3</caffeine.version>
         <!-- document-service native: Tika Graal feature touches jakarta.mail.Part -->
         <jakarta.mail.api.version>2.1.3</jakarta.mail.api.version>
-        <!-- Override Tika 3.3.0 transitive jsoup 1.22.1 (CVE-2026-71497). -->
-        <jsoup.version>1.23.1</jsoup.version>
+        <!-- Override Tika 3.3.0 transitive jsoup (CVE-2026-71497). 1.23.2 still listed for CVE-2026-75140 — no fixed Maven release yet. -->
+        <jsoup.version>1.23.2</jsoup.version>
         <tika.version>3.3.0</tika.version>
 
         <!-- Maven plugin versions -->
@@ -204,7 +207,7 @@
                 <artifactId>jakarta.mail-api</artifactId>
                 <version>${jakarta.mail.api.version}</version>
             </dependency>
-            <!-- Bouncy Castle 1.85: fixes CVE-2026-* on 1.84 (Tika crypto parser + Quarkus BOM pin). -->
+            <!-- Bouncy Castle: fixes CVE-2026-* on older pins (Tika crypto parser + Quarkus BOM). -->
             <dependency>
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcprov-jdk18on</artifactId>
@@ -249,6 +252,16 @@
                 <groupId>org.jsoup</groupId>
                 <artifactId>jsoup</artifactId>
                 <version>${jsoup.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.luben</groupId>
+                <artifactId>zstd-jni</artifactId>
+                <version>${zstd.jni.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-core</artifactId>
+                <version>${micrometer.core.version}</version>
             </dependency>
             <!-- tika -->
             <dependency>
