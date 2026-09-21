@@ -1,0 +1,39 @@
+---
+version: '3'
+
+# Included as `_clover` from root (CI-oriented weekly coverage).
+
+vars:
+  MAVEN_CMD: '$(command -v mvnd >/dev/null 2>&1 && echo mvnd || echo "./mvnw")'
+  ROOT_DIR: "{{.TASKFILE_DIR}}/.."
+  EXCLUDED_MODULES: '-pl ''!libs/sdk/sdk-bundle,!services/template-service'''
+
+tasks:
+  _default:
+    cmds:
+      - task --list-all
+
+  unit:
+    desc: Clover unit tests (all modules)
+    dir: "{{.ROOT_DIR}}"
+    cmds:
+      - '{{.MAVEN_CMD}} clover:setup test {{.EXCLUDED_MODULES}} -am -Dsurefire.parallel=none -T 1'
+      - 'command -v mvnd >/dev/null 2>&1 && mvnd --stop || true'
+
+  integration:
+    desc: Clover integration tests (MODULE=)
+    dir: "{{.ROOT_DIR}}"
+    vars:
+      MODULE: '{{.MODULE | default ""}}'
+      PL_FLAG: '{{if eq .MODULE ""}}{{.EXCLUDED_MODULES}}{{else}}-pl ''{{.MODULE}}''{{end}}'
+    cmds:
+      - '{{.MAVEN_CMD}} clover:setup {{.PL_FLAG}} test-compile failsafe:integration-test failsafe:verify -DskipUnitTests -Dsurefire.parallel=none -T 1'
+      - 'command -v mvnd >/dev/null 2>&1 && mvnd --stop || true'
+
+  report:
+    desc: Clover merged report (HTML)
+    dir: "{{.ROOT_DIR}}"
+    cmds:
+      # singleCloverDatabase=true, all coverage is already in one DB, so just generate report on root
+      - '{{.MAVEN_CMD}} clover:clover -pl :backbone-platform -Dsurefire.parallel=none -T 1'
+      - 'command -v mvnd >/dev/null 2>&1 && mvnd --stop || true'

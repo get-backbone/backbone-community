@@ -4,6 +4,16 @@
 # Shared utilities for backbone-core shell scripts: CLI checks, logging, paths, .envrc.local updates.
 #
 # Prerequisite: gum on PATH when calling log_* or require_cli.
+#
+# This file lives at scripts/lib/common.sh, so the repo root is always ../..
+# from here. Prefer REPO_ROOT over recomputing from each caller's SCRIPT_DIR.
+
+# ---- Paths ------------------------------------------------------------------
+
+SCRIPTS_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly SCRIPTS_LIB_DIR
+REPO_ROOT="$(cd "${SCRIPTS_LIB_DIR}/../.." && pwd)"
+readonly REPO_ROOT
 
 # ---- Functions --------------------------------------------------------------
 
@@ -193,13 +203,10 @@ gum_error() {
 
 # -- Path utilities -----------------------------------------------------------
 
-# Returns project root (two levels above SCRIPT_DIR). Caller must set SCRIPT_DIR first.
+# Returns project root (scripts/lib/../..). Prefer this over SCRIPT_DIR/../.. —
+# nested callers (e.g. scripts/aws/platform-smoke) are more than two levels deep.
 get_project_root() {
-    if [[ -z "${SCRIPT_DIR:-}" ]]; then
-        echo "Error: SCRIPT_DIR must be set before calling get_project_root()" >&2
-        exit 1
-    fi
-    cd "$SCRIPT_DIR/../.." && pwd
+    printf '%s\n' "${REPO_ROOT}"
 }
 
 # -- .envrc.local -------------------------------------------------------------
