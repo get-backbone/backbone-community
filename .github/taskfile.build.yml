@@ -8,7 +8,7 @@ vars:
   MAVEN_CMD: '$(command -v mvnd >/dev/null 2>&1 && echo mvnd || echo "./mvnw")'
   ROOT_DIR: "{{.TASKFILE_DIR}}/.."
   HARDEN_SKIP: '-Dharden.skip=true'
-  EXCLUDED_MODULES: '-pl ''!services/template-service'''
+  BUILD_EXCLUDED: '-pl ''!services/template-service'''
 
 tasks:
   _default:
@@ -26,28 +26,28 @@ tasks:
     desc: mvn clean
     dir: "{{.ROOT_DIR}}"
     cmds:
-      - '{{.MAVEN_CMD}} clean {{.EXCLUDED_MODULES}} -am'
+      - '{{.MAVEN_CMD}} clean {{.BUILD_EXCLUDED}} -am'
 
   compile:
     desc: mvn compile
     dir: "{{.ROOT_DIR}}"
     cmds:
-      - '{{.MAVEN_CMD}} compile {{.EXCLUDED_MODULES}} -am'
+      - '{{.MAVEN_CMD}} compile {{.BUILD_EXCLUDED}} -am'
 
   package:
     desc: mvn package -DskipTests
     dir: "{{.ROOT_DIR}}"
     cmds:
-      - '{{.MAVEN_CMD}} package -Dmaven.test.skip {{.HARDEN_SKIP}} {{.EXCLUDED_MODULES}} -am'
+      - '{{.MAVEN_CMD}} package -Dmaven.test.skip {{.HARDEN_SKIP}} {{.BUILD_EXCLUDED}} -am'
 
   install:
     desc: mvn install -DskipTests
     dir: "{{.ROOT_DIR}}"
     cmds:
-      - '{{.MAVEN_CMD}} install -Dmaven.test.skip {{.HARDEN_SKIP}} {{.EXCLUDED_MODULES}} -am'
+      - '{{.MAVEN_CMD}} install -Dmaven.test.skip {{.HARDEN_SKIP}} {{.BUILD_EXCLUDED}} -am'
 
   _install:ci:
     desc: mvn install -DskipTests -Dquarkus.build.skip
     dir: "{{.ROOT_DIR}}"
     cmds:
-      - '{{.MAVEN_CMD}} install -Dmaven.test.skip -Dquarkus.build.skip=true {{.HARDEN_SKIP}} {{.EXCLUDED_MODULES}} -am {{.CLI_ARGS}}'
+      - '{{.MAVEN_CMD}} install -Dmaven.test.skip -Dquarkus.build.skip=true {{.HARDEN_SKIP}} {{.BUILD_EXCLUDED}} -am {{.CLI_ARGS}}'

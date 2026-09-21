@@ -12,7 +12,10 @@ includes:
   bootstrap: "scripts/taskfile.bootstrap.yml"
   seed: "scripts/taskfile.seed.yml"
   # internal tasks (not exposed via cli)
-  _clover: ".github/taskfile.clover.yml"
+  _clover:
+    taskfile: ".github/taskfile.clover.yml"
+    vars:
+      CLOVER_EXCLUDED: '-pl ''!services/template-service'''
   _static: ".github/taskfile.static.yml"
   # community tasks (promoted from *.community.yml on sync)
   dev: "scripts/taskfile.development.yml"

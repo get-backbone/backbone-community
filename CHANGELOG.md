@@ -1,3 +1,14 @@
+## v3.3.2 (2026-09-21)
+
+### Fix
+
+- **deps**: bump micrometer-core to 1.16.7 for CVE-2026-59295
+- **deps**: clear OWASP CVSS>=7 static-analysis gate
+
+### Refactor
+
+- **native**: extract shared AO reflect helpers into ao-reflect.sh
+
 ## v3.3.1 (2026-09-20)
 
 ### Fix

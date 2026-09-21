@@ -11,7 +11,7 @@ runs:
       if: runner.os == 'Linux'
       shell: bash
       run: |
-        curl -sL https://taskfile.dev/install.sh | sh -s -- -b /usr/local/bin
+        curl -sL https://taskfile.dev/install.sh | sh -s -- -b /usr/local/bin  v3.53.1
 
     - name: Install ShellCheck
       if: runner.os == 'Linux'

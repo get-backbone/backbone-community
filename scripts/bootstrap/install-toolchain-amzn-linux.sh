@@ -132,14 +132,6 @@ install_gh() {
     run_pkg_install gh
 }
 
-install_task_if_missing() {
-    if command -v task &> /dev/null; then
-        return 0
-    fi
-
-    sh -c "$(curl -fsSL https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
-}
-
 install_jbang() {
     if command -v jbang &> /dev/null; then
         return 0
@@ -259,7 +251,6 @@ main() {
     install_base_packages
     install_k6
     install_gh
-    install_task_if_missing
     install_jbang
     install_quarkus_cli
     install_lefthook

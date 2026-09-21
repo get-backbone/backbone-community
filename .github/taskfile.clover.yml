@@ -2,11 +2,12 @@
 version: '3'
 
 # Included as `_clover` from root (CI-oriented weekly coverage).
+# Community overrides CLOVER_EXCLUDED via include vars in taskfile.community.yml
 
 vars:
   MAVEN_CMD: '$(command -v mvnd >/dev/null 2>&1 && echo mvnd || echo "./mvnw")'
   ROOT_DIR: "{{.TASKFILE_DIR}}/.."
-  EXCLUDED_MODULES: '-pl ''!libs/sdk/sdk-bundle,!services/template-service'''
+  CLOVER_EXCLUDED: '{{.CLOVER_EXCLUDED | default "-pl ''!libs/sdk/sdk-bundle,!services/template-service''"}}'
 
 tasks:
   _default:
@@ -17,7 +18,7 @@ tasks:
     desc: Clover unit tests (all modules)
     dir: "{{.ROOT_DIR}}"
     cmds:
-      - '{{.MAVEN_CMD}} clover:setup test {{.EXCLUDED_MODULES}} -am -Dsurefire.parallel=none -T 1'
+      - '{{.MAVEN_CMD}} clover:setup test {{.CLOVER_EXCLUDED}} -am -Dsurefire.parallel=none -T 1'
       - 'command -v mvnd >/dev/null 2>&1 && mvnd --stop || true'
 
   integration:
@@ -25,7 +26,7 @@ tasks:
     dir: "{{.ROOT_DIR}}"
     vars:
       MODULE: '{{.MODULE | default ""}}'
-      PL_FLAG: '{{if eq .MODULE ""}}{{.EXCLUDED_MODULES}}{{else}}-pl ''{{.MODULE}}''{{end}}'
+      PL_FLAG: '{{if eq .MODULE ""}}{{.CLOVER_EXCLUDED}}{{else}}-pl ''{{.MODULE}}''{{end}}'
     cmds:
       - '{{.MAVEN_CMD}} clover:setup {{.PL_FLAG}} test-compile failsafe:integration-test failsafe:verify -DskipUnitTests -Dsurefire.parallel=none -T 1'
       - 'command -v mvnd >/dev/null 2>&1 && mvnd --stop || true'
