@@ -1,3 +1,15 @@
+## v3.3.4 (2026-09-22)
+
+### Fix
+
+- **ci**: scripts honour pre-set REPO_ROOT when sourcing common.sh
+
+## v3.3.3 (2026-09-22)
+
+### Fix
+
+- **rename**: platform module security-cognito --> cognito only
+
 ## v3.3.2 (2026-09-21)
 
 ### Fix

@@ -7,13 +7,19 @@
 #
 # This file lives at scripts/lib/common.sh, so the repo root is always ../..
 # from here. Prefer REPO_ROOT over recomputing from each caller's SCRIPT_DIR.
+# Callers may set REPO_ROOT before sourcing (e.g. GITHUB_WORKSPACE); we honour it.
 
 # ---- Paths ------------------------------------------------------------------
 
-SCRIPTS_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-readonly SCRIPTS_LIB_DIR
-REPO_ROOT="$(cd "${SCRIPTS_LIB_DIR}/../.." && pwd)"
-readonly REPO_ROOT
+if [[ -z "${_BACKBONE_COMMON_LOADED:-}" ]]; then
+    SCRIPTS_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    readonly SCRIPTS_LIB_DIR
+    if [[ -z "${REPO_ROOT:-}" ]]; then
+        REPO_ROOT="$(cd "${SCRIPTS_LIB_DIR}/../.." && pwd)"
+    fi
+    readonly REPO_ROOT
+    _BACKBONE_COMMON_LOADED=1
+fi
 
 # ---- Functions --------------------------------------------------------------
 

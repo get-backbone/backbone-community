@@ -12,9 +12,8 @@ set -euo pipefail
 # ---- Imports ----------------------------------------------------------------
 
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-readonly REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 # shellcheck source=../../scripts/lib/common.sh
-source "${REPO_ROOT}/scripts/lib/common.sh"
+source "${SCRIPT_DIR}/../../scripts/lib/common.sh"
 
 # ---- Constants --------------------------------------------------------------
 

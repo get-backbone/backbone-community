@@ -4,7 +4,7 @@
 
     <groupId>io.backbone.core</groupId>
     <artifactId>backbone-platform</artifactId>
-    <version>3.3.2</version>
+    <version>3.3.4</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -399,7 +399,7 @@
             </dependency>
             <dependency>
                 <groupId>io.backbone.core</groupId>
-                <artifactId>security-cognito</artifactId>
+                <artifactId>cognito</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <!-- libs/vendor -->
