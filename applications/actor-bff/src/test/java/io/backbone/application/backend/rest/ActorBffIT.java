@@ -2,7 +2,7 @@ package io.backbone.application.backend.rest;
 
 import io.backbone.core.test.common.QuarkusLoggingTestResource;
 import io.backbone.core.test.common.QuarkusPortsEnvTestResource;
-import io.backbone.kit.throttle.impl.test.ThrottlingDisabledTestProfile;
+import io.backbonehq.kit.throttle.impl.test.ThrottlingDisabledTestProfile;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;

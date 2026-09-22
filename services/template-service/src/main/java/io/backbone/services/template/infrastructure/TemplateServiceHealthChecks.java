@@ -1,6 +1,6 @@
 package io.backbone.services.template.infrastructure;
 
-import io.backbone.kit.health.impl.infrastructure.PostgresHealthCheck;
+import io.backbonehq.kit.health.impl.infrastructure.PostgresHealthCheck;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 import jakarta.persistence.EntityManager;

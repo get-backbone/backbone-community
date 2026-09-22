@@ -15,7 +15,7 @@
     "allDeclaredMethods": true
   },
   {
-    "name": "io.backbone.kit.security.api.dto.TokenValidation",
+    "name": "io.backbonehq.kit.security.api.dto.TokenValidation",
     "allDeclaredConstructors": true,
     "allPublicConstructors": true,
     "allDeclaredMethods": true,
@@ -23,7 +23,7 @@
     "allDeclaredFields": true
   },
   {
-    "name": "io.backbone.kit.security.api.dto.AuthIdentity",
+    "name": "io.backbonehq.kit.security.api.dto.AuthIdentity",
     "allDeclaredConstructors": true,
     "allPublicConstructors": true,
     "allDeclaredMethods": true,

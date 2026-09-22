@@ -64,7 +64,7 @@
         </dependency>
         <!-- backbone-kit -->
         <dependency>
-            <groupId>io.backbone</groupId>
+            <groupId>io.backbonehq</groupId>
             <artifactId>backbone-logging</artifactId>
         </dependency>
         <!-- libs (published binaries; no libs source on community mirror) -->

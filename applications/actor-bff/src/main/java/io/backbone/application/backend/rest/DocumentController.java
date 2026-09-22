@@ -1,7 +1,7 @@
 package io.backbone.application.backend.rest;
 
 import io.backbone.core.client.api.document.DocumentServiceClient;
-import io.backbone.kit.security.api.rest.Secured;
+import io.backbonehq.kit.security.api.rest.Secured;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;

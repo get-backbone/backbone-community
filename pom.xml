@@ -47,7 +47,7 @@
         <!-- Cross-cutting library versions (used by multiple aggregators) -->
         <commons.lang3.version>3.20.0</commons.lang3.version>
         <commons.collections4.version>4.5.0</commons.collections4.version>
-        <io.backbone.version>1.0.1</io.backbone.version>
+        <io.backbonehq.version>2.0.0</io.backbonehq.version>
         <!-- Must match Quarkus BOM protobuf-java: Quarkus fast-jar loads protobuf parent-first, so RuntimeVersion
              comes from that copy. libs/vendor/licence-runtime gencode (protoc) must use the same line. Do not bump above BOM
              without checking quarkus.class-loading or Quarkus release notes. Keep in step with backbone-kit. -->
@@ -276,59 +276,59 @@
             </dependency>
             <!-- backbone-kit -->
             <dependency>
-                <groupId>io.backbone</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>backbone-common</artifactId>
-                <version>${io.backbone.version}</version>
+                <version>${io.backbonehq.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.backbone</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>backbone-health-aws</artifactId>
-                <version>${io.backbone.version}</version>
+                <version>${io.backbonehq.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.backbone</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>backbone-logging</artifactId>
-                <version>${io.backbone.version}</version>
+                <version>${io.backbonehq.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.backbone</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>backbone-logging-api</artifactId>
-                <version>${io.backbone.version}</version>
+                <version>${io.backbonehq.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.backbone</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>backbone-metrics</artifactId>
-                <version>${io.backbone.version}</version>
+                <version>${io.backbonehq.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.backbone</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>backbone-metrics-api</artifactId>
-                <version>${io.backbone.version}</version>
+                <version>${io.backbonehq.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.backbone</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>backbone-observability-api</artifactId>
-                <version>${io.backbone.version}</version>
+                <version>${io.backbonehq.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.backbone</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>backbone-observability-aws</artifactId>
-                <version>${io.backbone.version}</version>
+                <version>${io.backbonehq.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.backbone</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>backbone-security</artifactId>
-                <version>${io.backbone.version}</version>
+                <version>${io.backbonehq.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.backbone</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>backbone-security-api</artifactId>
-                <version>${io.backbone.version}</version>
+                <version>${io.backbonehq.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.backbone</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>backbone-throttle</artifactId>
-                <version>${io.backbone.version}</version>
+                <version>${io.backbonehq.version}</version>
             </dependency>
             <!-- libs/sdk -->
             <dependency>

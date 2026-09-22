@@ -100,31 +100,31 @@
         </dependency>
         <!-- backbone-kit -->
         <dependency>
-            <groupId>io.backbone</groupId>
+            <groupId>io.backbonehq</groupId>
             <artifactId>backbone-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.backbone</groupId>
+            <groupId>io.backbonehq</groupId>
             <artifactId>backbone-logging</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.backbone</groupId>
+            <groupId>io.backbonehq</groupId>
             <artifactId>backbone-logging-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.backbone</groupId>
+            <groupId>io.backbonehq</groupId>
             <artifactId>backbone-metrics</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.backbone</groupId>
+            <groupId>io.backbonehq</groupId>
             <artifactId>backbone-metrics-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.backbone</groupId>
+            <groupId>io.backbonehq</groupId>
             <artifactId>backbone-observability-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.backbone</groupId>
+            <groupId>io.backbonehq</groupId>
             <artifactId>backbone-observability-aws</artifactId>
         </dependency>
         <!-- libs (published binaries; no libs source on community mirror) -->

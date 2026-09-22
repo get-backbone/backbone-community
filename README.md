@@ -87,9 +87,6 @@ Your domain code carries forward. You don't rebuild the platform when you go to 
 
 Approx. 10 minutes.
 
-### 0. Community licence
-Download a Free community licence from the [Backbone website](https://backbonehq.io/#pricing)
-
 ### 1. Bootstrap
 
 ```bash

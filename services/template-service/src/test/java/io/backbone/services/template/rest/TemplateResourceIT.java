@@ -5,9 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import io.backbone.core.test.common.QuarkusLoggingTestResource;
 import io.backbone.core.test.common.QuarkusPortsEnvTestResource;
-import io.backbone.kit.throttle.impl.test.ThrottlingDisabledTestProfile;
 import io.backbone.services.template.domain.dto.TemplateEventRequest;
 import io.backbone.services.template.infrastructure.persistence.TemplateEventRecord;
+import io.backbonehq.kit.throttle.impl.test.ThrottlingDisabledTestProfile;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;

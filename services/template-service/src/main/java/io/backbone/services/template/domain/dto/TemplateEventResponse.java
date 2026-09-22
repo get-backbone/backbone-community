@@ -1,6 +1,6 @@
 package io.backbone.services.template.domain.dto;
 
-import io.backbone.kit.metrics.api.dto.MetricsResultIndicator;
+import io.backbonehq.kit.metrics.api.dto.MetricsResultIndicator;
 import java.util.UUID;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
