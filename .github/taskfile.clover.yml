@@ -7,7 +7,7 @@ version: '3'
 vars:
   MAVEN_CMD: '$(command -v mvnd >/dev/null 2>&1 && echo mvnd || echo "./mvnw")'
   ROOT_DIR: "{{.TASKFILE_DIR}}/.."
-  CLOVER_EXCLUDED: '{{.CLOVER_EXCLUDED | default "-pl ''!libs/sdk/sdk-bundle,!services/template-service''"}}'
+  CLOVER_EXCLUDED: '{{.CLOVER_EXCLUDED | default "-pl ''!core/sdk/sdk-bundle,!services/template-service''"}}'
 
 tasks:
   _default:

@@ -2,15 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.backbone.core</groupId>
+    <groupId>io.backbonehq</groupId>
     <artifactId>backbone-platform</artifactId>
-    <version>3.3.4</version>
+    <version>4.0.1</version>
     <packaging>pom</packaging>
 
     <modules>
         <module>config</module>
-        <!-- reusable libraries -->
-        <module>libs</module>
+        <module>core</module>
         <!-- REST controllers, DTOs etc. -->
         <module>applications</module>
         <!-- services -->
@@ -49,7 +48,7 @@
         <commons.collections4.version>4.5.0</commons.collections4.version>
         <io.backbonehq.version>2.0.0</io.backbonehq.version>
         <!-- Must match Quarkus BOM protobuf-java: Quarkus fast-jar loads protobuf parent-first, so RuntimeVersion
-             comes from that copy. libs/vendor/licence-runtime gencode (protoc) must use the same line. Do not bump above BOM
+             comes from that copy. core/vendor/licence-runtime gencode (protoc) must use the same line. Do not bump above BOM
              without checking quarkus.class-loading or Quarkus release notes. Keep in step with backbone-kit. -->
         <protobuf.version>4.32.1</protobuf.version>
         <!-- Override Quarkus BOM / Tika transitive BC (OWASP CVSS>=7). Coordinated across jdk18on modules. -->
@@ -116,7 +115,7 @@
         <aws.sdk.version>2.42.34</aws.sdk.version>
 
         <!-- Test execution control properties -->
-        <!-- Empty so Surefire @{argLine} late-replacement resolves when Quarkus/JaCoCo do not set argLine (e.g. libs). -->
+        <!-- Empty so Surefire @{argLine} late-replacement resolves when Quarkus/JaCoCo do not set argLine (e.g. core). -->
         <argLine/>
         <skipUnitTests>false</skipUnitTests>
         <skipIntegrationTests>false</skipIntegrationTests>
@@ -330,81 +329,81 @@
                 <artifactId>backbone-throttle</artifactId>
                 <version>${io.backbonehq.version}</version>
             </dependency>
-            <!-- libs/sdk -->
+            <!-- core/sdk -->
             <dependency>
-                <groupId>io.backbone.core</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>audit</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.backbone.core</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>cache</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.backbone.core</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>common</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.backbone.core</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>domain-clients</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.backbone.core</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>domain-dtos</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.backbone.core</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>sdk-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.backbone.core</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>sdk-bundle</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.backbone.core</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>security</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.backbone.core</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>test-support</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <!-- libs/platform -->
+            <!-- core/platform -->
             <dependency>
-                <groupId>io.backbone.core</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>aws-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.backbone.core</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>document</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.backbone.core</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>notification</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.backbone.core</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>oauth</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.backbone.core</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>cognito</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <!-- libs/vendor -->
+            <!-- core/vendor -->
             <dependency>
-                <groupId>io.backbone.core</groupId>
+                <groupId>io.backbonehq</groupId>
                 <artifactId>licence</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -840,7 +839,7 @@
                             <rulesets>
                                 <ruleset>${maven.multiModuleProjectDirectory}/.config/.pmd-rules.xml</ruleset>
                             </rulesets>
-                            <!-- Exclude generated sources (e.g. protobuf in libs/vendor/licence-runtime) from PMD -->
+                            <!-- Exclude generated sources (e.g. protobuf in core/vendor/licence-runtime) from PMD -->
                             <excludeRoots>
                                 <excludeRoot>target/generated-sources/protobuf</excludeRoot>
                             </excludeRoots>
@@ -962,7 +961,7 @@
                 <quarkus.native.enabled>true</quarkus.native.enabled>
                 <!-- Native-image warns when heap is under ~5.67g (GC churn) -->
                 <quarkus.native.native-image-xmx>6656m</quarkus.native.native-image-xmx>
-                <!-- Bundled Ed25519 public key lives in libs/vendor/licence-runtime; Graal does not pull dependency META-INF resources into the image by default. -->
+                <!-- Bundled Ed25519 public key lives in core/vendor/licence-runtime; Graal does not pull dependency META-INF resources into the image by default. -->
                 <!-- Snappy JNI libs for AMP remote-write (see config/META-INF/native-image). -->
                 <native.resources.base>META-INF/backbone-licence.pub,org/xerial/snappy/native/.*,.*libsnappyjava.*</native.resources.base>
                 <quarkus.native.resources.includes>${native.resources.base}</quarkus.native.resources.includes>

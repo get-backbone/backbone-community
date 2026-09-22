@@ -49,8 +49,8 @@ main() {
 
     mapfile -t ecs_module_paths < <(jq -r '.services[] | select(.deployment == "ecs") | .modulePath' "${SERVICES_JSON}" | sort -u)
 
-    if ((${#changed_non_pom[@]} > 0)) && printf '%s\n' "${changed_non_pom[@]}" | grep -qE '^(libs|config)/'; then
-        echo "libs/ or config/ changed in range (non-pom); rebuilding all ECS modules."
+    if ((${#changed_non_pom[@]} > 0)) && printf '%s\n' "${changed_non_pom[@]}" | grep -qE '^(core|config)/'; then
+        echo "core/ or config/ changed in range (non-pom); rebuilding all ECS modules."
         mapfile -t modules < <(printf '%s\n' "${ecs_module_paths[@]}" | sort -u)
     else
         mapfile -t modules < <(

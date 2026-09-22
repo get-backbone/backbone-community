@@ -27,12 +27,11 @@
       "description": "Ignore in-repo reactor parents (not on Maven Central).",
       "enabled": false,
       "matchPackageNames": [
-        "/^io\\.backbone:.*$/",
-        "/^io\\.forge\\.core:.*$/"
+        "/^io\\.backbonehq:.*$/"
       ]
     },
     {
-      "description": "Protobuf is pinned to Quarkus BOM (parent-first RuntimeVersion); bump only with Quarkus upgrades (see root pom protobuf.version, libs/licence README).",
+      "description": "Protobuf is pinned to Quarkus BOM (parent-first RuntimeVersion); bump only with Quarkus upgrades (see root pom protobuf.version, core/vendor README).",
       "matchDatasources": [
         "maven"
       ],

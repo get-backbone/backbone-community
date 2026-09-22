@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>io.backbone.core</groupId>
+        <groupId>io.backbonehq</groupId>
         <artifactId>backbone-platform</artifactId>
-        <version>3.3.4</version>
+        <version>4.0.1</version>
     </parent>
 
     <artifactId>services</artifactId>
@@ -83,52 +83,20 @@
             <artifactId>quarkus-smallrye-openapi</artifactId>
         </dependency>
         <!-- backbone-kit -->
+        <!-- core/sdk (leaf GAVs for local/dev hot reload; published clients use sdk-bundle) -->
+        <!-- core (published binaries; no core source on community mirror) -->
         <dependency>
             <groupId>io.backbonehq</groupId>
-            <artifactId>backbone-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.backbonehq</groupId>
-            <artifactId>backbone-health-aws</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.backbonehq</groupId>
-            <artifactId>backbone-logging</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.backbonehq</groupId>
-            <artifactId>backbone-logging-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.backbonehq</groupId>
-            <artifactId>backbone-metrics</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.backbonehq</groupId>
-            <artifactId>backbone-metrics-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.backbonehq</groupId>
-            <artifactId>backbone-observability-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.backbonehq</groupId>
-            <artifactId>backbone-observability-aws</artifactId>
-        </dependency>
-        <!-- libs/sdk (leaf GAVs for local/dev hot reload; published clients use sdk-bundle) -->
-        <!-- libs (published binaries; no libs source on community mirror) -->
-        <dependency>
-            <groupId>io.backbone.core</groupId>
             <artifactId>sdk-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.backbone.core</groupId>
+            <groupId>io.backbonehq</groupId>
             <artifactId>sdk-bundle</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.backbone.core</groupId>
+            <groupId>io.backbonehq</groupId>
             <artifactId>licence</artifactId>
             <version>${project.version}</version>
         </dependency>

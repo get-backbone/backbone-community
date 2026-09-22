@@ -35,7 +35,7 @@ logs/
 *.rar
 
 # Checked-in jars under core-only tooling trees (not on client mirrors)
-!libs/tools/obfuscator/*.jar
+!core/tools/obfuscator/*.jar
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*

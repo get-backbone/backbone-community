@@ -41,8 +41,8 @@ EOF
 # Persistence source of truth remains in services/template-service/src.
 strip_rds_for_stateless() {
     local dest_dir="$1"
-    local java_root="${dest_dir}/src/main/java/io/backbone/services/template"
-    local test_root="${dest_dir}/src/test/java/io/backbone/services/template"
+    local java_root="${dest_dir}/src/main/java/io/backbonehq/services/template"
+    local test_root="${dest_dir}/src/test/java/io/backbonehq/services/template"
     local parent_version
 
     log_info "Stripping RDS persistence (stateless scaffold)"
@@ -71,7 +71,7 @@ strip_rds_for_stateless() {
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>io.backbone.core</groupId>
+        <groupId>io.backbonehq</groupId>
         <artifactId>services</artifactId>
         <version>${parent_version}</version>
     </parent>
@@ -85,7 +85,7 @@ EOF
 quarkus.application.name=template-service
 quarkus.http.port=${TEMPLATE_SERVICE_PORT:8080}
 # Class-loading is read before normal config (Quarkus docs): must be in application.properties.
-quarkus.class-loading.parent-first-artifacts=io.backbone.core:sdk-bundle
+quarkus.class-loading.parent-first-artifacts=io.backbonehq:sdk-bundle
 quarkus.config.locations=quarkus.properties,platform-config.yml,aws.properties,throttle.properties,otel.properties,logging.properties,metrics.properties,cache.properties,redis.properties
 
 # REST service client configurations (AuthServiceClient for S2S tokens)
@@ -96,16 +96,16 @@ backbone.audit.enabled=false
 EOF
 
     cat > "${java_root}/domain/TemplateService.java" << 'EOF'
-package io.backbone.services.template.domain;
+package io.backbonehq.services.template.domain;
 
-import io.backbone.core.audit.api.domain.AuditEvent;
-import io.backbone.core.audit.api.domain.EventSeverity;
-import io.backbone.core.audit.api.domain.EventType;
+import io.backbonehq.core.audit.api.domain.AuditEvent;
+import io.backbonehq.core.audit.api.domain.EventSeverity;
+import io.backbonehq.core.audit.api.domain.EventType;
 import io.backbonehq.kit.logging.api.LogMethodEntry;
 import io.backbonehq.kit.metrics.api.domain.ServiceMetrics;
-import io.backbone.services.template.domain.dto.TemplateEventRequest;
-import io.backbone.services.template.domain.dto.TemplateEventResponse;
-import io.backbone.services.template.infrastructure.TemplateMetricsRecorder;
+import io.backbonehq.services.template.domain.dto.TemplateEventRequest;
+import io.backbonehq.services.template.domain.dto.TemplateEventResponse;
+import io.backbonehq.services.template.infrastructure.TemplateMetricsRecorder;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.jboss.logging.Logger;
@@ -139,12 +139,12 @@ EOF
 
     mkdir -p "${test_root}/rest"
     cat > "${test_root}/rest/TemplateResourceIT.java" << 'EOF'
-package io.backbone.services.template.rest;
+package io.backbonehq.services.template.rest;
 
-import io.backbone.core.common.api.test.QuarkusLoggingTestResource;
-import io.backbone.core.common.api.test.QuarkusPortsEnvTestResource;
+import io.backbonehq.core.common.api.test.QuarkusLoggingTestResource;
+import io.backbonehq.core.common.api.test.QuarkusPortsEnvTestResource;
 import io.backbonehq.kit.throttle.impl.test.ThrottlingDisabledTestProfile;
-import io.backbone.services.template.domain.dto.TemplateEventRequest;
+import io.backbonehq.services.template.domain.dto.TemplateEventRequest;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
@@ -249,15 +249,15 @@ rename_java_paths() {
     local old_pkg_dir new_pkg_dir
     local file base_name new_name
 
-    old_pkg_dir="${java_root}/main/java/io/backbone/services/template"
-    new_pkg_dir="${java_root}/main/java/io/backbone/services/${package_segment}"
+    old_pkg_dir="${java_root}/main/java/io/backbonehq/services/template"
+    new_pkg_dir="${java_root}/main/java/io/backbonehq/services/${package_segment}"
     if [[ -d "$old_pkg_dir" ]]; then
         mkdir -p "$(dirname "$new_pkg_dir")"
         mv "$old_pkg_dir" "$new_pkg_dir"
     fi
 
-    old_pkg_dir="${java_root}/test/java/io/backbone/services/template"
-    new_pkg_dir="${java_root}/test/java/io/backbone/services/${package_segment}"
+    old_pkg_dir="${java_root}/test/java/io/backbonehq/services/template"
+    new_pkg_dir="${java_root}/test/java/io/backbonehq/services/${package_segment}"
     if [[ -d "$old_pkg_dir" ]]; then
         mkdir -p "$(dirname "$new_pkg_dir")"
         mv "$old_pkg_dir" "$new_pkg_dir"
@@ -285,7 +285,7 @@ replace_tokens_in_tree() {
             sed -i '' \
                 -e "s/TEMPLATE_SERVICE_PORT/${port_var}/g" \
                 -e "s/template-service/${service_name}/g" \
-                -e "s/io\.backbone\.services\.template/io.backbone.services.${package_segment}/g" \
+                -e "s/io\.backbonehq\.services\.template/io.backbonehq.services.${package_segment}/g" \
                 -e "s/Template/${class_prefix}/g" \
                 -e "s/template/${package_segment}/g" \
                 "$file"
@@ -293,7 +293,7 @@ replace_tokens_in_tree() {
             sed -i \
                 -e "s/TEMPLATE_SERVICE_PORT/${port_var}/g" \
                 -e "s/template-service/${service_name}/g" \
-                -e "s/io\.backbone\.services\.template/io.backbone.services.${package_segment}/g" \
+                -e "s/io\.backbonehq\.services\.template/io.backbonehq.services.${package_segment}/g" \
                 -e "s/Template/${class_prefix}/g" \
                 -e "s/template/${package_segment}/g" \
                 "$file"

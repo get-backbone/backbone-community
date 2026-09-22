@@ -60,7 +60,7 @@ jobs:
       - uses: actions/upload-artifact@v7
         with:
           name: maven-repo
-          path: ~/.m2/repository/io/backbone
+          path: ~/.m2/repository/io/backbonehq
           retention-days: 1
           if-no-files-found: warn
 
@@ -82,7 +82,7 @@ jobs:
       - uses: actions/download-artifact@v8
         with:
           name: maven-repo
-          path: ~/.m2/repository/io/backbone
+          path: ~/.m2/repository/io/backbonehq
       - run: task test:unit -- -Dtest.thread.count=4
       - if: always()
         uses: actions/upload-artifact@v7
@@ -119,7 +119,7 @@ jobs:
       - uses: actions/download-artifact@v8
         with:
           name: maven-repo
-          path: ~/.m2/repository/io/backbone
+          path: ~/.m2/repository/io/backbonehq
       - run: |
           # Future: Floci / Cognito ITs — uncomment with the floci action above.
           # task dev:floci

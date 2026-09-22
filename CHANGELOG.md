@@ -1,3 +1,16 @@
+## v4.0.1 (2026-09-22)
+
+### Fix
+
+- **sdk**: stage kit jars for sdk-bundle Aidsfuscator
+
+## v4.0.0 (2026-09-22)
+
+### Refactor
+
+- rename libs/ directory to core/
+- rename Java packages to io.backbonehq.*
+
 ## v3.3.4 (2026-09-22)
 
 ### Fix

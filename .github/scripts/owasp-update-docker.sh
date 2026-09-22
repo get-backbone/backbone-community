@@ -55,7 +55,7 @@ recreate_container() {
         --name "${CONTAINER_NAME}" \
         --platform "${IMAGE_PLATFORM}" \
         --restart unless-stopped \
-        --label "io.backbone.owasp=dependency-check" \
+        --label "io.backbonehq.owasp=dependency-check" \
         --entrypoint sleep \
         "${IMAGE}" \
         infinity \

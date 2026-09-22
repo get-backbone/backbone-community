@@ -5,7 +5,7 @@ version: '3'
 # ui/ and config/ are not hooked here (no unit-test modules in those trees).
 #
 # Use the root reactor (-pl … -am from pom.xml), not -f services/pom.xml / -f applications/pom.xml. Sub-aggregators list
-# io.backbone.core libs as external dependencies; only the root reactor builds those modules from source so pre-push works
+# io.backbonehq core as external dependencies; only the root reactor builds those modules from source, so pre-push works
 # before GitHub Packages has the new version.
 
 vars:

@@ -23,11 +23,11 @@ validate_dependencies() {
 }
 
 maven_pl() {
-    # Core has libs/vendor/licence-runtime; mirrored clients only have libs (sdk dependency).
-    if [[ -f "${ROOT_DIR}/libs/vendor/licence-runtime/pom.xml" ]]; then
-        echo "libs/vendor/licence-runtime"
+    # Core has core/vendor/licence-runtime; mirrored clients only have core (sdk dependency).
+    if [[ -f "${ROOT_DIR}/core/vendor/licence-runtime/pom.xml" ]]; then
+        echo "core/vendor/licence-runtime"
     else
-        echo "libs"
+        echo "core"
     fi
 }
 
@@ -41,7 +41,7 @@ main() {
     MAVEN_OPTS="${MAVEN_OPTS:-} --sun-misc-unsafe-memory-access=allow" \
         exec mvn exec:java \
         -q \
-        -Dexec.mainClass="io.backbone.core.licence.cli.LicenceVerifier" \
+        -Dexec.mainClass="io.backbonehq.core.licence.cli.LicenceVerifier" \
         -pl "$(maven_pl)" \
         -Dexec.args="$*" \
         --no-transfer-progress
