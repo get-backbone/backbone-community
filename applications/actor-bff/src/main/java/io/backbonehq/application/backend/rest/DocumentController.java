@@ -1,9 +1,18 @@
 package io.backbonehq.application.backend.rest;
 
 import io.backbonehq.core.client.api.document.DocumentServiceClient;
+import io.backbonehq.core.common.api.io.FileTransferUtils;
 import io.backbonehq.kit.security.api.rest.Secured;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.*;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
@@ -37,7 +46,8 @@ public final class DocumentController
     @Operation(summary = "Get documents")
     public Response getDocuments(@QueryParam("actorId") final String actorId)
     {
-        requireActorId(actorId);
+        requireNonBlank(actorId, "actorId is required");
+
         return documentServiceClient.getDocuments(actorId);
     }
 
@@ -59,9 +69,34 @@ public final class DocumentController
             .build();
     }
 
+    @POST
+    @Path("/{documentId}/link")
+    @Secured
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Create a short-lived download link for a document")
+    public Response createDocumentLink(@PathParam("documentId") final String documentId, @QueryParam("actorId") final String actorId)
+    {
+        requireNonBlank(actorId, "actorId is required");
+        requireNonBlank(documentId, "documentId is required");
+
+        return documentServiceClient.createDocumentLink(documentId, actorId);
+    }
+
+    @DELETE
+    @Path("/{documentId}")
+    @Secured
+    @Operation(summary = "Delete a document and its source object")
+    public Response deleteDocument(@PathParam("documentId") final String documentId, @QueryParam("actorId") final String actorId)
+    {
+        requireNonBlank(actorId, "actorId is required");
+        requireNonBlank(documentId, "documentId is required");
+
+        return documentServiceClient.deleteDocument(documentId, actorId);
+    }
+
     private static void validateUploadRequest(final String actorId, final List<FileUpload> documents)
     {
-        requireActorId(actorId);
+        requireNonBlank(actorId, "actorId is required");
 
         if (CollectionUtils.isEmpty(documents))
         {
@@ -69,11 +104,11 @@ public final class DocumentController
         }
     }
 
-    private static void requireActorId(final String actorId)
+    private static void requireNonBlank(final String value, final String message)
     {
-        if (StringUtils.isEmpty(actorId))
+        if (StringUtils.isBlank(value))
         {
-            throw badRequest("actorId is required");
+            throw badRequest(message);
         }
     }
 
@@ -88,21 +123,32 @@ public final class DocumentController
 
     private Object processDocument(final String actorId, final FileUpload document)
     {
-        try (final Response parseResponse = documentServiceClient.createDocument(actorId, document.filePath().toFile()))
+        java.nio.file.Path namedUpload = null;
+        try
         {
-            if (isSuccess(parseResponse))
+            // Rest client uses File#getName() as the multipart filename; Quarkus temp paths are not the original name.
+            namedUpload = FileTransferUtils.copyToTempDir(document.filePath(), document.fileName());
+            try (final Response parseResponse = documentServiceClient.createDocument(actorId, namedUpload.toFile()))
             {
-                return parseResponse.readEntity(Object.class);
-            }
+                if (isSuccess(parseResponse))
+                {
+                    return parseResponse.readEntity(Object.class);
+                }
 
-            return errorResult(document, parseResponse);
+                return errorResult(document, parseResponse);
+            }
         }
         catch (final Exception e)
         {
             LOGGER.errorf(e, "Error parsing document: %s", document.fileName());
             return Map.of(
-                "fileName", safeFileName(document), "error", "Error processing file: " + e.getMessage()
+                "fileName", StringUtils.isBlank(document.fileName()) ? "(blank)" : document.fileName(), "error", "Error processing file: " + e
+                    .getMessage()
             );
+        }
+        finally
+        {
+            FileTransferUtils.deleteQuietly(namedUpload);
         }
     }
 
@@ -117,13 +163,8 @@ public final class DocumentController
         final String errorMessage = response.readEntity(String.class);
 
         return Map.of(
-            "fileName", safeFileName(document), "error", StringUtils.defaultIfBlank(errorMessage, "Failed to create document"), "status", response
-                .getStatus()
+            "fileName", FileTransferUtils.requireFileName(document.fileName()), "error", StringUtils
+                .defaultIfBlank(errorMessage, "Failed to create document"), "status", response.getStatus()
         );
-    }
-
-    private static String safeFileName(final FileUpload document)
-    {
-        return StringUtils.defaultIfBlank(document.fileName(), "unknown");
     }
 }

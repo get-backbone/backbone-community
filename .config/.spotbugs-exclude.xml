@@ -153,5 +153,10 @@
         <Class name="io.backbonehq.core.security.infrastructure.cognito.CognitoPasswordResetSupport"/>
         <Bug pattern="EI_EXPOSE_REP2"/>
     </Match>
+    <!-- REST client proxy. SpotBugs treats DocumentServiceClient as mutable because deleteDocument starts with "delete" and does not return the client. -->
+    <Match>
+        <Class name="io.backbonehq.application.backend.rest.DocumentController"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
 </FindBugsFilter>
 

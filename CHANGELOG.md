@@ -1,3 +1,15 @@
+## v4.1.0 (2026-10-09)
+
+### Feat
+
+- **document**: adding delete function to document-service
+- **document**: adding a frontend to the document-service upload/parse
+
+### Fix
+
+- **cache**: cache key generator fix for multi-arg vs single-arg cache keys
+- **deps**: suppress snappy-java CVE-2026-93452 (#102)
+
 ## v4.0.1 (2026-09-22)
 
 ### Fix

@@ -21,19 +21,123 @@
 <div class="container">
 
     <h1 style="margin-bottom: 32px;">Profile</h1>
-    
+
     <div id="loading" class="loading">Loading profile...</div>
     <div id="error" class="error"></div>
-    <div id="profile"></div>
-    
+
+    <div id="profile" hidden>
+
+        <section class="profile-section" id="candidate-section" aria-labelledby="candidate-heading">
+            <h2 id="candidate-heading">Candidate Information</h2>
+            <div class="profile-details">
+                <div class="profile-item" id="profile-name-item" hidden>
+                    <strong>Name:</strong> <span id="profile-name"></span>
+                </div>
+                <div class="profile-item" id="profile-email-item" hidden>
+                    <strong>Email:</strong> <span id="profile-email"></span>
+                </div>
+                <div class="profile-item" id="profile-registered-item" hidden>
+                    <strong>Registered:</strong> <span id="profile-registered"></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="profile-section" id="resume-section" aria-labelledby="resume-heading">
+            <div class="cv-section-header">
+                <div>
+                    <h2 id="resume-heading">Resume(s)</h2>
+                    <p class="cv-section-lede">Add a CV and/or cover letter(s) for companies to review.</p>
+                </div>
+            </div>
+
+            <div class="cv-dropzone" id="resume-upload-box" role="button" tabindex="0" aria-label="Upload documents">
+                <input type="file" id="resume-file-input" multiple
+                       accept=".pdf,.doc,.docx,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"/>
+                <div class="cv-dropzone-main">
+                    <div class="cv-dropzone-icon" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                            <path d="M12 16V4m0 0l-4 4m4-4l4 4"/>
+                            <path d="M4 16.5V18a2 2 0 002 2h12a2 2 0 002-2v-1.5"/>
+                        </svg>
+                    </div>
+                    <div class="cv-dropzone-copy">
+                        <span class="cv-dropzone-title">Drop files or browse</span>
+                        <span class="cv-dropzone-hint">PDF, DOC, DOCX, TXT · multiple allowed</span>
+                    </div>
+                    <button type="button" class="btn btn-dashboard cv-upload-btn" id="resume-upload-btn" disabled>Upload</button>
+                </div>
+                <div class="cv-selected-files" id="resume-selected-file" hidden></div>
+                <div class="cv-upload-status" id="resume-upload-status" role="status" aria-live="polite"></div>
+            </div>
+
+            <div class="cv-documents" id="documents-list">
+                <div class="cv-documents-loading" id="documents-loading">Loading documents…</div>
+                <div class="cv-empty" id="documents-empty" hidden>
+                    <div class="cv-empty-title">No documents on file</div>
+                    <div class="cv-empty-hint">Upload a resume or cover letter above to get started.</div>
+                </div>
+                <div class="cv-empty cv-empty-error" id="documents-error" hidden></div>
+                <ul class="cv-doc-list" id="documents-list-items" hidden></ul>
+            </div>
+        </section>
+
+    </div>
+
     <div class="nav-links" style="margin-top: 32px; display: flex; flex-direction: row; gap: 12px;">
         <a href="dashboard.html" class="btn btn-dashboard">← Dashboard</a>
     </div>
 
 </div>
 
+<dialog id="cv-modal" class="cv-modal" aria-labelledby="cv-modal-title">
+    <form method="dialog" class="cv-modal-panel">
+        <h3 id="cv-modal-title" class="cv-modal-title"></h3>
+        <p id="cv-modal-message" class="cv-modal-message"></p>
+        <div class="cv-modal-actions">
+            <button type="submit" value="cancel" id="cv-modal-cancel" class="btn btn-dashboard">Cancel</button>
+            <button type="submit" value="confirm" id="cv-modal-confirm" class="btn btn-dashboard cv-modal-confirm">OK</button>
+        </div>
+    </form>
+</dialog>
+
+<template id="cv-file-chip-template">
+    <span class="cv-selected-file">
+        <span class="cv-file-chip-name" data-field="name"></span>
+        <span class="cv-file-chip-meta" data-field="size"></span>
+        <button type="button" class="cv-file-chip-clear" data-field="remove" aria-label="Remove file">×</button>
+    </span>
+</template>
+
+<template id="cv-doc-card-template">
+    <li class="cv-doc-card">
+        <div class="cv-doc-badge" data-field="badge"></div>
+        <div class="cv-doc-body">
+            <div class="cv-doc-name" data-field="name"></div>
+            <div class="cv-doc-meta">
+                <span data-field="size"></span>
+                <span class="cv-meta-sep">·</span>
+                <span data-field="parsed"></span>
+            </div>
+            <button type="button" class="cv-preview-toggle" data-field="preview-toggle" hidden aria-expanded="false">Show preview</button>
+            <div class="cv-preview" data-field="preview" hidden>
+                <pre class="cv-preview-text" data-field="preview-text"></pre>
+            </div>
+        </div>
+        <div class="cv-doc-actions">
+            <button type="button" class="cv-download-btn document-download-btn" data-field="download" title="Download" hidden>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true">
+                    <path d="M12 4v10m0 0l-4-4m4 4l4-4"/>
+                    <path d="M5 18h14"/>
+                </svg>
+            </button>
+            <button type="button" class="cv-download-btn cv-delete-btn document-delete-btn" data-field="delete" title="Delete" hidden aria-label="Delete">
+                ❌
+            </button>
+        </div>
+    </li>
+</template>
+
 <script src="profile.js"></script>
 
 </body>
 </html>
-

@@ -88,10 +88,23 @@
     <suppress>
         <notes><![CDATA[
            snappy-java 1.1.10.8 (Quarkus / Kafka transitive).
-           CVE-2026-90559 High (CVSS ~8.7); Snappy.uncompress ByteBuffer OOB write. No fixed Maven release
-           beyond 1.1.10.8 yet. Revisit when xerial publishes a patch.
+           CVE-2026-90559 High (CVSS ~8.7); Snappy.uncompress ByteBuffer OOB write.
+           CVE-2026-93452 High (CVSS ~8.7); Snappy.compress ByteBuffer overflow on incompressible data.
+           No fixed Maven release beyond 1.1.10.8 yet. Revisit when xerial publishes a patch.
         ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.xerial\.snappy/snappy-java@1\.1\.10\.8$</packageUrl>
         <cve>CVE-2026-90559</cve>
+        <cve>CVE-2026-93452</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+           SmallRye Fault Tolerance 6.11.1 (Quarkus 3.36.1 BOM).
+           CVE-2026-94449 High (CVSS ~8.7); DelegatingMetricsCollector leak when a programmatic
+           Guard is invoked via @ApplyGuard or @ApplyFaultTolerance. Declarative @Retry, @Timeout,
+           and @CircuitBreaker do not put a fresh MeteredOperationName on the context, so they do not leak.
+           Fixed in 6.11.4 (Quarkus 3.40). Revisit on quarkus.platform.version bump.
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.smallrye/smallrye-fault-tolerance-core@6\.11\.1$</packageUrl>
+        <cve>CVE-2026-94449</cve>
     </suppress>
 </suppressions>

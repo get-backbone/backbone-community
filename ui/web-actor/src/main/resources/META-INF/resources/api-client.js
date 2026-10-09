@@ -12,9 +12,14 @@ const ApiClient = {
 
     // Get JWT token and add to headers
     const headers = {
-      'Content-Type': 'application/json',
       ...optionHeaders
     };
+    if (!(restOptions.body instanceof FormData) && headers['Content-Type'] === undefined) {
+      headers['Content-Type'] = 'application/json';
+    }
+    if (restOptions.body instanceof FormData) {
+      delete headers['Content-Type'];
+    }
     
     const accessToken = AuthUtils.getAccessToken();
     if (accessToken && !AuthUtils.isTokenExpired()) {
@@ -109,6 +114,24 @@ const ApiClient = {
       method: 'POST',
       body: JSON.stringify(data)
     });
+  },
+
+  /**
+   * POST multipart/form-data (do not set Content-Type; browser adds boundary)
+   */
+  async postMultipart(url, formData, options = {}) {
+    return this.request(url, {
+      ...options,
+      method: 'POST',
+      body: formData
+    });
+  },
+
+  /**
+   * DELETE request
+   */
+  async delete(url, options = {}) {
+    return this.request(url, { ...options, method: 'DELETE' });
   },
   
   /**

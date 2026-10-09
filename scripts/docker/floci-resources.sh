@@ -36,12 +36,12 @@ create_dynamodb_tables() {
     awslocal dynamodb create-table \
         --table-name 'DOCUMENTS' \
         --attribute-definitions \
-        AttributeName=transactionId,AttributeType=S \
+        AttributeName=documentId,AttributeType=S \
         AttributeName=actorId,AttributeType=S \
         AttributeName=formattedName,AttributeType=S \
         AttributeName=parseTimestamp,AttributeType=S \
         --key-schema \
-        AttributeName=transactionId,KeyType=HASH \
+        AttributeName=documentId,KeyType=HASH \
         --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1 \
         --global-secondary-indexes '[
       {

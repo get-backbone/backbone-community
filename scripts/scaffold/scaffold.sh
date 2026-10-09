@@ -397,7 +397,7 @@ add_backbone_services_entry() {
             serviceName: $serviceName,
             cognitoServiceAccount: true,
             deployment: "ecs",
-            alb: { internalPathPattern: $albPath }
+            alb: { internalPathPatterns: [$albPath] }
         }]' "$json_file" > "$tmp_file"
     mv "$tmp_file" "$json_file"
 }
