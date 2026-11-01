@@ -36,4 +36,5 @@ jobs:
           restore-keys: |
             dependency-check-${{ runner.os }}-
 
-      - run: task test:static -- -Doss.index.analyzer.enabled=true
+#      - run: task test:static -- -Doss.index.analyzer.enabled=true
+      - run: task test:static

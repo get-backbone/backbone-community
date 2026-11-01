@@ -107,4 +107,20 @@
         <packageUrl regex="true">^pkg:maven/io\.smallrye/smallrye-fault-tolerance-core@6\.11\.1$</packageUrl>
         <cve>CVE-2026-94449</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+           opentelemetry-api 1.60.1 (OpenTelemetry transitive).
+           CVE-2026-54285. Revisit when a patched OpenTelemetry release is available.
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.opentelemetry/opentelemetry-api@1\.60\.1$</packageUrl>
+        <cve>CVE-2026-54285</cve>
+    </suppress>
+    <suppress>
+        <notes><![CDATA[
+           opentelemetry-api-incubator 1.60.1-alpha (OpenTelemetry transitive).
+           CVE-2026-54285. Revisit when a patched OpenTelemetry release is available.
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.opentelemetry/opentelemetry-api-incubator@1\.60\.1-alpha$</packageUrl>
+        <cve>CVE-2026-54285</cve>
+    </suppress>
 </suppressions>
